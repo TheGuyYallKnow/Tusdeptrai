@@ -1,0 +1,370 @@
+local OrionLib = loadstring(game:HttpGet(('https://raw.githubusercontent.com/shlexware/Orion/main/source')))()
+
+local plr = game:GetService('Players')
+
+local Window = OrionLib:MakeWindow({Name = "Bloodlines", HidePremium = false, SaveConfig = true, ConfigFolder = "Tus"})
+
+local function notification(text,dur)
+	if not dur then dur = 5 end
+	OrionLib:MakeNotification({
+		Name = "Peepoo Peepoo",
+		Content = text,
+		Image = "rbxassetid://4483345998",
+		Time = dur
+	})
+end
+
+local Variables
+local file = "tushub.json"
+if isfile(file) then
+	Variables = game:service'HttpService':JSONDecode(readfile(file))
+	print(readfile(file))
+else
+	local function save()
+		writefile(file, game:service'HttpService':JSONEncode(Variables))
+	end
+	Variables = 
+		{
+			wheat = false,
+			wheat_pos = nil,
+			wheat_damage = 98,
+
+			sharingan = false,
+			sharingan_tomoes = 1,
+
+			bug_server = false,
+			bug_cmd = 'tudeptrai',
+			
+			refreshrate = 5
+		}
+	setmetatable(Variables,{
+		__index = function()
+			notification('Saved')
+			save()
+		end,
+		__newindex = function()
+			notification('Saved')
+			save()
+		end,
+	})
+	save()
+end
+
+local nostam = false
+local mt = getrawmetatable(game)
+local index = mt.__index
+local newindex = mt.__newindex
+local namecall = mt.__namecall
+setreadonly(mt, false)
+mt.__namecall = newcclosure(function(self,...)
+	local args = {...}
+	local method = getnamecallmethod()
+	if method:lower() == "fireserver" and not checkcaller() then
+		if nostam == true and table.find({'Jump','TreeJump'},args[1]) then
+			return
+		end
+	end
+	return namecall(self,...)
+end)
+setreadonly(mt, true)
+
+local function reset()
+	game.Players.LocalPlayer.Character:BreakJoints()
+end
+local function checker()
+	local rp = game.Players.LocalPlayer.Character.HumanoidRootPart
+	local has = false
+	for i,v in pairs(game:GetService('Players'):GetChildren()) do
+		if v.Character and v.Character:FindFirstChild('HumanoidRootPart') then
+			local length = (rp.Position - v.Character:FindFirstChild('HumanoidRootPart').Position).Magnitude
+			if length < 50 then
+				local R = RaycastParams.new()
+				R.FilterType = Enum.RaycastFilterType.Blacklist
+				R.FilterDescendantsInstances = {rp.Parent,v.Character}
+				local Result = workspace:Raycast(rp.Position, v.Character:FindFirstChild('HumanoidRootPart').CFrame.LookVector*length, R)
+				if Result then
+					
+				else
+					has = true
+					break
+				end
+			end
+		end
+	end
+	print(has)
+	return has
+end
+local function bug()
+	if game.Workspace.FilteringEnabled == false then
+		game.Players.LocalPlayer.Character.Humanoid.MaxHealth = 0
+	end
+	if game.Workspace.FilteringEnabled == true then
+		local player=game.Players.LocalPlayer.Character
+		player.Humanoid:Remove()
+		Instance.new('Humanoid',player)
+	end
+end
+
+local Tab_char = Window:MakeTab({
+	Name = "Self",
+	Icon = "rbxassetid://4483345998",
+	PremiumOnly = false
+})
+Tab_char:AddButton({
+	Name = "Reset Character",
+	Callback = function()
+		reset()
+	end    
+})
+Tab_char:AddBind({
+	Name = "Infinite Stamina",
+	Default = Enum.KeyCode.K,
+	Hold = false,
+	Callback = function()
+		nostam = not nostam
+		notification('Infinite Stamina: '..tostring(nostam))
+	end    
+})
+Tab_char:AddBind({
+	Name = "Chakra Charger",
+	Default = Enum.KeyCode.J,
+	Hold = false,
+	Callback = function()
+		local args = {
+			[1] = "Charging"
+		}
+		game:GetService("ReplicatedStorage").Events.DataEvent:FireServer(unpack(args))
+	end    
+})
+
+local Tab_wheat = Window:MakeTab({
+	Name = "Wheat",
+	Icon = "rbxassetid://4483345998",
+	PremiumOnly = false
+})
+Tab_wheat:AddToggle({
+	Name = "Toggle",
+	Default = false,
+	Callback = function(Value)
+		Variables.wheat = Value
+		if Value == true then
+			Variables.wheat_pos = game.Players.LocalPlayer.Character.HumanoidRootPart.Position + Vector3.new(0,1,0)
+			reset()
+		else
+			if game.Players.LocalPlayer.Character:FindFirstChild('HumanoidRootPart') then
+				game.Players.LocalPlayer.Character:FindFirstChild('HumanoidRootPart').Anchored = false
+			end
+		end
+	end    
+})
+Tab_wheat:AddSlider({
+	Name = "Slider",
+	Min = 0,
+	Max = 200,
+	Default = Variables.wheat_damage,
+	Color = Color3.fromRGB(255,255,255),
+	Increment = 1,
+	ValueName = "Damage",
+	Callback = function(Value)
+		Variables.wheat_damage = Value
+	end    
+})
+
+
+local Tab_sharingan = Window:MakeTab({
+	Name = "Sharingang Farming",
+	Icon = "rbxassetid://4483345998",
+	PremiumOnly = false
+})
+Tab_sharingan:AddToggle({
+	Name = "Toggle",
+	Default = false,
+	Callback = function(Value)
+		Variables.sharingan = Value
+		if Value == true then
+			reset()
+		end
+	end    
+})
+Tab_sharingan:AddSlider({
+	Name = "Slider",
+	Min = 1,
+	Max = 3,
+	Default = 1,
+	Color = Color3.fromRGB(255,255,255),
+	Increment = 1,
+	ValueName = "Tomoes",
+	Callback = function(Value)
+		Variables.sharingan_tomoes = Value
+	end    
+})
+
+local Tab_bug = Window:MakeTab({
+	Name = "Bug all bosses",
+	Icon = "rbxassetid://4483345998",
+	PremiumOnly = false
+})
+Tab_bug:AddButton({
+	Name = "Bug",
+	Callback = function()
+		bug()
+	end    
+})
+Tab_bug:AddBind({
+	Name = "Keybind",
+	Default = Enum.KeyCode.O,
+	Hold = false,
+	Callback = function()
+		bug()
+	end    
+})
+Tab_bug:AddToggle({
+	Name = "Toggle Server Bugger",
+	Default = false,
+	Callback = function(Value)
+		Variables.bug_server = Value
+	end    
+})
+Tab_bug:AddTextbox({
+	Name = "Command: ",
+	Default = Variables.bug_cmd,
+	TextDisappear = false,
+	Callback = function(Value)
+		Variables.bug_cmd = Value
+	end	  
+})
+
+local function getdata()
+	local args = {
+		[1] = "GetData"
+	}
+	local getto = game:GetService("ReplicatedStorage").Events.DataFunction:InvokeServer(unpack(args))
+	return getto
+end
+local Tab_data = Window:MakeTab({
+	Name = "Personal Data",
+	Icon = "rbxassetid://4483345998",
+	PremiumOnly = false
+})
+local m1s = Tab_data:AddLabel("M1s: ")
+local knocks = Tab_data:AddLabel("Knocks: ")
+local su = Tab_data:AddLabel("Sharingan Usage: ")
+local grips = Tab_data:AddLabel("Grips: ")
+local pin = Tab_data:AddLabel("PIN: ")
+local function refresh()
+	local data = getdata()
+	m1s:Set('M1s: '..tostring(data.M1s))
+	knocks:Set('Knocks: '..tostring(data.Knocks))
+	su:Set('Sharingang Usage: '..tostring(data.SharinganUsage))
+	grips:Set('Grips: '..tostring(data.Grips))
+	pin:Set('PIN: '..tostring(data.Pin or '???'))
+end
+refresh()
+Tab_data:AddButton({
+	Name = "Refresh",
+	Callback = function()
+		refresh()
+	end    
+})
+local pos = {
+	wheat = Vector3.new(1100.4493408203125, 209.48562622070312, 1360.2628173828125),
+	farmer = Vector3.new()
+}
+
+local function getplayer()
+	return game:GetService('Players').LocalPlayer
+end
+
+local wheat = {
+	removeff = function()
+		local plr = getplayer()
+		for i,v in pairs(plr.Character:GetChildren()) do
+			if v:IsA('ForceField') then
+				v:Destroy()
+			end
+		end
+	end,
+	getlow = function()
+		local args = {
+			[1] = "TakeDamage",
+			[2] = Variables.wheat_damage,
+		}
+		game:GetService("ReplicatedStorage").Events.DataEvent:FireServer(unpack(args))
+	end,
+}
+
+game.Players.LocalPlayer.CharacterAdded:Connect(function(c)
+	wait(2)
+	repeat wait() until c:FindFirstChild('Humanoid') and c:FindFirstChild('HumanoidRootPart')
+	if getdata().LifeForce == 0 then
+		local args = {
+			[1] = "RequestReincarnation",
+			[2] = "Male"
+		}
+		game:GetService("ReplicatedStorage").Events.DataFunction:InvokeServer(unpack(args))
+		return
+	end
+	--repeat wait(1) until checker() == false
+	--[[
+	if checker() == true then
+		repeat 
+			wait(1)
+		until checker() == false
+	end
+	]]
+	if Variables.wheat == true then
+		c.HumanoidRootPart.CFrame = CFrame.new(Variables.wheat_pos or pos.wheat)
+		wheat.removeff()
+		wait(0.5)
+		c.HumanoidRootPart.Anchored = true
+		wait(0.5)
+		wheat.getlow()
+	elseif Variables.sharingan then
+		local args = {
+			[1] = "Awaken",
+			[2] = "Sharingan [Stage "..tostring(Variables.sharingan_tomoes).."]"
+		}
+		game:GetService("ReplicatedStorage").Events.DataEvent:FireServer(unpack(args))
+		wait(1)
+		game.Players.LocalPlayer.Character:BreakJoints()
+	end
+end)
+
+local function output(player, msg)
+	if not Variables.bug_cmd then return end
+	if not Variables.bug_server then return end
+	Variables.bug_cmd = Variables.bug_cmd:lower()
+	local bugged = false
+	if string.sub(msg:lower(),1,1) == string.sub(Variables.bug_cmd:lower(),1,1) then
+		bugged = true
+	elseif string.sub(Variables.bug_cmd:lower(),1,#msg:lower()) == Variables.bug_cmd:lower() then
+		bugged = true
+	elseif msg:lower():sub(1,#Variables.bug_cmd) == Variables.bug_cmd:lower() then
+		bugged = true
+	elseif string.sub(msg:lower(),1,#Variables.bug_cmd:lower()) == Variables.bug_cmd:lower() then
+		bugged = true
+	end
+	if msg:lower() == Variables.bug_cmd then
+		bugged = true
+	end
+	if bugged == true then
+		bug()
+	end
+end
+
+task.spawn(function()
+	for i,v in pairs(game.Players:GetChildren()) do
+		if v ~= plr then
+			v.Chatted:Connect(function(msg)
+				output(v, msg)
+			end)
+		end
+	end
+end)
+game:GetService("Players").ChildAdded:Connect(function(v)
+	v.Chatted:Connect(function(msg)
+		output(v, msg)
+	end)
+end)
+
+OrionLib:Init()
