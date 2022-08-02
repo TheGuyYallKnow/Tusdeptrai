@@ -315,9 +315,7 @@ game.Players.LocalPlayer.CharacterAdded:Connect(function(c)
 	if Variables.wheat == true then
 		c.HumanoidRootPart.CFrame = CFrame.new(Variables.wheat_pos or pos.wheat)
 		wheat.removeff()
-		wait(0.5)
-		c.HumanoidRootPart.Anchored = true
-		wait(0.5)
+		wait(1)
 		wheat.getlow()
 	elseif Variables.sharingan then
 		local args = {
