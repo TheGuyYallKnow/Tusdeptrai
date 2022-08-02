@@ -268,6 +268,62 @@ Tab_data:AddButton({
 		refresh()
 	end    
 })
+
+local Tab_misc = Window:MakeTab({
+	Name = "Misc",
+	Icon = "rbxassetid://4483345998",
+	PremiumOnly = false
+})
+local injection = {
+	iy = false,
+	ue = false,
+	autoclick = false,
+	dex = false
+}
+local links = {
+	iy = 'https://pastebin.com/raw/tzTXmYf2',
+	ue = 'https://raw.githubusercontent.com/ic3w0lf22/Unnamed-ESP/master/UnnamedESP.lua',
+	autoclick = 'https://raw.githubusercontent.com/JustEzpi/ROBLOX-Scripts/main/ROBLOX_AutoClicker',
+	dex = 'https://raw.githubusercontent.com/Uvxtq/lua/main/Dark%20Dex%20Made%20by%20Moon%2C%20wally%2C%20and%20ic3.lua',
+}
+Tab_bug:AddButton({
+	Name = "Infinite yield",
+	Callback = function()
+		if injection.iy == false then
+			injection.iy = true
+			loadstring(game:HttpGetAsync(links.iy))
+		end
+	end    
+})
+Tab_bug:AddButton({
+	Name = "Unnamed Esp",
+	Callback = function()
+		if injection.ue == false then
+			injection.ue = true
+			loadstring(game:HttpGetAsync(links.ue))
+		end
+	end    
+})
+Tab_bug:AddButton({
+	Name = "Auto click",
+	Callback = function()
+		if injection.autoclick == false then
+			injection.autoclick = true
+			loadstring(game:HttpGetAsync(links.autoclick))
+		end
+	end    
+})
+Tab_bug:AddButton({
+	Name = "Dark Dex",
+	Callback = function()
+		if injection.dex == false then
+			injection.dex = true
+			loadstring(game:HttpGetAsync(links.dex))
+		end
+	end    
+})
+
+
 local pos = {
 	wheat = Vector3.new(1100.4493408203125, 209.48562622070312, 1360.2628173828125),
 	farmer = Vector3.new()
