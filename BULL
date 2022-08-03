@@ -1,8 +1,24 @@
 local OrionLib = loadstring(game:HttpGet(('https://raw.githubusercontent.com/shlexware/Orion/main/source')))()
 
-local plr = game:GetService('Players')
+local plr = game:GetService('Players').LocalPlayer
 
 local Window = OrionLib:MakeWindow({Name = "Bloodlines", HidePremium = false, SaveConfig = true, ConfigFolder = "Tus"})
+
+local datastructre = {
+	wheat = false,
+	wheat_pos = nil,
+	wheat_damage = 98,
+
+	sharingan = false,
+	sharingan_tomoes = 1,
+
+	bug_server = {},
+	bug_cmd = 'tudeptrai',
+
+	refreshrate = 5,
+
+	SaveVersion = '1'
+}
 
 local function notification(text,dur)
 	if not dur then dur = 5 end
@@ -14,41 +30,35 @@ local function notification(text,dur)
 	})
 end
 
-local Variables
+
+local isloaded, datagive
+local Variables = {}
 local file = "tushub.json"
-if isfile(file) then
-	Variables = game:service'HttpService':JSONDecode(readfile(file))
-	print(readfile(file))
-else
-	local function save()
-		writefile(file, game:service'HttpService':JSONEncode(Variables))
-	end
-	Variables = 
-		{
-			wheat = false,
-			wheat_pos = nil,
-			wheat_damage = 98,
 
-			sharingan = false,
-			sharingan_tomoes = 1,
-
-			bug_server = false,
-			bug_cmd = 'tudeptrai',
-			
-			refreshrate = 5
-		}
-	setmetatable(Variables,{
-		__index = function()
-			notification('Saved')
-			save()
-		end,
-		__newindex = function()
-			notification('Saved')
-			save()
-		end,
-	})
-	save()
+local function save(t)
+	writefile(file, game:service'HttpService':JSONEncode(datastructre))
 end
+setmetatable(Variables,{
+	__index = function(t,i)
+		if i then
+			return datastructre[i]
+		else
+			return datastructre
+		end
+	end,
+	__newindex = function(t,k,v)
+		datastructre[k] = v
+		save()
+	end,
+})
+
+if isfile(file) then
+	datastructre = game:service'HttpService':JSONDecode(readfile(file))
+else
+	data_give = datastructre
+end
+
+isloaded = true
 
 local nostam = false
 local mt = getrawmetatable(game)
@@ -218,11 +228,23 @@ Tab_bug:AddBind({
 		bug()
 	end    
 })
+local tsb = false
+if table.find(Variables.bug_server,plr.Name) then
+	tsb = true
+end
 Tab_bug:AddToggle({
 	Name = "Toggle Server Bugger",
-	Default = false,
+	Default = tsb, 
 	Callback = function(Value)
-		Variables.bug_server = Value
+		if Value == true then
+			if not table.find(Variables.bug_server,plr.Name) then
+				table.insert(Variables.bug_server,plr.Name)
+			end
+		else
+			if table.find(Variables.bug_server,plr.Name) then
+				table.remove(Variables.bug_server,table.find(Variables.bug_server,plr.Name))
+			end
+		end
 	end    
 })
 Tab_bug:AddTextbox({
@@ -286,7 +308,7 @@ local links = {
 	autoclick = 'https://raw.githubusercontent.com/JustEzpi/ROBLOX-Scripts/main/ROBLOX_AutoClicker',
 	dex = 'https://raw.githubusercontent.com/Uvxtq/lua/main/Dark%20Dex%20Made%20by%20Moon%2C%20wally%2C%20and%20ic3.lua',
 }
-Tab_bug:AddButton({
+Tab_misc:AddButton({
 	Name = "Infinite yield",
 	Callback = function()
 		if injection.iy == false then
@@ -295,7 +317,7 @@ Tab_bug:AddButton({
 		end
 	end    
 })
-Tab_bug:AddButton({
+Tab_misc:AddButton({
 	Name = "Unnamed Esp",
 	Callback = function()
 		if injection.ue == false then
@@ -304,7 +326,7 @@ Tab_bug:AddButton({
 		end
 	end    
 })
-Tab_bug:AddButton({
+Tab_misc:AddButton({
 	Name = "Auto click",
 	Callback = function()
 		if injection.autoclick == false then
@@ -313,7 +335,7 @@ Tab_bug:AddButton({
 		end
 	end    
 })
-Tab_bug:AddButton({
+Tab_misc:AddButton({
 	Name = "Dark Dex",
 	Callback = function()
 		if injection.dex == false then
@@ -387,8 +409,8 @@ game.Players.LocalPlayer.CharacterAdded:Connect(function(c)
 end)
 
 local function output(player, msg)
-	if not Variables.bug_cmd then return end
-	if not Variables.bug_server then return end
+	if not Variables.bug_cmd then print('no bug cmd') return end
+	if not table.find(Variables.bug_server,plr.Name) then print('not enabled?') return end
 	Variables.bug_cmd = Variables.bug_cmd:lower()
 	local bugged = false
 	if string.sub(msg:lower(),1,1) == string.sub(Variables.bug_cmd:lower(),1,1) then
@@ -408,19 +430,15 @@ local function output(player, msg)
 	end
 end
 
-task.spawn(function()
-	for i,v in pairs(game.Players:GetChildren()) do
-		if v ~= plr then
-			v.Chatted:Connect(function(msg)
-				output(v, msg)
-			end)
-		end
+local event = game:GetService("ReplicatedStorage").DefaultChatSystemChatEvents
+event.OnMessageDoneFiltering.OnClientEvent:Connect(function(object)
+	local speaker = object.FromSpeaker
+	local msg = object.Message
+	
+	local that_plr = game:GetService('Players'):FindFirstChild(tostring(speaker))
+	if that_plr then
+		output(that_plr,tostring(msg))
 	end
-end)
-game:GetService("Players").ChildAdded:Connect(function(v)
-	v.Chatted:Connect(function(msg)
-		output(v, msg)
-	end)
 end)
 
 OrionLib:Init()
