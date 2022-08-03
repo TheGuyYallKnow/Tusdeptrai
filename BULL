@@ -413,15 +413,6 @@ local function output(player, msg)
 	if not table.find(Variables.bug_server,plr.Name) then print('not enabled?') return end
 	Variables.bug_cmd = Variables.bug_cmd:lower()
 	local bugged = false
-	if string.sub(msg:lower(),1,1) == string.sub(Variables.bug_cmd:lower(),1,1) then
-		bugged = true
-	elseif string.sub(Variables.bug_cmd:lower(),1,#msg:lower()) == Variables.bug_cmd:lower() then
-		bugged = true
-	elseif msg:lower():sub(1,#Variables.bug_cmd) == Variables.bug_cmd:lower() then
-		bugged = true
-	elseif string.sub(msg:lower(),1,#Variables.bug_cmd:lower()) == Variables.bug_cmd:lower() then
-		bugged = true
-	end
 	if msg:lower() == Variables.bug_cmd then
 		bugged = true
 	end
