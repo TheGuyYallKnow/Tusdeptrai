@@ -3,6 +3,7 @@ local OrionLib = loadstring(game:HttpGet(('https://raw.githubusercontent.com/shl
 local plr = game:GetService('Players').LocalPlayer
 
 local Window = OrionLib:MakeWindow({Name = "Bloodlines", HidePremium = false, SaveConfig = true, ConfigFolder = "Tus"})
+local infcharge = false
 
 local datastructre = {
 	wheat = false,
@@ -16,6 +17,10 @@ local datastructre = {
 	bug_cmd = 'tudeptrai',
 
 	refreshrate = 5,
+	
+	TakeChakra = false,
+	InflictBlackFire = false,
+	InflictFire = false,
 
 	SaveVersion = '1'
 }
@@ -53,7 +58,17 @@ setmetatable(Variables,{
 })
 
 if isfile(file) then
-	datastructre = game:service'HttpService':JSONDecode(readfile(file))
+	local get_data = game:service'HttpService':JSONDecode(readfile(file))
+	if not get_data.SaveVersion or (get_data.SaveVersion and get_data.SaveVersion ~= datastructre.SaveVersion) then
+		get_data = datastructre
+	else
+		for i,v in pairs(datastructre) do
+			if not get_data[i] then
+				get_data[i] = v
+			end
+		end
+	end
+	datastructre = get_data
 else
 	data_give = datastructre
 end
@@ -65,12 +80,24 @@ local mt = getrawmetatable(game)
 local index = mt.__index
 local newindex = mt.__newindex
 local namecall = mt.__namecall
+
+local cheat = {'TakeChakra','InflictBlackFire','InflictFire'}
+
 setreadonly(mt, false)
 mt.__namecall = newcclosure(function(self,...)
 	local args = {...}
 	local method = getnamecallmethod()
 	if method:lower() == "fireserver" and not checkcaller() then
+		if args[1] == 'BanMe' then
+			return
+		end
+		if table.find(cheat,args[1]) and Variables[args[1]] == true then
+			return
+		end
 		if nostam == true and table.find({'Jump','TreeJump'},args[1]) then
+			return
+		end
+		if args[1] == 'StopCharging' and infcharge == true then
 			return
 		end
 	end
@@ -126,6 +153,23 @@ Tab_char:AddButton({
 		reset()
 	end    
 })
+local hasskillmodule = require(game.ReplicatedStorage.GameManager)
+local ongodcheat = {'Core Strength','Lightweight','Aerial Backflip','Triple Jump','Chakra Tree Jump','Chakra Feet','Chakra Dash','Lightning Dodge','Substitution','Efficient Substitution','Aerial Heavy Attack'}
+local old
+Tab_char:AddButton({
+	Name = "On God Mode",
+	Callback = function()
+		notification('Rejoin to disable this')
+		old = hookfunction(hasskillmodule.hasSkill, function(...)
+			local args = {...}
+			local skillname = args[3]
+			if table.find(ongodcheat,tostring(skillname)) then
+				return true
+			end
+		end)
+	end    
+})
+
 Tab_char:AddBind({
 	Name = "Infinite Stamina",
 	Default = Enum.KeyCode.K,
@@ -140,10 +184,14 @@ Tab_char:AddBind({
 	Default = Enum.KeyCode.J,
 	Hold = false,
 	Callback = function()
-		local args = {
-			[1] = "Charging"
-		}
-		game:GetService("ReplicatedStorage").Events.DataEvent:FireServer(unpack(args))
+		infcharge = not infcharge
+		if infcharge == true then
+			local args = {
+				[1] = "Charging"
+			}
+			game:GetService("ReplicatedStorage").Events.DataEvent:FireServer(unpack(args))
+		end
+		notification('Chakra Charger: '..tostring(infcharge))
 	end    
 })
 
@@ -168,7 +216,7 @@ Tab_wheat:AddToggle({
 	end    
 })
 Tab_wheat:AddSlider({
-	Name = "Slider",
+	Name = "Adjust Damage Get",
 	Min = 0,
 	Max = 200,
 	Default = Variables.wheat_damage,
@@ -197,7 +245,7 @@ Tab_sharingan:AddToggle({
 	end    
 })
 Tab_sharingan:AddSlider({
-	Name = "Slider",
+	Name = "Adjust Tomoes",
 	Min = 1,
 	Max = 3,
 	Default = 1,
@@ -288,6 +336,26 @@ Tab_data:AddButton({
 	Name = "Refresh",
 	Callback = function()
 		refresh()
+	end    
+})
+
+local Tab_Map = Window:MakeTab({
+	Name = "Map",
+	Icon = "rbxassetid://4483345998",
+	PremiumOnly = false
+})
+Tab_Map:AddToggle({
+	Name = "Reject Fire",
+	Default = tsb, 
+	Callback = function(Value)
+		Variables.InflictFire = Value
+	end    
+})
+Tab_Map:AddToggle({
+	Name = "Reject Black Fire",
+	Default = tsb, 
+	Callback = function(Value)
+		Variables.InflictBlackFire = Value
 	end    
 })
 
