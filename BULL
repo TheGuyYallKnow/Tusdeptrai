@@ -162,10 +162,7 @@ Tab_char:AddButton({
 		notification('Rejoin to disable this')
 		old = hookfunction(hasskillmodule.hasSkill, function(...)
 			local args = {...}
-			local skillname = args[3]
-			if table.find(ongodcheat,tostring(skillname)) then
-				return true
-			end
+			return true
 		end)
 	end    
 })
@@ -356,6 +353,48 @@ Tab_Map:AddToggle({
 	Default = tsb, 
 	Callback = function(Value)
 		Variables.InflictBlackFire = Value
+	end    
+})
+
+local Tab_exc = Window:MakeTab({
+	Name = "Exculives",
+	Icon = "rbxassetid://4483345998",
+	PremiumOnly = false
+})
+Tab_exc:AddLabel('No sins needed, works everywhere')
+Tab_exc:AddButton({
+	Name = "Implant Eyes (must equip)",
+	Callback = function()
+		local event = game.ReplicatedStorage.Events.DataEvent
+		event:FireServer("ImplantEyes")
+	end    
+})
+Tab_exc:AddButton({
+	Name = "Upgrade Sharingan",
+	Callback = function()
+		local event = game.ReplicatedStorage.Events.DataEvent
+		event:FireServer("UpgradeSharingan")
+	end    
+})
+Tab_exc:AddButton({
+	Name = "Upgrade Byakugan",
+	Callback = function()
+		local event = game.ReplicatedStorage.Events.DataEvent
+		event:FireServer("UpgradeByakugan")
+	end    
+})
+Tab_exc:AddButton({
+	Name = "Upgrade Awakening Level",
+	Callback = function()
+		local event = game.ReplicatedStorage.Events.DataEvent
+		event:FireServer("UpgradeAwakeningLevel")
+	end    
+})
+Tab_exc:AddButton({
+	Name = "Upgrade Aryui Affinity",
+	Callback = function()
+		local event = game.ReplicatedStorage.Events.DataEvent
+		event:FireServer("UnlockAyruiAffinity")
 	end    
 })
 
