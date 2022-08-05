@@ -12,12 +12,13 @@ local datastructre = {
 
 	sharingan = false,
 	sharingan_tomoes = 1,
+	sharingan_pos = nil,
 
 	bug_server = {},
 	bug_cmd = 'tudeptrai',
 
 	refreshrate = 5,
-	
+
 	TakeChakra = false,
 	InflictBlackFire = false,
 	InflictFire = false,
@@ -120,7 +121,7 @@ local function checker()
 				R.FilterDescendantsInstances = {rp.Parent,v.Character}
 				local Result = workspace:Raycast(rp.Position, v.Character:FindFirstChild('HumanoidRootPart').CFrame.LookVector*length, R)
 				if Result then
-					
+
 				else
 					has = true
 					break
@@ -237,6 +238,7 @@ Tab_sharingan:AddToggle({
 	Callback = function(Value)
 		Variables.sharingan = Value
 		if Value == true then
+			Variables.sharingan_pos = game.Players.LocalPlayer.Character.HumanoidRootPart.Position + Vector3.new(0,1,0)
 			reset()
 		end
 	end    
@@ -420,7 +422,7 @@ Tab_misc:AddButton({
 	Callback = function()
 		if injection.iy == false then
 			injection.iy = true
-			loadstring(game:HttpGetAsync(links.iy))
+			loadstring(game:HttpGetAsync(links.iy))()
 		end
 	end    
 })
@@ -429,7 +431,7 @@ Tab_misc:AddButton({
 	Callback = function()
 		if injection.ue == false then
 			injection.ue = true
-			loadstring(game:HttpGetAsync(links.ue))
+			loadstring(game:HttpGetAsync(links.ue))()
 		end
 	end    
 })
@@ -438,7 +440,7 @@ Tab_misc:AddButton({
 	Callback = function()
 		if injection.autoclick == false then
 			injection.autoclick = true
-			loadstring(game:HttpGetAsync(links.autoclick))
+			loadstring(game:HttpGetAsync(links.autoclick))()
 		end
 	end    
 })
@@ -447,7 +449,7 @@ Tab_misc:AddButton({
 	Callback = function()
 		if injection.dex == false then
 			injection.dex = true
-			loadstring(game:HttpGetAsync(links.dex))
+			loadstring(game:HttpGetAsync(links.dex))()
 		end
 	end    
 })
@@ -505,6 +507,9 @@ game.Players.LocalPlayer.CharacterAdded:Connect(function(c)
 		wait(1)
 		wheat.getlow()
 	elseif Variables.sharingan then
+		if Variables.sharingan_pos then
+			c.HumanoidRootPart.CFrame = CFrame.new(Variables.sharingan_pos)
+		end
 		local args = {
 			[1] = "Awaken",
 			[2] = "Sharingan [Stage "..tostring(Variables.sharingan_tomoes).."]"
@@ -532,7 +537,7 @@ local event = game:GetService("ReplicatedStorage").DefaultChatSystemChatEvents
 event.OnMessageDoneFiltering.OnClientEvent:Connect(function(object)
 	local speaker = object.FromSpeaker
 	local msg = object.Message
-	
+
 	local that_plr = game:GetService('Players'):FindFirstChild(tostring(speaker))
 	if that_plr then
 		output(that_plr,tostring(msg))
