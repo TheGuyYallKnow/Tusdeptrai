@@ -9,6 +9,7 @@ local datastructre = {
 	wheat = false,
 	wheat_pos = nil,
 	wheat_damage = 98,
+	wheat_res = false,
 
 	sharingan = false,
 	sharingan_tomoes = 1,
@@ -199,7 +200,7 @@ local Tab_wheat = Window:MakeTab({
 	PremiumOnly = false
 })
 Tab_wheat:AddToggle({
-	Name = "Toggle",
+	Name = "Toggle Wheat mode",
 	Default = false,
 	Callback = function(Value)
 		Variables.wheat = Value
@@ -213,8 +214,15 @@ Tab_wheat:AddToggle({
 		end
 	end    
 })
+Tab_wheat:AddToggle({
+	Name = "Auto Restore",
+	Default = false,
+	Callback = function(Value)
+		Variables.wheat_res = Value
+	end    
+})
 Tab_wheat:AddSlider({
-	Name = "Adjust Damage Get",
+	Name = "Adjust Damage Get (not work when wiped)",
 	Min = 0,
 	Max = 200,
 	Default = Variables.wheat_damage,
@@ -485,7 +493,7 @@ local wheat = {
 game.Players.LocalPlayer.CharacterAdded:Connect(function(c)
 	wait(2)
 	repeat wait() until c:FindFirstChild('Humanoid') and c:FindFirstChild('HumanoidRootPart')
-	if getdata().LifeForce == 0 then
+	if Variables.wheat_res == true and getdata().LifeForce == 0 then
 		local args = {
 			[1] = "RequestReincarnation",
 			[2] = "Male"
