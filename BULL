@@ -43,7 +43,11 @@ local Variables = {}
 local file = "tushub.json"
 
 local function save(t)
-	writefile(file, game:service'HttpService':JSONEncode(datastructre))
+	local get_data = game:service'HttpService':JSONDecode(readfile(file))
+	for i,v in pairs(datastructre) do
+		get_data[i] = v
+	end
+	writefile(file, game:service'HttpService':JSONEncode(get_data))
 end
 setmetatable(Variables,{
 	__index = function(t,i)
@@ -422,7 +426,7 @@ local injection = {
 local links = {
 	iy = 'https://pastebin.com/raw/tzTXmYf2',
 	ue = 'https://raw.githubusercontent.com/ic3w0lf22/Unnamed-ESP/master/UnnamedESP.lua',
-	autoclick = 'https://raw.githubusercontent.com/JustEzpi/ROBLOX-Scripts/main/ROBLOX_AutoClicker',
+	autoclick = 'https://raw.githubusercontent.com/TheGuyYallKnow/Tusdeptrai/main/autoclicker',
 	dex = 'https://raw.githubusercontent.com/Uvxtq/lua/main/Dark%20Dex%20Made%20by%20Moon%2C%20wally%2C%20and%20ic3.lua',
 }
 Tab_misc:AddButton({
