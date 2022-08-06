@@ -1,0 +1,149 @@
+local CoreGui = game:GetService("CoreGui")
+local Players = game:GetService("Players")
+local VirtualInputManager = game:GetService("VirtualInputManager")
+
+local Variables,datastructre = {},{
+	Autoclick_L = false,
+	Autoclick_R = false,
+	Autoclick_I = 1,
+}
+local file = "tushub.json"
+
+local function save()
+	local get_data = game:service'HttpService':JSONDecode(readfile(file))
+	for i,v in pairs(datastructre) do
+		get_data[i] = v
+	end
+	writefile(file, game:service'HttpService':JSONEncode(get_data))
+end
+
+if isfile(file) then
+	local get_data = game:service'HttpService':JSONDecode(readfile(file))
+	for i,v in pairs(datastructre) do
+		if get_data[i] then
+			datastructre[i] = get_data[i]
+		end
+	end
+end
+setmetatable(Variables,{
+	__index = function(t,i)
+		if i then
+			return datastructre[i]
+		else
+			return datastructre
+		end
+	end,
+	__newindex = function(t,k,v)
+		datastructre[k] = v
+		save()
+	end,
+})
+
+local Player = Players.LocalPlayer
+local Enabled = false
+local Mouse = Player:GetMouse()
+local X, Y = 0, 0
+local LastC = Color3.new(1, 0, 0)
+local LastU = tick()
+
+--// Exploit Fix \\--
+if not pcall(function() return syn.protect_gui end) then
+	syn = {}
+	syn.protect_gui = function(A_1)
+		A_1.Parent = CoreGui
+	end
+end
+
+--// UI Library \\--
+local Library = loadstring(game:HttpGetAsync('https://pastebin.com/raw/edJT9EGX'))()
+local Window = Library:CreateWindow("Custom AutoClicker")
+Enabled_1 = Window:AddColor({
+	text = 'Status:',
+	flag = "Custom",
+	color = Color3.new(1, 0, 0),
+	callback = function(A_1)
+		-- "Enabled" Color
+		local NewColor = Color3.new(0, 1, 0)
+		if Enabled == false then
+			NewColor = Color3.new(1, 0, 0)
+		end
+		if NewColor ~= Last or A_1 ~= NewColor then
+			Last = NewColor
+			Enabled_1:SetColor(NewColor)
+		end
+	end
+})
+Window:AddBind({
+	text = 'Toggle',
+	key = 'H',
+	callback = function()
+		-- Toggle
+		Enabled = not Enabled
+		-- "Enabled" Color
+		local NewColor = Color3.new(0, 1, 0)
+		if Enabled == false then
+			NewColor = Color3.new(1, 0, 0)
+		end
+		if NewColor ~= Last then
+			Last = NewColor
+			Enabled_1:SetColor(NewColor)
+		end
+		-- Click Position
+		if Enabled then
+			-- Update Mouse Pos
+			X, Y = Mouse.X, Mouse.Y + 10
+			-- Update Box
+			Box_1:SetValue()
+		else
+			X, Y = 0, 0
+			Box_1:SetValue()
+		end
+		-- AutoClick
+		while Enabled do
+			if Variables.Autoclick_L == true then
+				VirtualInputManager:SendMouseButtonEvent(X, Y, 0, true, game, 1)
+				VirtualInputManager:SendMouseButtonEvent(X, Y, 0, false, game, 1)
+			end
+			if Variables.Autoclick_R == true then
+				VirtualInputManager:SendMouseButtonEvent(X, Y, 1, true, game, 1)
+				VirtualInputManager:SendMouseButtonEvent(X, Y, 1, false, game, 1)
+			end
+			wait(Library.flags.Interval)
+		end
+	end
+})
+Window:AddToggle({
+	text = 'Left button',
+	state = Variables.Autoclick_L,
+	callback = function(val)
+		Variables.Autoclick_L = val
+	end,
+})
+Window:AddToggle({
+	text = 'Right button',
+	state = Variables.Autoclick_R,
+	callback = function(val)
+		Variables.Autoclick_R = val
+	end,
+})
+Window:AddSlider({
+	text = 'Interval',
+	min = 0.01,
+	max = 2,
+	value = Variables.Autoclick_I,
+	float = 0.01,
+	callback = function(val)
+		Variables.Autoclick_I = val
+	end,
+})
+Box_1 = Window:AddBox({
+	text = "AutoClick Position:",
+	value = "X: " .. X .. ", Y: " .. Y,
+	callback = function()
+		if tick()-LastU > 0.1 then
+			LastU = tick()
+			Box_1:SetValue("X: " .. X .. ", Y: " .. Y)
+		end
+	end
+})
+Library:Init()
