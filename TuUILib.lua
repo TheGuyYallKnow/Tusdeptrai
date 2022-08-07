@@ -1492,4 +1492,5 @@ modules.side.Tabfunc = function(parento)
 	end
 end
 
-return modules.side.Libfunc({})
+local ToreturnHubto = {}
+return modules.side.Libfunc(ToreturnHubto)
