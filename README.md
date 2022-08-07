@@ -81,7 +81,7 @@ Flag = <string>
 Tab:AddToggle({
 	Name = "This is a toggle!",
 	Default = false,
-  Flag = 'Tu',
+	Flag = 'Tu',
 	Callback = function(Value)
 		print(Value) -- this will return <bool>
 	end    
@@ -130,7 +130,7 @@ Tab:AddSlider({
 	Default = 3,
 	Increment = 1,
 	ValueName = "Tomoes",
-  Flag = "Tu_Slider",
+  	Flag = "Tu_Slider",
 	Callback = function(Value)
 		print(Value)
 	end    
