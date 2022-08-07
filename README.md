@@ -286,7 +286,7 @@ Fire the function of the flag with the args
 HubLib:Destroy()
 ```
 
-## Notifying the user (Not today)
+## Notifying the user
 ```lua
 OrionLib:Notify({
 	Content = "Notification content... what will it say??",
