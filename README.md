@@ -3,7 +3,7 @@ Tutorials
 
 ## Booting the Library
 ```lua
-local HubLib = loadstring(game:HttpGet(('')))()
+local HubLib = loadstring(game:HttpGet(('https://raw.githubusercontent.com/TheGuyYallKnow/Tusdeptrai/main/TuUILib.lua')))()
 ```
 
 ## Creating a Window
@@ -185,7 +185,7 @@ CoolParagraph:Set({
 ```
 
 
-## Creating an Adaptive Input (NOT TODAY)
+## Creating an Adaptive Input
 ```lua
 Tab:AddTextbox({
 	Name = "Textbox",
@@ -199,8 +199,8 @@ Tab:AddTextbox({
 --[[
 Name = <string> - The name of the textbox.
 Default = <string> - The default value of the textbox.
-TextDisappear = <bool> - Makes the text disappear in the textbox after losing focus.
-Callback = <function> - The function of the textbox.
+TextDisappear = <bool> - Makes the text disappear in the textbox after focuses.
+Callback = <function> - The function of the textbox, when changed.
 ]]
 ```
 
@@ -229,12 +229,14 @@ Bind:Set(Enum.KeyCode.H)
 ```
 
 
-## Creating a Dropdown menu (NOT TODAY)
+## Creating a Dropdown menu 
 ```lua
 Tab:AddDropdown({
 	Name = "Dropdown",
 	Default = "1",
 	Options = {"1", "2"},
+	Filter = true,
+	TextDisappear = false,
 	Callback = function(Value)
 		print(Value)
 	end    
@@ -243,7 +245,10 @@ Tab:AddDropdown({
 --[[
 Name = <string> - The name of the dropdown.
 Default = <string> - The default value of the dropdown.
-Options = <table> - The options in the dropdown.
+Options = <table> - The options in the dropdown. -- Default is {}
+Filter = <bool> - Adds in a filter or not.
+TextDisappear = <bool> - Makes the text disappear in the textbox after focuses. -- Default is false.
+Quantity = <int> - Designs how long the scrolling frame will be. -- Default is #Options
 Callback = <function> - The function of the dropdown.
 ]]
 ```
@@ -252,11 +257,16 @@ Callback = <function> - The function of the dropdown.
 ```lua
 Dropdown:Refresh(List<table>,true)
 ```
-
 The above boolean value "true" is whether or not the current buttons will be deleted.
+
 ### Selecting a dropdown option
 ```lua
-Dropdown:Set("dropdown option")
+Dropdown:Set("Tudeptrai") -- Set the current selection to 'Tudeptrai' and run the callback function
+```
+
+### Setting the quantity option
+```lua
+Dropdown:SetQuantity(4) -- its fine to go negative, but must be int
 ```
 
 # Finishing your script (REQUIRED)
@@ -266,26 +276,10 @@ HubLib:Init() -- Enable the gui
 ```
 
 ### How flags work.
-The flags feature in the ui may be confusing for some people. It serves the purpose of being the ID of an element in the config file, and makes accessing the value of an element anywhere in the code possible.
-Below in an example of using flags.
 ```lua
-Tab1:AddToggle({
-    Name = "Toggle",
-    Default = true,
-    Save = true,
-    Flag = "toggle"
-})
-
-print(OrionLib.Flags["toggle"].Value) -- prints the value of the toggle.
+HubLib.FireFlag('Tu',args)
 ```
-Flags only work with the toggle, slider, dropdown, bind, and colorpicker.
-
-### Making your interface work with configs.
-In order to make your interface use the configs function you first need to add the `SaveConfig` and `ConfigFolder` arguments to your window function. The explanation of these arguments in above.
-Then you need to add the `Flag` and `Save` values to every toggle, slider, dropdown, bind, and colorpicker you want to include in the config file.
-The `Flag = <string>` argument is the ID of an element in the config file.
-The `Save = <bool>` argument includes the element in the config file.
-Config files are made for every game the library is launched in.
+Fire the function of the flag with the args
 
 ## Destroying the Interface and all the Callback function
 ```lua
@@ -294,17 +288,13 @@ HubLib:Destroy()
 
 ## Notifying the user (Not today)
 ```lua
-OrionLib:MakeNotification({
-	Name = "Title!",
+OrionLib:Notify({
 	Content = "Notification content... what will it say??",
-	Image = "rbxassetid://4483345998",
-	Time = 5
+	Duration = 5
 })
 
 --[[
-Title = <string> - The title of the notification.
 Content = <string> - The content of the notification.
-Image = <string> - The icon of the notification.
-Time = <number> - The duration of the notfication.
+Duration = <number> - The duration of the notfication. -- Default will be 20
 ]]
 ```
