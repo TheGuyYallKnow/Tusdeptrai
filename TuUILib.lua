@@ -1119,324 +1119,6 @@ local con_3 = RuS.RenderStepped:connect(function(delta)
 end)
 table.insert(ex_connections,{con_1,con_2,con_3})
 
-modules.side.Libfunc = function(hub)
-	function hub:MakeWindow(args)
-		local Name = args.Name
-		local Flag = args.Flag
-		local Callback = args.Callback
-		if Name then
-			local Hub = Instance.new("ScreenGui")
-			local Frame = Instance.new("Frame")
-			local UICorner = Instance.new("UICorner")
-			local TopBar = Instance.new("Frame")
-			local Tushub = Instance.new("TextLabel")
-			local Frame_2 = Instance.new("Frame")
-			local Gameto = Instance.new("TextLabel")
-			local Frame_3 = Instance.new("Frame")
-			local UICorner_2 = Instance.new("UICorner")
-			local ScrollingFrame = Instance.new("ScrollingFrame")
-			local UIListLayout = Instance.new("UIListLayout")
-			local UIPadding = Instance.new("UIPadding")
-			local CharBoard = Instance.new("Frame")
-			local Frame_4 = Instance.new("Frame")
-			local Frame_5 = Instance.new("Frame")
-			local ImageLabel = Instance.new("ImageLabel")
-			local ImageLabel_2 = Instance.new("ImageLabel")
-			local UICorner_3 = Instance.new("UICorner")
-			local Frame_6 = Instance.new("Frame")
-			local UICorner_4 = Instance.new("UICorner")
-			local TextLabel = Instance.new("TextLabel")
-			local Frame_7 = Instance.new("Frame")
-
-			--Properties:
-
-			Hub.Name = "Hub"
-			Hub.Parent = game.Players.LocalPlayer:WaitForChild("PlayerGui")
-
-			Frame.Parent = Hub
-			Frame.BackgroundColor3 = Color3.fromRGB(25, 25, 25)
-			Frame.BorderSizePixel = 0
-			Frame.ClipsDescendants = true
-			Frame.Position = UDim2.new(0.5, -307, 0.5, -172)
-			Frame.Size = UDim2.new(0, 615, 0, 344)
-
-			UICorner.CornerRadius = UDim.new(0, 10)
-			UICorner.Parent = Frame
-
-			TopBar.Name = "TopBar"
-			TopBar.Parent = Frame
-			TopBar.BackgroundTransparency = 1.000
-			TopBar.Size = UDim2.new(1, 0, 0, 50)
-
-			Tushub.Name = "Tushub"
-			Tushub.Parent = TopBar
-			Tushub.BackgroundTransparency = 1.000
-			Tushub.Position = UDim2.new(0, 25, 0, -24)
-			Tushub.Size = UDim2.new(1, -30, 2, 0)
-			Tushub.Font = Enum.Font.GothamBlack
-			Tushub.Text = "Tus Hub"
-			Tushub.TextColor3 = Color3.fromRGB(240, 240, 240)
-			Tushub.TextSize = 20.000
-			Tushub.TextXAlignment = Enum.TextXAlignment.Left
-
-			Frame_2.Parent = TopBar
-			Frame_2.BackgroundColor3 = Color3.fromRGB(60, 60, 60)
-			Frame_2.BorderSizePixel = 0
-			Frame_2.Position = UDim2.new(0, 0, 1, -1)
-			Frame_2.Size = UDim2.new(1, 0, 0, 1)
-
-			Gameto.Name = "Game"
-			Gameto.Parent = TopBar
-			Gameto.BackgroundTransparency = 1.000
-			Gameto.Position = UDim2.new(0, 426, 0, 12)
-			Gameto.Size = UDim2.new(0.339837402, -30, 0.540000021, 0)
-			Gameto.Font = Enum.Font.GothamBlack
-			Gameto.Text = tostring(Name)
-			Gameto.TextColor3 = Color3.fromRGB(129, 129, 129)
-			Gameto.TextSize = 15.000
-			Gameto.TextStrokeTransparency = 0.000
-			Gameto.TextXAlignment = Enum.TextXAlignment.Right
-
-			Frame_3.Parent = Frame
-			Frame_3.BackgroundColor3 = Color3.fromRGB(32, 32, 32)
-			Frame_3.BorderSizePixel = 0
-			Frame_3.Position = UDim2.new(0, 0, 0, 50)
-			Frame_3.Size = UDim2.new(0, 150, 1, -50)
-
-			UICorner_2.CornerRadius = UDim.new(0, 10)
-			UICorner_2.Parent = Frame_3
-
-			ScrollingFrame.Parent = Frame_3
-			ScrollingFrame.BackgroundTransparency = 1.000
-			ScrollingFrame.BorderSizePixel = 0
-			ScrollingFrame.Size = UDim2.new(1, 0, 1, -50)
-			ScrollingFrame.BottomImage = "rbxassetid://7445543667"
-			ScrollingFrame.CanvasSize = UDim2.new(0, 0, 0, 46)
-			ScrollingFrame.MidImage = "rbxassetid://7445543667"
-			ScrollingFrame.ScrollBarThickness = 4
-			ScrollingFrame.TopImage = "rbxassetid://7445543667"
-
-			UIListLayout.Parent = ScrollingFrame
-			UIListLayout.SortOrder = Enum.SortOrder.LayoutOrder
-
-			UIPadding.Parent = ScrollingFrame
-			UIPadding.PaddingBottom = UDim.new(0, 8)
-			UIPadding.PaddingTop = UDim.new(0, 8)
-
-			CharBoard.Name = "CharBoard"
-			CharBoard.Parent = Frame_3
-			CharBoard.BackgroundTransparency = 1.000
-			CharBoard.Position = UDim2.new(0, 0, 1, -50)
-			CharBoard.Size = UDim2.new(1, 0, 0, 50)
-
-			Frame_4.Parent = CharBoard
-			Frame_4.BackgroundColor3 = Color3.fromRGB(60, 60, 60)
-			Frame_4.BorderSizePixel = 0
-			Frame_4.Size = UDim2.new(1, 0, 0, 1)
-
-			Frame_5.Parent = CharBoard
-			Frame_5.AnchorPoint = Vector2.new(0, 0.5)
-			Frame_5.BackgroundColor3 = Color3.fromRGB(60, 60, 60)
-			Frame_5.BorderSizePixel = 0
-			Frame_5.Position = UDim2.new(0, 10, 0.5, 0)
-			Frame_5.Size = UDim2.new(0, 32, 0, 32)
-
-			ImageLabel.Parent = Frame_5
-			ImageLabel.BackgroundTransparency = 1.000
-			ImageLabel.Size = UDim2.new(1, 0, 1, 0)
-			local uid = game:GetService('Players').LocalPlayer.UserId
-			ImageLabel.Image = "https://www.roblox.com/headshot-thumbnail/image?userId="..tostring(uid).."&width=420&height=420&format=png"
-
-			ImageLabel_2.Parent = Frame_5
-			ImageLabel_2.BackgroundTransparency = 1.000
-			ImageLabel_2.Size = UDim2.new(1, 0, 1, 0)
-			ImageLabel_2.Image = "rbxassetid://4031889928"
-			ImageLabel_2.ImageColor3 = Color3.fromRGB(32, 32, 32)
-
-			UICorner_3.CornerRadius = UDim.new(1, 10)
-			UICorner_3.Parent = Frame_5
-
-			Frame_6.Parent = CharBoard
-			Frame_6.AnchorPoint = Vector2.new(0, 0.5)
-			Frame_6.BackgroundTransparency = 1.000
-			Frame_6.Position = UDim2.new(0, 10, 0.5, 0)
-			Frame_6.Size = UDim2.new(0, 32, 0, 32)
-
-			UICorner_4.CornerRadius = UDim.new(1, 10)
-			UICorner_4.Parent = Frame_6
-
-			TextLabel.Parent = CharBoard
-			TextLabel.BackgroundTransparency = 1.000
-			TextLabel.ClipsDescendants = true
-			TextLabel.Position = UDim2.new(0, 50, 0, 18)
-			TextLabel.Size = UDim2.new(1, -60, 0, 13)
-			TextLabel.Font = Enum.Font.GothamBold
-			TextLabel.Text = game:GetService('Players').LocalPlayer.Name or '???'
-			TextLabel.TextColor3 = Color3.fromRGB(240, 240, 240)
-			TextLabel.TextSize = 13.000
-			TextLabel.TextXAlignment = Enum.TextXAlignment.Left
-
-			Frame_7.Parent = Frame_3
-			Frame_7.BackgroundColor3 = Color3.fromRGB(60, 60, 60)
-			Frame_7.BorderSizePixel = 0
-			Frame_7.Position = UDim2.new(1, -1, 0, 0)
-			Frame_7.Size = UDim2.new(0, 1, 1, 0)
-			
-			local Notify = Instance.new("Frame")
-			local UIListLayout = Instance.new("UIListLayout")
-
-			--Properties:
-
-			Notify.Name = "Notify"
-			Notify.Parent = Hub
-			Notify.AnchorPoint = Vector2.new(1, 1)
-			Notify.BackgroundTransparency = 1.000
-			Notify.BorderColor3 = Color3.fromRGB(27, 42, 53)
-			Notify.Position = UDim2.new(1, -25, 1, -25)
-			Notify.Size = UDim2.new(0, 300, 1, -25)
-
-			UIListLayout.Parent = Notify
-			UIListLayout.HorizontalAlignment = Enum.HorizontalAlignment.Center
-			UIListLayout.SortOrder = Enum.SortOrder.LayoutOrder
-			UIListLayout.VerticalAlignment = Enum.VerticalAlignment.Bottom
-			UIListLayout.Padding = UDim.new(0, 5)
-
-			Hub.Enabled = false
-
-			Drag = Frame
-
-			Drag.InputBegan:Connect(function(input)
-				if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
-					dragging = true
-					dragStart = input.Position
-					startPos = Drag.Position
-					input.Changed:Connect(function()
-						if input.UserInputState == Enum.UserInputState.End then
-							dragging = false
-						end
-					end)
-				end
-			end)
-			Drag.InputChanged:Connect(function(input)
-				if input.UserInputType == Enum.UserInputType.MouseMovement or input.UserInputType == Enum.UserInputType.Touch then
-					dragInput = input
-				end
-			end)
-
-			if Flag then
-				Variables.Flags[Flag] = function(boolean)
-					Hub.Enabled = boolean
-				end
-			end
-
-			local Argsto = {
-				ScrollingFrame = ScrollingFrame,
-				Main = Frame,
-				Hub = Hub,
-				Notify = Notify,
-			}
-			Variables.link = Argsto
-			
-			Variables.Closedcallback = Callback
-		end
-	end
-	
-	function hub:Notify(args)
-		local Content = args.Content
-		local Duration = args.Duration or 20
-		if Content and Duration then
-			local TextButton = Instance.new("TextButton")
-			local Content = Instance.new("TextLabel")
-			local UICorner = Instance.new("UICorner")
-			local Frame = Instance.new("Frame")
-			local UICorner_2 = Instance.new("UICorner")
-			local Frame_2 = Instance.new("Frame")
-			local UICorner_3 = Instance.new("UICorner")
-
-			--Properties:
-
-			TextButton.Parent = Variables.link.Notify
-			TextButton.BackgroundColor3 = Color3.fromRGB(53, 53, 53)
-			TextButton.Size = UDim2.new(0.980000019, 0, 0, 45)
-			TextButton.ZIndex = 3
-			TextButton.Font = Enum.Font.SourceSans
-			TextButton.Text = ""
-			TextButton.TextColor3 = Color3.fromRGB(0, 0, 0)
-			TextButton.TextSize = 14.000
-
-			Content.Name = "Content"
-			Content.Parent = TextButton
-			Content.BackgroundTransparency = 1.000
-			Content.BorderColor3 = Color3.fromRGB(27, 42, 53)
-			Content.Position = UDim2.new(0, 0, 0, 0)
-			Content.Size = UDim2.new(1, -12, 0.953333139, 0)
-			Content.ZIndex = 3
-			Content.Font = Enum.Font.SourceSansBold
-			Content.LineHeight = 2.000
-			Content.Text = Content
-			Content.TextColor3 = Color3.fromRGB(65025, 65025, 65025)
-			Content.TextScaled = true
-			Content.TextSize = 20.000
-			Content.TextWrapped = true
-
-			UICorner.CornerRadius = UDim.new(0, 5)
-			UICorner.Parent = TextButton
-
-			Frame.Parent = TextButton
-			Frame.BackgroundColor3 = Color3.fromRGB(170, 170, 170)
-			Frame.BorderSizePixel = 0
-			Frame.Position = UDim2.new(-0.0102040814, 0, 0, 0)
-			Frame.Size = UDim2.new(1.02040815, 0, 0.266666681, 33)
-			Frame.ZIndex = 2
-
-			UICorner_2.CornerRadius = UDim.new(0, 5)
-			UICorner_2.Parent = Frame
-
-			Frame_2.Parent = TextButton
-			Frame_2.BackgroundColor3 = Color3.fromRGB(162, 251, 255)
-			Frame_2.Position = UDim2.new(0.0136054419, 0, 0.953333855, 0)
-			Frame_2.Size = UDim2.new(0.966394544, 0, 0, 2)
-			Frame_2.ZIndex = 3
-
-			UICorner_3.CornerRadius = UDim.new(0, 5)
-			UICorner_3.Parent = Frame_2
-			
-			local slide = Frame_2
-			if tostring(Duration) ~= 'inf' then
-				slide:TweenSize(UDim2.new(0,0,0,2),Enum.EasingDirection.Out,Enum.EasingStyle.Quart,Duration,true)
-			else
-				Frame_2.Visible = false
-			end
-			
-			game.Debris:AddItem(TextButton,Duration)
-			TextButton.MouseButton1Down:Connect(function()
-				TextButton:Destroy()
-			end)
-		end
-	end
-	
-	function hub:Init()
-		Variables.link.Hub.Enabled = true
-	end
-	
-	function hub:Destroy()
-		for i,v in pairs(ex_connections) do
-			v:Disconnect()
-			v = nil
-		end
-		Variables.link.Hub:Destroy()
-		Variables = nil
-	end
-	
-	function hub:FireFlag(flagname,args)
-		if Variables.Flags[flagname] then
-			Variables.Flags[flagname](args)
-		end
-	end
-	
-	
-end
-
 modules.side.Windowfunc = function(parento)
 	function parento:MakeTab(args)
 		return modules.side.AddTab(args)
@@ -1492,5 +1174,319 @@ modules.side.Tabfunc = function(parento)
 	end
 end
 
-local ToreturnHubto = {}
-return modules.side.Libfunc(ToreturnHubto)
+local hub = {}
+
+function hub:MakeWindow(args)
+	local Name = args.Name
+	local Flag = args.Flag
+	local Callback = args.Callback
+	if Name then
+		local Hub = Instance.new("ScreenGui")
+		local Frame = Instance.new("Frame")
+		local UICorner = Instance.new("UICorner")
+		local TopBar = Instance.new("Frame")
+		local Tushub = Instance.new("TextLabel")
+		local Frame_2 = Instance.new("Frame")
+		local Gameto = Instance.new("TextLabel")
+		local Frame_3 = Instance.new("Frame")
+		local UICorner_2 = Instance.new("UICorner")
+		local ScrollingFrame = Instance.new("ScrollingFrame")
+		local UIListLayout = Instance.new("UIListLayout")
+		local UIPadding = Instance.new("UIPadding")
+		local CharBoard = Instance.new("Frame")
+		local Frame_4 = Instance.new("Frame")
+		local Frame_5 = Instance.new("Frame")
+		local ImageLabel = Instance.new("ImageLabel")
+		local ImageLabel_2 = Instance.new("ImageLabel")
+		local UICorner_3 = Instance.new("UICorner")
+		local Frame_6 = Instance.new("Frame")
+		local UICorner_4 = Instance.new("UICorner")
+		local TextLabel = Instance.new("TextLabel")
+		local Frame_7 = Instance.new("Frame")
+
+		--Properties:
+
+		Hub.Name = "Hub"
+		Hub.Parent = game.Players.LocalPlayer:WaitForChild("PlayerGui")
+
+		Frame.Parent = Hub
+		Frame.BackgroundColor3 = Color3.fromRGB(25, 25, 25)
+		Frame.BorderSizePixel = 0
+		Frame.ClipsDescendants = true
+		Frame.Position = UDim2.new(0.5, -307, 0.5, -172)
+		Frame.Size = UDim2.new(0, 615, 0, 344)
+
+		UICorner.CornerRadius = UDim.new(0, 10)
+		UICorner.Parent = Frame
+
+		TopBar.Name = "TopBar"
+		TopBar.Parent = Frame
+		TopBar.BackgroundTransparency = 1.000
+		TopBar.Size = UDim2.new(1, 0, 0, 50)
+
+		Tushub.Name = "Tushub"
+		Tushub.Parent = TopBar
+		Tushub.BackgroundTransparency = 1.000
+		Tushub.Position = UDim2.new(0, 25, 0, -24)
+		Tushub.Size = UDim2.new(1, -30, 2, 0)
+		Tushub.Font = Enum.Font.GothamBlack
+		Tushub.Text = "Tus Hub"
+		Tushub.TextColor3 = Color3.fromRGB(240, 240, 240)
+		Tushub.TextSize = 20.000
+		Tushub.TextXAlignment = Enum.TextXAlignment.Left
+
+		Frame_2.Parent = TopBar
+		Frame_2.BackgroundColor3 = Color3.fromRGB(60, 60, 60)
+		Frame_2.BorderSizePixel = 0
+		Frame_2.Position = UDim2.new(0, 0, 1, -1)
+		Frame_2.Size = UDim2.new(1, 0, 0, 1)
+
+		Gameto.Name = "Game"
+		Gameto.Parent = TopBar
+		Gameto.BackgroundTransparency = 1.000
+		Gameto.Position = UDim2.new(0, 426, 0, 12)
+		Gameto.Size = UDim2.new(0.339837402, -30, 0.540000021, 0)
+		Gameto.Font = Enum.Font.GothamBlack
+		Gameto.Text = tostring(Name)
+		Gameto.TextColor3 = Color3.fromRGB(129, 129, 129)
+		Gameto.TextSize = 15.000
+		Gameto.TextStrokeTransparency = 0.000
+		Gameto.TextXAlignment = Enum.TextXAlignment.Right
+
+		Frame_3.Parent = Frame
+		Frame_3.BackgroundColor3 = Color3.fromRGB(32, 32, 32)
+		Frame_3.BorderSizePixel = 0
+		Frame_3.Position = UDim2.new(0, 0, 0, 50)
+		Frame_3.Size = UDim2.new(0, 150, 1, -50)
+
+		UICorner_2.CornerRadius = UDim.new(0, 10)
+		UICorner_2.Parent = Frame_3
+
+		ScrollingFrame.Parent = Frame_3
+		ScrollingFrame.BackgroundTransparency = 1.000
+		ScrollingFrame.BorderSizePixel = 0
+		ScrollingFrame.Size = UDim2.new(1, 0, 1, -50)
+		ScrollingFrame.BottomImage = "rbxassetid://7445543667"
+		ScrollingFrame.CanvasSize = UDim2.new(0, 0, 0, 46)
+		ScrollingFrame.MidImage = "rbxassetid://7445543667"
+		ScrollingFrame.ScrollBarThickness = 4
+		ScrollingFrame.TopImage = "rbxassetid://7445543667"
+
+		UIListLayout.Parent = ScrollingFrame
+		UIListLayout.SortOrder = Enum.SortOrder.LayoutOrder
+
+		UIPadding.Parent = ScrollingFrame
+		UIPadding.PaddingBottom = UDim.new(0, 8)
+		UIPadding.PaddingTop = UDim.new(0, 8)
+
+		CharBoard.Name = "CharBoard"
+		CharBoard.Parent = Frame_3
+		CharBoard.BackgroundTransparency = 1.000
+		CharBoard.Position = UDim2.new(0, 0, 1, -50)
+		CharBoard.Size = UDim2.new(1, 0, 0, 50)
+
+		Frame_4.Parent = CharBoard
+		Frame_4.BackgroundColor3 = Color3.fromRGB(60, 60, 60)
+		Frame_4.BorderSizePixel = 0
+		Frame_4.Size = UDim2.new(1, 0, 0, 1)
+
+		Frame_5.Parent = CharBoard
+		Frame_5.AnchorPoint = Vector2.new(0, 0.5)
+		Frame_5.BackgroundColor3 = Color3.fromRGB(60, 60, 60)
+		Frame_5.BorderSizePixel = 0
+		Frame_5.Position = UDim2.new(0, 10, 0.5, 0)
+		Frame_5.Size = UDim2.new(0, 32, 0, 32)
+
+		ImageLabel.Parent = Frame_5
+		ImageLabel.BackgroundTransparency = 1.000
+		ImageLabel.Size = UDim2.new(1, 0, 1, 0)
+		local uid = game:GetService('Players').LocalPlayer.UserId
+		ImageLabel.Image = "https://www.roblox.com/headshot-thumbnail/image?userId="..tostring(uid).."&width=420&height=420&format=png"
+
+		ImageLabel_2.Parent = Frame_5
+		ImageLabel_2.BackgroundTransparency = 1.000
+		ImageLabel_2.Size = UDim2.new(1, 0, 1, 0)
+		ImageLabel_2.Image = "rbxassetid://4031889928"
+		ImageLabel_2.ImageColor3 = Color3.fromRGB(32, 32, 32)
+
+		UICorner_3.CornerRadius = UDim.new(1, 10)
+		UICorner_3.Parent = Frame_5
+
+		Frame_6.Parent = CharBoard
+		Frame_6.AnchorPoint = Vector2.new(0, 0.5)
+		Frame_6.BackgroundTransparency = 1.000
+		Frame_6.Position = UDim2.new(0, 10, 0.5, 0)
+		Frame_6.Size = UDim2.new(0, 32, 0, 32)
+
+		UICorner_4.CornerRadius = UDim.new(1, 10)
+		UICorner_4.Parent = Frame_6
+
+		TextLabel.Parent = CharBoard
+		TextLabel.BackgroundTransparency = 1.000
+		TextLabel.ClipsDescendants = true
+		TextLabel.Position = UDim2.new(0, 50, 0, 18)
+		TextLabel.Size = UDim2.new(1, -60, 0, 13)
+		TextLabel.Font = Enum.Font.GothamBold
+		TextLabel.Text = game:GetService('Players').LocalPlayer.Name or '???'
+		TextLabel.TextColor3 = Color3.fromRGB(240, 240, 240)
+		TextLabel.TextSize = 13.000
+		TextLabel.TextXAlignment = Enum.TextXAlignment.Left
+
+		Frame_7.Parent = Frame_3
+		Frame_7.BackgroundColor3 = Color3.fromRGB(60, 60, 60)
+		Frame_7.BorderSizePixel = 0
+		Frame_7.Position = UDim2.new(1, -1, 0, 0)
+		Frame_7.Size = UDim2.new(0, 1, 1, 0)
+
+		local Notify = Instance.new("Frame")
+		local UIListLayout = Instance.new("UIListLayout")
+
+		--Properties:
+
+		Notify.Name = "Notify"
+		Notify.Parent = Hub
+		Notify.AnchorPoint = Vector2.new(1, 1)
+		Notify.BackgroundTransparency = 1.000
+		Notify.BorderColor3 = Color3.fromRGB(27, 42, 53)
+		Notify.Position = UDim2.new(1, -25, 1, -25)
+		Notify.Size = UDim2.new(0, 300, 1, -25)
+
+		UIListLayout.Parent = Notify
+		UIListLayout.HorizontalAlignment = Enum.HorizontalAlignment.Center
+		UIListLayout.SortOrder = Enum.SortOrder.LayoutOrder
+		UIListLayout.VerticalAlignment = Enum.VerticalAlignment.Bottom
+		UIListLayout.Padding = UDim.new(0, 5)
+
+		Hub.Enabled = false
+
+		Drag = Frame
+
+		Drag.InputBegan:Connect(function(input)
+			if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
+				dragging = true
+				dragStart = input.Position
+				startPos = Drag.Position
+				input.Changed:Connect(function()
+					if input.UserInputState == Enum.UserInputState.End then
+						dragging = false
+					end
+				end)
+			end
+		end)
+		Drag.InputChanged:Connect(function(input)
+			if input.UserInputType == Enum.UserInputType.MouseMovement or input.UserInputType == Enum.UserInputType.Touch then
+				dragInput = input
+			end
+		end)
+
+		if Flag then
+			Variables.Flags[Flag] = function(boolean)
+				Hub.Enabled = boolean
+			end
+		end
+
+		local Argsto = {
+			ScrollingFrame = ScrollingFrame,
+			Main = Frame,
+			Hub = Hub,
+			Notify = Notify,
+		}
+		Variables.link = Argsto
+
+		Variables.Closedcallback = Callback
+	end
+end
+
+function hub:Notify(args)
+	local Content = args.Content
+	local Duration = args.Duration or 20
+	if Content and Duration then
+		local TextButton = Instance.new("TextButton")
+		local Content = Instance.new("TextLabel")
+		local UICorner = Instance.new("UICorner")
+		local Frame = Instance.new("Frame")
+		local UICorner_2 = Instance.new("UICorner")
+		local Frame_2 = Instance.new("Frame")
+		local UICorner_3 = Instance.new("UICorner")
+
+		--Properties:
+
+		TextButton.Parent = Variables.link.Notify
+		TextButton.BackgroundColor3 = Color3.fromRGB(53, 53, 53)
+		TextButton.Size = UDim2.new(0.980000019, 0, 0, 45)
+		TextButton.ZIndex = 3
+		TextButton.Font = Enum.Font.SourceSans
+		TextButton.Text = ""
+		TextButton.TextColor3 = Color3.fromRGB(0, 0, 0)
+		TextButton.TextSize = 14.000
+
+		Content.Name = "Content"
+		Content.Parent = TextButton
+		Content.BackgroundTransparency = 1.000
+		Content.BorderColor3 = Color3.fromRGB(27, 42, 53)
+		Content.Position = UDim2.new(0, 0, 0, 0)
+		Content.Size = UDim2.new(1, -12, 0.953333139, 0)
+		Content.ZIndex = 3
+		Content.Font = Enum.Font.SourceSansBold
+		Content.LineHeight = 2.000
+		Content.Text = Content
+		Content.TextColor3 = Color3.fromRGB(65025, 65025, 65025)
+		Content.TextScaled = true
+		Content.TextSize = 20.000
+		Content.TextWrapped = true
+
+		UICorner.CornerRadius = UDim.new(0, 5)
+		UICorner.Parent = TextButton
+
+		Frame.Parent = TextButton
+		Frame.BackgroundColor3 = Color3.fromRGB(170, 170, 170)
+		Frame.BorderSizePixel = 0
+		Frame.Position = UDim2.new(-0.0102040814, 0, 0, 0)
+		Frame.Size = UDim2.new(1.02040815, 0, 0.266666681, 33)
+		Frame.ZIndex = 2
+
+		UICorner_2.CornerRadius = UDim.new(0, 5)
+		UICorner_2.Parent = Frame
+
+		Frame_2.Parent = TextButton
+		Frame_2.BackgroundColor3 = Color3.fromRGB(162, 251, 255)
+		Frame_2.Position = UDim2.new(0.0136054419, 0, 0.953333855, 0)
+		Frame_2.Size = UDim2.new(0.966394544, 0, 0, 2)
+		Frame_2.ZIndex = 3
+
+		UICorner_3.CornerRadius = UDim.new(0, 5)
+		UICorner_3.Parent = Frame_2
+
+		local slide = Frame_2
+		if tostring(Duration) ~= 'inf' then
+			slide:TweenSize(UDim2.new(0,0,0,2),Enum.EasingDirection.Out,Enum.EasingStyle.Quart,Duration,true)
+		else
+			Frame_2.Visible = false
+		end
+
+		game.Debris:AddItem(TextButton,Duration)
+		TextButton.MouseButton1Down:Connect(function()
+			TextButton:Destroy()
+		end)
+	end
+end
+
+function hub:Init()
+	Variables.link.Hub.Enabled = true
+end
+
+function hub:Destroy()
+	for i,v in pairs(ex_connections) do
+		v:Disconnect()
+		v = nil
+	end
+	Variables.link.Hub:Destroy()
+	Variables = nil
+end
+
+function hub:FireFlag(flagname,args)
+	if Variables.Flags[flagname] then
+		Variables.Flags[flagname](args)
+	end
+end
+return hub
