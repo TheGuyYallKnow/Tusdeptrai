@@ -1392,8 +1392,11 @@ function hub:MakeWindow(args)
 			Notify = Notify,
 		}
 		Variables.link = Argsto
-
 		Variables.Closedcallback = Callback
+		
+		modules.side.Windowfunc(Frame)
+		
+		return Frame
 	end
 end
 
@@ -1489,4 +1492,5 @@ function hub:FireFlag(flagname,args)
 		Variables.Flags[flagname](args)
 	end
 end
+
 return hub
