@@ -1582,4 +1582,5 @@ function hub:FireFlag(flagname,args)
 	end
 end
 
+wait(2)
 return hub
