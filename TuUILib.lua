@@ -17,7 +17,6 @@ local Variables = {
 	held = false,
 	mousepressed = false,
 	CurrentSlider = nil,
-	CurrentSlider_Name = nil,
 	CurrentSlider_callback = nil,
 }
 local modules = {
@@ -29,6 +28,12 @@ local TweenService = game:GetService('TweenService')
 local function createTween(frame,info,props)
 	local tween = TweenService:Create(frame,info,props)
 	return tween
+end
+
+local function updateCs(scrollingFrame,listLayout,plus)
+	print(scrollingFrame.Name)
+	scrollingFrame.CanvasSize = UDim2.new(0, 0, 0, listLayout.AbsoluteContentSize.Y + plus)
+	print(scrollingFrame.CanvasSize)
 end
 
 local function create_LeftButton()
@@ -90,43 +95,73 @@ modules.side.AddFrame = function()
 	return Frame, Content
 end
 modules.side.AddToggle = function(args)
-	local Frame = args.Frame
+	local frameto = args.Frame
 	local Name = args.Name
 	local Callback = args.Callback
 	local Flag = args.Flag
 	local Default = args.Default
-	if Name and Callback and Frame then
-		local frame,content = modules.side.AddFrame()
-		frame.Parent = Frame
-		content.Text = Name
-
+	if Name and Callback and frameto then
+		local Frame = Instance.new("Frame")
+		local UICorner = Instance.new("UICorner")
+		local Content = Instance.new("TextLabel")
 		local TextButton = Instance.new("TextButton")
-		TextButton.Parent = frame
+		local UIStroke = Instance.new('UIStroke')
+
+		--Properties:
+
+		Frame.Parent = frameto
+		Frame.BackgroundColor3 = Color3.fromRGB(80, 211, 40)
+		Frame.BorderColor3 = Color3.fromRGB(255, 255, 255)
+		Frame.BorderSizePixel = 0
+		Frame.Size = UDim2.new(1, 0, 0, 38)
+
+		UICorner.CornerRadius = UDim.new(0, 5)
+		UICorner.Parent = Frame
+
+		Content.Name = "Content"
+		Content.Parent = Frame
+		Content.BackgroundTransparency = 1.000
+		Content.Position = UDim2.new(0, 12, 0, 0)
+		Content.Size = UDim2.new(1, -12, 1, 0)
+		Content.Font = Enum.Font.GothamBold
+		Content.Text = Name
+		Content.TextColor3 = Color3.fromRGB(240, 240, 240)
+		Content.TextSize = 15.000
+		Content.TextXAlignment = Enum.TextXAlignment.Left
+
+		TextButton.Parent = Frame
 		TextButton.BackgroundTransparency = 1.000
 		TextButton.BorderSizePixel = 0
 		TextButton.Size = UDim2.new(1, 0, 1, 0)
 		TextButton.AutoButtonColor = false
 		TextButton.Text = ""
+		
+		UIStroke.Parent = Frame
+		UIStroke.Thickness = 1
+		UIStroke.LineJoinMode = Enum.LineJoinMode.Round
+		UIStroke.Transparency = 0
+		UIStroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Contextual
+		UIStroke.Enabled = true
 
-		if not Variables.Debounces[frame] then
-			Variables.Debounces[frame] = Default
+		if not Variables.Debounces[Frame] then
+			Variables.Debounces[Frame] = Default
 		end
 
 		local function changeColor()
-			if Variables.Debounces[frame] == true then
-				frame.BackgroundColor3 = Color3.fromRGB(80, 211, 40)
-				frame.UIStroke.Color = Color3.fromRGB(255,255,255)
+			if Variables.Debounces[Frame] == true then
+				Frame.BackgroundColor3 = Color3.fromRGB(80, 211, 40)
+				UIStroke.Color = Color3.fromRGB(255,255,255)
 			else
-				frame.BackgroundColor3 = Color3.fromRGB(32, 32, 32)
-				frame.UIStroke.Color = Color3.fromRGB(60, 60, 60)
+				Frame.BackgroundColor3 = Color3.fromRGB(32, 32, 32)
+				UIStroke.Color = Color3.fromRGB(60, 60, 60)
 			end
 		end
 
 		changeColor()
 		local Click = function()
-			Variables.Debounces[frame] = not Variables.Debounces[frame]
+			Variables.Debounces[Frame] = not Variables.Debounces[Frame]
 			changeColor()
-			Callback(Variables.Debounces[frame])
+			Callback(Variables.Debounces[Frame])
 		end
 		TextButton.MouseButton1Down:Connect(Click)
 
@@ -139,7 +174,7 @@ modules.side.AddToggle = function(args)
 		
 		local methods = {
 			Destroy = function()
-				frame:Destroy()
+				Frame:Destroy()
 				Variables[Flag] = nil
 			end,
 		}
@@ -165,8 +200,8 @@ modules.side.AddButton = function(args)
 
 		TextButton.MouseButton1Down:Connect(function()
 			local ti = TweenInfo.new(0.25,Enum.EasingStyle.Quart,Enum.EasingDirection.Out)
-			local props_1 = {BackgroundColor = Color3.fromRGB(100,100,100)}
-			local props_2 = {BackgroundColor = Color3.fromRGB(32,32,32)}
+			local props_1 = {BackgroundColor3 = Color3.fromRGB(100,100,100)}
+			local props_2 = {BackgroundColor3 = Color3.fromRGB(32,32,32)}
 			local tween_1 = createTween(frame,ti,props_1)
 			local tween_2 = createTween(frame,ti,props_2)
 			tween_1:Play()
@@ -212,7 +247,7 @@ modules.side.AddParagraph = function(args)
 		local Title = Instance.new("TextLabel")
 		local Content = Instance.new("TextLabel")
 
-		Frame.Parent = game.StarterGui.Rel.Frame.ItemContainer
+		Frame.Parent = Frameto
 		Frame.BackgroundColor3 = Color3.fromRGB(32, 32, 32)
 		Frame.BackgroundTransparency = 0.700
 		Frame.BorderSizePixel = 0
@@ -277,7 +312,7 @@ modules.side.AddSlider = function(args)
 		local UICorner_3 = Instance.new("UICorner")
 		local Value_2 = Instance.new("TextLabel")
 
-		Frame.Parent = game.StarterGui.Rel.Frame.ItemContainer
+		Frame.Parent = Frameto
 		Frame.BackgroundColor3 = Color3.fromRGB(32, 32, 32)
 		Frame.BorderSizePixel = 0
 		Frame.Size = UDim2.new(1, 0, 0, 65)
@@ -334,7 +369,7 @@ modules.side.AddSlider = function(args)
 		Value_2.Position = UDim2.new(0, 12, 0, 6)
 		Value_2.Size = UDim2.new(1, -12, 0, 14)
 		Value_2.Font = Enum.Font.GothamBold
-		Value_2.Text = "5 bananas"
+		Value_2.Text = ""
 		Value_2.TextColor3 = Color3.fromRGB(240, 240, 240)
 		Value_2.TextSize = 13.000
 		Value_2.TextXAlignment = Enum.TextXAlignment.Left
@@ -350,17 +385,25 @@ modules.side.AddSlider = function(args)
 		local minto = Instance.new('NumberValue',Frame_3)
 		minto.Name = 'Minto'
 		minto.Value = Min
+		
+		local incremento = Instance.new('NumberValue',Frame_3)
+		incremento.Name = 'Increment'
+		incremento.Value = Increment
 
-		local connection = Frame_3.MouseEnter:connect(function()
+		local connection = Frame.MouseEnter:connect(function()
+			local cancel = false
+			local con_ = Frame.MouseLeave:Connect(function()
+				cancel = true
+			end)
 			repeat
-				wait()
 				if Variables.mousepressed then
 					Variables.held = true
 					Variables.CurrentSlider = Frame_3
-					Variables.CurrentSlider_Name = Name
 					Variables.CurrentSlider_callback = Callback
 				end
-			until Frame_3.MouseLeave
+				task.wait()
+			until cancel == true
+			con_:Disconnect()
 		end)
 		
 		if Flag then
@@ -409,7 +452,7 @@ modules.side.AddSlider = function(args)
 end
 modules.side.AddSection = function(args)
 	local Name = args.Name
-	local Parent = args.Parent
+	local Parent = args.Frame
 	if Name and Parent then
 		local Frame = Instance.new("Frame")
 		local TextLabel = Instance.new("TextLabel")
@@ -443,7 +486,16 @@ modules.side.AddBind = function(args)
 	
 	if Name and Callback then
 		local function EnumtoString(enum)
-			return string.split(tostring(enum),'.')[3]
+			local give = string.split(tostring(enum),'.')[3]
+			local tab = {
+				MouseButton1 = 'LMB',
+				MouseButton2 = 'RMB',
+				MouseButton3 = 'MMB',
+			}
+			if tab[tostring(give)] then
+				give = tab[tostring(give)]
+			end
+			return give
 		end
 		
 		local Frame = Instance.new("Frame")
@@ -524,11 +576,21 @@ modules.side.AddBind = function(args)
 				if Variables.Keybinds[Default] then
 					if table.find(Variables.Keybinds[Default],Callback_) then
 						table.remove(Variables.Keybinds[Default],table.find(Variables.Keybinds[Default],Callback_))
+						if #Variables.Keybinds[Default] == 0 then
+							Variables.Keybinds[Default] = nil
+						end
 					end
 				end
 			end
 			--// New
-			Default = input
+			if input.UserInputType == Enum.UserInputType.Keyboard then
+				Default = input.KeyCode
+			else
+				Default = input.UserInputType
+			end
+			if not Variables.Keybinds[Default] then
+				Variables.Keybinds[Default] = {}
+			end
 			table.insert(Variables.Keybinds[Default],Callback_)
 			Value.Text = EnumtoString(Default) or '???'
 			Callback(Default,true)
@@ -536,6 +598,7 @@ modules.side.AddBind = function(args)
 		
 		TextButton.MouseButton1Down:Connect(function()
 			Value.Text = ''
+			wait()
 			local connection
 			connection = UIS.InputBegan:Connect(function(input)
 				connection:Disconnect()
@@ -564,11 +627,12 @@ modules.side.AddBind = function(args)
 	end
 end
 modules.side.AddTextBox = function(args)
+	local Frameto = args.Frame
 	local Name = args.Name
 	local Default = args.Default
 	local TextDisappear = args.TextDisappear
 	local Callback = args.Callback
-	if Name then
+	if Name and Frameto then
 		local Frame = Instance.new("Frame")
 		local UICorner = Instance.new("UICorner")
 		local Content = Instance.new("TextLabel")
@@ -579,7 +643,7 @@ modules.side.AddTextBox = function(args)
 
 		--Properties:
 
-		Frame.Parent = Frame
+		Frame.Parent = Frameto
 		Frame.BackgroundColor3 = Color3.fromRGB(32, 32, 32)
 		Frame.BorderSizePixel = 0
 		Frame.Size = UDim2.new(1, 0, 0, 38)
@@ -627,9 +691,10 @@ modules.side.AddTextBox = function(args)
 		TextButton.Text = ""
 		
 		TextButton.MouseButton1Down:Connect(function()
-			TextButton:CaptureFocus()
-			TextBox.FocusLost:Wait()
-			Callback(TextBox.Value)
+			TextBox:CaptureFocus()
+			TextBox.FocusLost:Connect(function()
+				Callback(TextBox.Text)
+			end)
 		end)
 		
 		local methods = {
@@ -657,7 +722,7 @@ modules.side.AddDropdown = function(args)
 	local Filter = args.Filter
 	local TextDisappear = args.TextDisappear or false
 	local Quantity = args.Quantity
-	if Name and Callback then
+	if Name and Callback and frameto then
 		local Frame = Instance.new("Frame")
 		local UICorner = Instance.new("UICorner")
 		local ScrollingFrame = Instance.new("ScrollingFrame")
@@ -672,7 +737,7 @@ modules.side.AddDropdown = function(args)
 
 		--Properties:
 
-		Frame.Parent = Frame
+		Frame.Parent = frameto
 		Frame.BackgroundColor3 = Color3.fromRGB(32, 32, 32)
 		Frame.BorderSizePixel = 0
 		Frame.ClipsDescendants = true
@@ -755,9 +820,15 @@ modules.side.AddDropdown = function(args)
 		
 		local function migrate()
 			for i,v in pairs(ScrollingFrame:GetChildren()) do
-				v.Parent = Holder
+				if v ~= UIListLayout then
+					v.Parent = Holder
+				end
 			end
 		end
+		
+		UIListLayout.Changed:Connect(function()
+			updateCs(ScrollingFrame,UIListLayout,0)
+		end)
 		
 		--// Filter
 		if Filter then
@@ -811,7 +882,9 @@ modules.side.AddDropdown = function(args)
 				if filtering == '' then
 					migrate()
 					for i,v in pairs(Textbuttons) do
-						v.Parent = ScrollingFrame
+						if v and v.Parent ~= ScrollingFrame then
+							v.Parent = ScrollingFrame
+						end
 					end
 				else
 					migrate()
@@ -883,7 +956,7 @@ modules.side.AddDropdown = function(args)
 		end
 		
 		if Default then Textbuttons[tostring(Default)].BackgroundTransparency = 0 Callback(tostring(Default)) end
-		if Quantity <= 0 then Quantity = 1 end
+		if Quantity and Quantity <= 0 then Quantity = 1 end
 		
 		local function Checkdot(real)
 			local str = tostring(real)
@@ -1003,6 +1076,10 @@ modules.side.AddTab = function(args)
 
 		Variables.Buttons[Name] = ItemContainer
 		Variables.Tab_Closedfuncs[Name] = Closedcallback
+		
+		UIListLayout.Changed:Connect(function()
+			updateCs(ItemContainer,UIListLayout,30)
+		end)
 
 		button.MouseButton1Down:Connect(function()
 			for i,v in pairs(Variables.Buttons) do
@@ -1014,14 +1091,14 @@ modules.side.AddTab = function(args)
 				end
 			end
 			Variables.Buttons[Name].Visible = true
-			Callback()
+			if Callback then
+				Callback()
+			end
 		end)
 
 		if Flag then
 			Variables.Flags[Flag] = Callback
 		end
-		
-		modules.side.Tabfunc(button)
 		
 		local methods = {
 			Destroy = function()
@@ -1029,7 +1106,9 @@ modules.side.AddTab = function(args)
 				ItemContainer:Destroy()
 				Variables.Flags[Flag] = nil
 			end,
+			self = ItemContainer,
 		}
+		modules.side.Tabfunc(methods)
 		return methods
 	end
 end
@@ -1081,23 +1160,33 @@ local con_3 = RuS.RenderStepped:connect(function(delta)
 	if Variables.held and Variables.CurrentSlider then
 		local max = Variables.CurrentSlider:FindFirstChild('Maxto').Value
 		local min = Variables.CurrentSlider:FindFirstChild('Minto').Value
-		local SliderBtn = Variables.CurrentSlider.Parent
-		local Sliderr = Variables.CurrentSlider
-		local MousePos = UIS:GetMouseLocation().X
-		local BtnPos = SliderBtn.Position
-		local SliderSize = Sliderr.AbsoluteSize.X
-		local SliderPos = Sliderr.AbsolutePosition.X
-		local pos = snap((MousePos-SliderPos)/SliderSize,1)
-		local percentage = math.clamp(pos,0,1)
-		SliderBtn.Position = UDim2.new(percentage/100,-1,(BtnPos.Y.Scale), BtnPos.Y.Offset)
-		SliderBtn.Size = UDim2.new(percentage,0,1,0)
-		local bry = (math.floor((0 + (max - 0) * percentage) * max) / max)
+		local increment = Variables.CurrentSlider:FindFirstChild('Increment').Value
+		
+		local Slider = Variables.CurrentSlider
+		local mouse = UIS:GetMouseLocation() -- LEFTEST
+		local Range = {
+			min = Slider.AbsolutePosition.X,
+			max = Slider.AbsolutePosition.X + Slider.Parent.AbsoluteSize.X,
+		}
+		local ap = Vector2.new(Slider.Parent.AbsolutePosition.X, Slider.Parent.AbsolutePosition.Y)
+		local as = Vector2.new(Slider.Parent.AbsoluteSize.X, Slider.Parent.AbsoluteSize.Y)
+
+		local percentage = math.clamp((mouse.X - ap.X)/Slider.Parent.AbsoluteSize.X,0,1)
+		--// Snapping, the increment thingy
+		local realnumber = max * percentage
+		local bry = math.floor(realnumber)
+		--//Check incremento
+		local coun = math.floor(((bry - min)/increment) + 1)
+		local newnumber = min + (coun - 1) * increment
+		local newpercentage = math.clamp(newnumber/max,0,1)
+		
+		Slider.Size = UDim2.new(newpercentage, 0, 1, 0)
 
 		local Val = {
 			Variables.CurrentSlider:FindFirstChild('Value'),
 			Variables.CurrentSlider.Parent:FindFirstChild('Value'),
 		}
-		
+
 		local Nameto = Variables.CurrentSlider:FindFirstChild('Nameto')
 		local function changeval(text)
 			for i,v in pairs(Val) do
@@ -1105,15 +1194,10 @@ local con_3 = RuS.RenderStepped:connect(function(delta)
 			end
 		end
 
-		local big = math.floor(bry)
-		local valueto = big
-		if min >= big then
-			valueto = min
-		end
-		changeval(valueto)
-		
+		changeval(newnumber)
+
 		if Variables.CurrentSlider_callback then
-			Variables.CurrentSlider_callback(valueto)
+			Variables.CurrentSlider_callback(newnumber)
 		end
 	end
 end)
@@ -1126,50 +1210,50 @@ modules.side.Windowfunc = function(parento)
 end
 modules.side.Tabfunc = function(parento)
 	function parento:AddSection(args)
-		args.Parent = parento
+		args.Frame = parento.self
 		return modules.side.AddSection(args)
 	end
 	
 	function parento:AddSlider(args)
-		args.Frame = parento
+		args.Frame = parento.self
 		return modules.side.AddSlider(args)
 	end
 	
 	function parento:AddButton(args)
-		args.Frame = parento
+		args.Frame = parento.self
 		return modules.side.AddButton(args)
 	end
 	
 	function parento:AddToggle(args)
-		args.Frame = parento
+		args.Frame = parento.self
 		return modules.side.AddToggle(args)
 	end
 	
 	function parento:AddLabel(...)
 		local faketo = {...}
 		local args = {}
-		args.Frame = parento
+		args.Frame = parento.self
 		args.Name = faketo[1]
 		return modules.side.AddLabel(args)
 	end
 	
 	function parento:AddParagraph(args)
-		args.Frame = parento
+		args.Frame = parento.self
 		return modules.side.AddParagraph(args)
 	end
 	
 	function parento:AddBind(args)
-		args.Frame = parento
+		args.Frame = parento.self
 		return modules.side.AddBind(args)
 	end
 	
-	function parento:AddTextBox(args)
-		args.Frame = parento
+	function parento:AddTextbox(args)
+		args.Frame = parento.self
 		return modules.side.AddTextBox(args)
 	end
 	
 	function parento:AddDropdown(args)
-		args.Frame = parento
+		args.Frame = parento.self
 		return modules.side.AddDropdown(args)
 	end
 end
@@ -1207,7 +1291,8 @@ function hub:MakeWindow(args)
 		--Properties:
 
 		Hub.Name = "Hub"
-		Hub.Parent = game.Players.LocalPlayer:WaitForChild("PlayerGui")
+		syn.protect_gui(Hub)
+		Hub.Parent = game:GetService("CoreGui")
 
 		Frame.Parent = Hub
 		Frame.BackgroundColor3 = Color3.fromRGB(25, 25, 25)
@@ -1394,9 +1479,10 @@ function hub:MakeWindow(args)
 		Variables.link = Argsto
 		Variables.Closedcallback = Callback
 		
-		modules.side.Windowfunc(Frame)
+		local methods = {}
+		modules.side.Windowfunc(methods)
 		
-		return Frame
+		return methods
 	end
 end
 
@@ -1483,6 +1569,9 @@ function hub:Destroy()
 		v:Disconnect()
 		v = nil
 	end
+	pcall(function()
+		syn.unprotect_gui(Variables.link.Hub)
+	end)
 	Variables.link.Hub:Destroy()
 	Variables = nil
 end
