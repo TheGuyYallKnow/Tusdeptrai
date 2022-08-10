@@ -211,6 +211,6 @@ end)
 
 game:GetService("Players").LocalPlayer.OnTeleport:Connect(function(State)
 	if State == Enum.TeleportState.Started then
-		syn.queue_on_teleport(game:HttpGetAsync("https://raw.githubusercontent.com/TheGuyYallKnow/Tusdeptrai/main/BULL"))
+		syn.queue_on_teleport(game:HttpGetAsync("https://raw.githubusercontent.com/TheGuyYallKnow/Tusdeptrai/main/gpo.lua"))
 	end
 end)
