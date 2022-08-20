@@ -305,6 +305,9 @@ Duration = <number> - The duration of the notfication. -- Default will be 20
 ### Layer:int
 ``` The Layer where the text should be located. ```
 
+### Priority:int
+``` The lowest => leftest. ```
+
 ### Text_front:str
 ``` Start of the Text. ```
 
