@@ -298,3 +298,27 @@ Content = <string> - The content of the notification.
 Duration = <number> - The duration of the notfication. -- Default will be 20
 ]]
 ```
+
+# Tu's ESP Modules:
+## Arguments:
+
+### Layer:int
+The Layer where the text should be located.
+
+### Text_front:str
+Start of the Text.
+
+### Text_end:str
+End of the Text.
+
+### TrackInst:inst
+Getting the instance to trace, we will require its components later.
+
+### TrackValue:str
+Track the value of the 'TrackInst'.
+
+### TrackDistance:bool
+Special module to Check the distance between the 'TrackInst' and self.
+
+### Flag:str
+Specify the track, so we can make a toggle for it.
