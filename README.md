@@ -320,8 +320,12 @@ Duration = <number> - The duration of the notfication. -- Default will be 20
 ### TrackValue:str
 ``` Track the value of the 'TrackInst'. ```
 
-### TrackDistance:bool
-``` Special module to Check the distance between the 'TrackInst' and self. ```
-
 ### Flag:str
 ``` Specify the track, so we can make a toggle for it. ```
+
+## Special Arguments:
+### TrackInst_2 and TrackValue_2: inst,str
+``` If added, used for tracking % between 'TrackValue' and 'TrackValue_2' (Highest).```
+
+### TrackDistance:bool
+``` Special module to Check the distance between the 'TrackInst' and self. ```
