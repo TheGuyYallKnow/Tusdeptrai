@@ -166,7 +166,8 @@ modules.side.AddToggle = function(args)
 		TextButton.MouseButton1Down:Connect(Click)
 
 		if Flag then
-			Variables[Flag] = function(args)
+			print('Adding Flag: '..Flag)
+			Variables.Flags[Flag] = function(args)
 				changeColor(args.Set)
 				Callback(args.Set)
 			end
@@ -175,7 +176,7 @@ modules.side.AddToggle = function(args)
 		local methods = {
 			Destroy = function()
 				Frame:Destroy()
-				Variables[Flag] = nil
+				Variables.Flags[Flag] = nil
 			end,
 		}
 		return methods
@@ -1142,6 +1143,7 @@ local con_2 = UIS.InputBegan:Connect(function(input,processed)
 	if input == dragInput and dragging and Drag.Size then
 		update(input)
 	end
+	print(game:GetService('HttpService'):JSONEncode(Variables.Keybinds))
 	if processed and Variables.Keybinds[input] then
 		for i,v in pairs(Variables.Keybinds[input]) do
 			v()
