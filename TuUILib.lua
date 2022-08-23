@@ -200,7 +200,7 @@ modules.side.AddButton = function(args)
 		TextButton.Text = ""
 
 		TextButton.MouseButton1Down:Connect(function()
-			local ti = TweenInfo.new(0.25,Enum.EasingStyle.Quart,Enum.EasingDirection.Out)
+			local ti = TweenInfo.new(0.15,Enum.EasingStyle.Quart,Enum.EasingDirection.Out)
 			local props_1 = {BackgroundColor3 = Color3.fromRGB(100,100,100)}
 			local props_2 = {BackgroundColor3 = Color3.fromRGB(32,32,32)}
 			local tween_1 = createTween(frame,ti,props_1)
