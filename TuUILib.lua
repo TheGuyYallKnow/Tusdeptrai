@@ -1487,9 +1487,9 @@ function hub:MakeWindow(args)
 end
 
 function hub:Notify(args)
-	local Content = args.Content
+	local Contento = args.Content
 	local Duration = args.Duration or 20
-	if Content and Duration then
+	if Contento and Duration then
 		local TextButton = Instance.new("TextButton")
 		local Content = Instance.new("TextLabel")
 		local UICorner = Instance.new("UICorner")
@@ -1518,7 +1518,7 @@ function hub:Notify(args)
 		Content.ZIndex = 3
 		Content.Font = Enum.Font.SourceSansBold
 		Content.LineHeight = 2.000
-		Content.Text = Content
+		Content.Text = Contento
 		Content.TextColor3 = Color3.fromRGB(65025, 65025, 65025)
 		Content.TextScaled = true
 		Content.TextSize = 20.000
