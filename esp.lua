@@ -499,6 +499,7 @@ print('EX')
 local toreturn = {}
 setmetatable(toreturn,{
 	__call = function(t,Lib,Window)
+		print('Executed')
 		local data_UI = {}
 		local Tab = Window:MakeTab({
 			Name = "ESP",
@@ -747,3 +748,5 @@ setmetatable(toreturn,{
 		--// Category:?
 	end,
 })
+print('new')
+return toreturn
