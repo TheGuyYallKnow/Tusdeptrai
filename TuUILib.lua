@@ -1155,10 +1155,10 @@ end)
 function snap(number, increment, max)
 	local newstep = math.ceil(number/increment)
 	local newnumber = newstep * increment
-	if newnumber >= max then
+	if newnumber > max then
 		return max
 	end
-	if newnumber <= 0 then
+	if newnumber < 0 then
 		return 0
 	end
 	return newnumber
