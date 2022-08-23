@@ -36,7 +36,7 @@ local function updateCs(scrollingFrame,listLayout,plus)
 	print(scrollingFrame.CanvasSize)
 end
 
-local function create_LeftButton()
+local function create_LeftButton(buttonname)
 	local TextButton = Instance.new("TextButton")
 	local Title = Instance.new("TextLabel")
 	local UICorner = Instance.new("UICorner")
@@ -57,7 +57,7 @@ local function create_LeftButton()
 	Title.Position = UDim2.new(0.0333333351, 0, 0.0333333351, 0)
 	Title.Size = UDim2.new(0.933333337, 0, 0.933333337, 0)
 	Title.Font = Enum.Font.GothamBlack
-	Title.Text = "Tab 1"
+	Title.Text = tostring(buttonname)
 	Title.TextColor3 = Color3.fromRGB(240, 240, 240)
 	Title.TextSize = 14.000
 
@@ -416,7 +416,7 @@ modules.side.AddSlider = function(args)
 					local BtnPos = SliderBtn.Position
 					local SliderSize = Sliderr.AbsoluteSize.X
 					local SliderPos = Sliderr.AbsolutePosition.X
-					local pos = (MousePos-SliderPos)/SliderSize
+					local pos = snap((MousePos-SliderPos)/SliderSize,1)
 					local percentage = math.clamp(pos,0,1)
 					SliderBtn.Position = UDim2.new(percentage/100,-1,(BtnPos.Y.Scale), BtnPos.Y.Offset)
 					SliderBtn.Size = UDim2.new(percentage,0,1,0)
@@ -1043,7 +1043,7 @@ modules.side.AddTab = function(args)
 	local Flag = args.Flag
 
 	if Name then
-		local button = create_LeftButton()
+		local button = create_LeftButton(Name)
 		button.Parent = Variables.link.ScrollingFrame
 
 		--// Scrolling frames
@@ -1577,7 +1577,7 @@ function hub:Destroy()
 end
 
 function hub:FireFlag(flagname,args)
-	print('FlagName = '..flagname)
+	print('FlagName = '..tostring(flagname))
 	print(game:GetService('HttpService'):JSONEncode(Variables.Flags))
 	if Variables.Flags[flagname] then
 		print('has Flag')
