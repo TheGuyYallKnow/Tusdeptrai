@@ -1144,7 +1144,7 @@ local con_2 = UIS.InputBegan:Connect(function(input,processed)
 	if input == dragInput and dragging and Drag.Size then
 		update(input)
 	end
-	if processed then
+	if not processed then
 		print('oh ho')
 		if Variables.Keybinds[input.KeyCode] or Variables.Keybinds[input.UserInputType] then
 			print(typeof(Variables.Keybinds[input.KeyCode] or Variables.Keybinds[input.UserInputType]))
@@ -1554,7 +1554,7 @@ function hub:Notify(args)
 
 		local slide = Frame_2
 		if tostring(Duration) ~= 'inf' then
-			slide:TweenSize(UDim2.new(0,0,0,2),Enum.EasingDirection.Out,Enum.EasingStyle.Quart,Duration,true)
+			slide:TweenSize(UDim2.new(0,0,0,2),Enum.EasingDirection.In,Enum.EasingStyle.Linear,Duration,true)
 		else
 			Frame_2.Visible = false
 		end
