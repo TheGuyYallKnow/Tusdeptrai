@@ -1,4 +1,5 @@
-return function(file,DataStructure,Variables)
+return function(file,DataStructure)
+	local Variables = DataStructure
 	if not isfolder('Tushub') then
 		makefolder('Tushub')
 	end 
@@ -34,4 +35,5 @@ return function(file,DataStructure,Variables)
 			Variables[i] = v
 		end
 	end
+	return Variables
 end
