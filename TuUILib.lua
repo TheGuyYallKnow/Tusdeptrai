@@ -168,6 +168,7 @@ modules.side.AddToggle = function(args)
 		if Flag then
 			print('Adding Flag: '..Flag)
 			Variables.Flags[Flag] = function(args)
+				Variables.Debounces[Frame] = args.Set
 				changeColor(args.Set)
 				Callback(args.Set)
 			end
@@ -1144,8 +1145,8 @@ local con_2 = UIS.InputBegan:Connect(function(input,processed)
 		update(input)
 	end
 	print(game:GetService('HttpService'):JSONEncode(Variables.Keybinds))
-	if processed and Variables.Keybinds[input] then
-		for i,v in pairs(Variables.Keybinds[input]) do
+	if processed and Variables.Keybinds[input.KeyCode] or Variables.Keybinds[input.UserInputType] then
+		for i,v in pairs(Variables.Keybinds[input.KeyCode] or Variables.Keybinds[input.UserInputType]) do
 			v()
 		end
 	end
