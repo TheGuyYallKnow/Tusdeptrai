@@ -1176,6 +1176,8 @@ local con_3 = RuS.RenderStepped:connect(function(delta)
 		local step = max/increment
 		local pos = snap((mouse.X - ap.X)/Slider.Parent.AbsoluteSize.X,step)
 		local newpercentage = math.clamp(pos,0,1)
+		print(newpercentage)
+		print(step)
 		local newnumber = newpercentage * max
 		--[[
 		local percentage = math.clamp((mouse.X - ap.X)/Slider.Parent.AbsoluteSize.X,0,1)
