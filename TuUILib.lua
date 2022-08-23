@@ -164,7 +164,6 @@ modules.side.AddToggle = function(args)
 		TextButton.MouseButton1Down:Connect(Click)
 
 		if Flag then
-			print('Adding Flag: '..Flag)
 			Variables.Flags[Flag] = function(args)
 				Variables.Debounces[Frame] = args.Set
 				changeColor(args.Set)
@@ -587,6 +586,9 @@ modules.side.AddBind = function(args)
 				Default = input.KeyCode
 			else
 				Default = input.UserInputType
+			end
+			if input.KeyCode == Enum.KeyCode.Backspace then
+				Default = nil
 			end
 			if not Variables.Keybinds[Default] then
 				Variables.Keybinds[Default] = {}
@@ -1150,9 +1152,12 @@ local con_2 = UIS.InputBegan:Connect(function(input,processed)
 		end
 	end
 end)
-function snap(number, increment)
-	print('Snapping real: '..tostring(number))
+function snap(number, increment, max)
 	local newstep = math.ceil(number/increment)
+	local newnumber = newstep * increment
+	if newnumber >= max then
+		newnumber = max
+	end
 	return newstep * increment
 end
 local RuS = game:GetService('RunService')
@@ -1171,7 +1176,13 @@ local con_3 = RuS.RenderStepped:connect(function(delta)
 		local ap = Vector2.new(Slider.Parent.AbsolutePosition.X, Slider.Parent.AbsolutePosition.Y)
 		local as = Vector2.new(Slider.Parent.AbsoluteSize.X, Slider.Parent.AbsoluteSize.Y)
 		
-		local newnumber = snap(((mouse.X - ap.X)/Slider.Parent.AbsoluteSize.X)*max,increment)
+		local roundupto = #(string.split(tostring(increment),'.')[2]) - 1
+		
+		local newnumber = snap(((mouse.X - ap.X)/Slider.Parent.AbsoluteSize.X)*max,increment,max)
+		local get = string.split(tostring(newnumber),'.')
+		local rounded = string.sub(get[2],1,roundupto)
+		newnumber = tonumber(get[1]..'.'..rounded)
+		
 		local newpercentage = math.clamp(newnumber/max,0,1)
 		--[[
 		local percentage = math.clamp((mouse.X - ap.X)/Slider.Parent.AbsoluteSize.X,0,1)
