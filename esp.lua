@@ -245,7 +245,7 @@ function getChar(inst)
 end
 
 --// Load Module here
-
+print('NEXT?')
 local userid = game:GetService('Players').LocalPlayer.UserId
 for i,v in pairs(game:GetService('Players'):GetChildren()) do
 	if v ~= game:GetService('Players').LocalPlayer then
@@ -257,6 +257,7 @@ for i,v in pairs(game:GetService('Players'):GetChildren()) do
 		end
 	end
 end
+print('pass')
 game:GetService('Players').PlayerAdded:Connect(function(p)
 	task.spawn(getChar,p)
 	if p:IsFriendsWith(userid) then
@@ -494,9 +495,8 @@ game:GetService('RunService').RenderStepped:Connect(function()
 	end)
 end)
 
-
+print('EX')
 return function(Lib,Window) --// WE Create UI	
-	print('Adding ESP')
 	local data_UI = {}
 	local Tab = Window:MakeTab({
 		Name = "ESP",
