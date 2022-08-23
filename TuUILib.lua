@@ -1150,12 +1150,10 @@ local con_2 = UIS.InputBegan:Connect(function(input,processed)
 		end
 	end
 end)
-function snap(number, factor)
-	if factor == 0 then
-		return number
-	else
-		return math.floor(number/factor+0.5)*factor
-	end
+function snap(number, increment)
+	print('Snapping real: '..tostring(number))
+	local newstep = math.ceil(number/increment)
+	return newstep * increment
 end
 local RuS = game:GetService('RunService')
 local con_3 = RuS.RenderStepped:connect(function(delta)
@@ -1173,9 +1171,7 @@ local con_3 = RuS.RenderStepped:connect(function(delta)
 		local ap = Vector2.new(Slider.Parent.AbsolutePosition.X, Slider.Parent.AbsolutePosition.Y)
 		local as = Vector2.new(Slider.Parent.AbsoluteSize.X, Slider.Parent.AbsoluteSize.Y)
 		
-		local step = (max-min)/increment
-		print(tostring(step))
-		local pos = snap(((mouse.X - ap.X)/Slider.Parent.AbsoluteSize.X)*max,step)
+		local pos = snap(((mouse.X - ap.X)/Slider.Parent.AbsoluteSize.X)*max,increment)
 		print(tostring((mouse.X - ap.X)/Slider.Parent.AbsoluteSize.X))
 		print(tostring(pos))
 		local newpercentage = math.clamp(pos,0,1)
