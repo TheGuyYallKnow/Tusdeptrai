@@ -349,7 +349,7 @@ modules.side.AddSlider = function(args)
 		Value.Position = UDim2.new(0, 12, 0, 6)
 		Value.Size = UDim2.new(1, -12, 0, 14)
 		Value.Font = Enum.Font.GothamBold
-		Value.Text = Default..' '..ValueName
+		Value.Text = tostring(Default)..' '..ValueName
 		Value.TextColor3 = Color3.fromRGB(240, 240, 240)
 		Value.TextSize = 13.000
 		Value.TextTransparency = 0.800
@@ -1146,6 +1146,8 @@ local con_2 = UIS.InputBegan:Connect(function(input,processed)
 	end
 	print(game:GetService('HttpService'):JSONEncode(Variables.Keybinds))
 	if processed and Variables.Keybinds[input.KeyCode] or Variables.Keybinds[input.UserInputType] then
+		print('oh ho')
+		print(typeof(Variables.Keybinds[input.KeyCode] or Variables.Keybinds[input.UserInputType]))
 		for i,v in pairs(Variables.Keybinds[input.KeyCode] or Variables.Keybinds[input.UserInputType]) do
 			v()
 		end
