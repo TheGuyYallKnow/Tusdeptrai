@@ -1158,7 +1158,7 @@ function snap(number, increment, max)
 	if newnumber >= max then
 		newnumber = max
 	end
-	return newstep * increment
+	return newnumber
 end
 local RuS = game:GetService('RunService')
 local con_3 = RuS.RenderStepped:connect(function(delta)
