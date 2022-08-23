@@ -1144,12 +1144,13 @@ local con_2 = UIS.InputBegan:Connect(function(input,processed)
 	if input == dragInput and dragging and Drag.Size then
 		update(input)
 	end
-	print(game:GetService('HttpService'):JSONEncode(Variables.Keybinds))
-	if processed and Variables.Keybinds[input.KeyCode] or Variables.Keybinds[input.UserInputType] then
+	if processed then
 		print('oh ho')
-		print(typeof(Variables.Keybinds[input.KeyCode] or Variables.Keybinds[input.UserInputType]))
-		for i,v in pairs(Variables.Keybinds[input.KeyCode] or Variables.Keybinds[input.UserInputType]) do
-			v()
+		if Variables.Keybinds[input.KeyCode] or Variables.Keybinds[input.UserInputType] then
+			print(typeof(Variables.Keybinds[input.KeyCode] or Variables.Keybinds[input.UserInputType]))
+			for i,v in pairs(Variables.Keybinds[input.KeyCode] or Variables.Keybinds[input.UserInputType]) do
+				v()
+			end
 		end
 	end
 end)
