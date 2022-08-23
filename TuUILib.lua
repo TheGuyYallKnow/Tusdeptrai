@@ -31,9 +31,7 @@ local function createTween(frame,info,props)
 end
 
 local function updateCs(scrollingFrame,listLayout,plus)
-	print(scrollingFrame.Name)
 	scrollingFrame.CanvasSize = UDim2.new(0, 0, 0, listLayout.AbsoluteContentSize.Y + plus)
-	print(scrollingFrame.CanvasSize)
 end
 
 local function create_LeftButton(buttonname)
@@ -1145,9 +1143,7 @@ local con_2 = UIS.InputBegan:Connect(function(input,processed)
 		update(input)
 	end
 	if not processed then
-		print('oh ho')
 		if Variables.Keybinds[input.KeyCode] or Variables.Keybinds[input.UserInputType] then
-			print(typeof(Variables.Keybinds[input.KeyCode] or Variables.Keybinds[input.UserInputType]))
 			for i,v in pairs(Variables.Keybinds[input.KeyCode] or Variables.Keybinds[input.UserInputType]) do
 				v()
 			end
@@ -1176,7 +1172,12 @@ local con_3 = RuS.RenderStepped:connect(function(delta)
 		}
 		local ap = Vector2.new(Slider.Parent.AbsolutePosition.X, Slider.Parent.AbsolutePosition.Y)
 		local as = Vector2.new(Slider.Parent.AbsoluteSize.X, Slider.Parent.AbsoluteSize.Y)
-
+		
+		local step = max/increment
+		local pos = snap((mouse.X - ap.X)/Slider.Parent.AbsoluteSize.X,step)
+		local newpercentage = math.clamp(pos,0,1)
+		local newnumber = newpercentage * max
+		--[[
 		local percentage = math.clamp((mouse.X - ap.X)/Slider.Parent.AbsoluteSize.X,0,1)
 		--// Snapping, the increment thingy
 		local realnumber = max * percentage
@@ -1185,6 +1186,7 @@ local con_3 = RuS.RenderStepped:connect(function(delta)
 		local coun = math.floor(((bry - min)/increment) + 1)
 		local newnumber = min + (coun - 1) * increment
 		local newpercentage = math.clamp(newnumber/max,0,1)
+		]]
 		
 		Slider.Size = UDim2.new(newpercentage, 0, 1, 0)
 
@@ -1583,12 +1585,8 @@ function hub:Destroy()
 end
 
 function hub:FireFlag(flagname,args)
-	print('FlagName = '..tostring(flagname))
-	print(game:GetService('HttpService'):JSONEncode(Variables.Flags))
 	if Variables.Flags[flagname] then
-		print('has Flag')
 		Variables.Flags[flagname](args)
-		print('fired')
 	end
 end
 
