@@ -548,6 +548,8 @@ setmetatable(toreturn,{
 				end
 			end,
 		})
+		print('Getting R>?')
+		print(tostring(Variables.ESP_PlayerColor.R))
 		data_UI.PESP_color = Tab:AddTextBox({
 			Name = 'Color, From RBG, You can search on google!',
 			Default = tostring(Variables.ESP_PlayerColor.R)..","..tostring(Variables.ESP_PlayerColor.G)..","..tostring(Variables.ESP_PlayerColor.B),
