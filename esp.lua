@@ -88,7 +88,6 @@ do --// Saving Essential
 		end
 	end
 end
-print('LoadedData')
 function WTS(pos)
 	local screen = workspace.CurrentCamera:WorldToViewportPoint(pos)
 	return Vector2.new(screen.x, screen.y)
@@ -245,7 +244,6 @@ function getChar(inst)
 end
 
 --// Load Module here
-print('NEXT?')
 local userid = game:GetService('Players').LocalPlayer.UserId
 for i,v in pairs(game:GetService('Players'):GetChildren()) do
 	if v ~= game:GetService('Players').LocalPlayer then
@@ -257,7 +255,6 @@ for i,v in pairs(game:GetService('Players'):GetChildren()) do
 		end
 	end
 end
-print('pass')
 game:GetService('Players').PlayerAdded:Connect(function(p)
 	task.spawn(getChar,p)
 	if p:IsFriendsWith(userid) then
@@ -495,11 +492,9 @@ game:GetService('RunService').RenderStepped:Connect(function()
 	end)
 end)
 
-print('EX')
 local toreturn = {}
 setmetatable(toreturn,{
 	__call = function(t,Lib,Window)
-		print('Executed')
 		local data_UI = {}
 		local Tab = Window:MakeTab({
 			Name = "ESP",
@@ -636,7 +631,7 @@ setmetatable(toreturn,{
 		Tab_2:AddSection({
 			Name = 'Global Settings'
 		})
-		Tab:AddSlider({
+		Tab_2:AddSlider({
 			Name = 'Size',
 			Min = 10,
 			Max = 25,
@@ -648,7 +643,7 @@ setmetatable(toreturn,{
 				Variables.ESP_Size = Value
 			end,
 		})
-		Tab:AddSlider({
+		Tab_2:AddSlider({
 			Name = 'Max Distance',
 			Min = 0,
 			Max = 10000,
@@ -660,7 +655,7 @@ setmetatable(toreturn,{
 				Variables.ESP_MaxDistance = Value
 			end,
 		})
-		Tab:AddSlider({
+		Tab_2:AddSlider({
 			Name = 'YOffset',
 			Min = -20,
 			Max = 20,
@@ -672,7 +667,7 @@ setmetatable(toreturn,{
 				Variables.ESP_YOffset = Value
 			end,
 		})
-		Tab:AddSlider({
+		Tab_2:AddSlider({
 			Name = 'ZOffset',
 			Min = -10,
 			Max = 10,
@@ -684,7 +679,7 @@ setmetatable(toreturn,{
 				Variables.ESP_ZOffset = Value
 			end,
 		})
-		Tab:AddButton({
+		Tab_2:AddButton({
 			Name = 'Refresh Teammate list',
 			Callback = function()
 				Current.Teamate = {}
@@ -748,5 +743,4 @@ setmetatable(toreturn,{
 		--// Category:?
 	end,
 })
-print('new')
 return toreturn
