@@ -377,185 +377,187 @@ end
 game:GetService('RunService').RenderStepped:Connect(function()
 	pcall(function()
 		for i,v in pairs(data.Track) do
-			if v.Part and v.Part:IsDescendantOf(workspace) then
-				print(v.Part.Parent.Name)
-				if v.Tag then
-					if typeof(v.Tag) == 'table' then
-						for o,c in pairs(v.Tag) do
+			task.spawn(function()
+				if v.Part and v.Part:IsDescendantOf(workspace) then
+					print(v.Part.Parent.Name)
+					if v.Tag then
+						if typeof(v.Tag) == 'table' then
+							for o,c in pairs(v.Tag) do
 
-						end
-					else
-						v.Tag.Position = WTS(v.Part)
-						local _, screen = workspace.CurrentCamera:WorldToViewportPoint(v.Part.Position)
-						if screen then
-							v.Tag.Visible = true
+							end
 						else
-							v.Tag.Visible = false
+							v.Tag.Position = WTS(v.Part)
+							local _, screen = workspace.CurrentCamera:WorldToViewportPoint(v.Part.Position)
+							if screen then
+								v.Tag.Visible = true
+							else
+								v.Tag.Visible = false
+							end
 						end
 					end
-				end
-				if v.Box and Variables[v.Box]then
-					if not v.Boxlib then
-						local color = Color3.fromRGB(255,0,0)
-						if v.Flag == 'Player ESP' then
-							local r,g,b = Variables.ESP_PlayerColor.R,Variables.ESP_PlayerColor.G,Variables.ESP_PlayerColor.B
-							color = Color3.fromRGB(r,g,b)
-							if v.IsTeam  then
-								local r,g,b = Variables.ESP_TeamColor.R,Variables.ESP_TeamColor.G,Variables.ESP_TeamColor.B
+					if v.Box and Variables[v.Box]then
+						if not v.Boxlib then
+							local color = Color3.fromRGB(255,0,0)
+							if v.Flag == 'Player ESP' then
+								local r,g,b = Variables.ESP_PlayerColor.R,Variables.ESP_PlayerColor.G,Variables.ESP_PlayerColor.B
 								color = Color3.fromRGB(r,g,b)
-							end
-						end
-						v.Boxlib = {
-							black = NewQuad(Color3.fromRGB(0,0,0)),
-							box = NewQuad(color),
-						}
-					end
-					if Variables[v.Box] == true then
-						--// track
-						local Pos, screen = workspace.CurrentCamera:WorldToViewportPoint(v.Part.Position)
-						if screen then
-							for o,c in pairs(v.Boxlib) do
-								if c.Visible == false then c.Visible = true end
-								local head = workspace.CurrentCamera:WorldToViewportPoint(v.Part.Position + Vector3.new(0,2.5,0))
-								local DistanceY = math.clamp((Vector2.new(head.X, head.Y) - Vector2.new(Pos.X, Pos.Y)).magnitude, 2, math.huge)
-
-								local function Size(item)
-									item.PointA = Vector2.new(Pos.X + DistanceY, Pos.Y - DistanceY*2)
-									item.PointB = Vector2.new(Pos.X - DistanceY, Pos.Y - DistanceY*2)
-									item.PointC = Vector2.new(Pos.X - DistanceY, Pos.Y + DistanceY*2)
-									item.PointD = Vector2.new(Pos.X + DistanceY, Pos.Y + DistanceY*2)
+								if v.IsTeam  then
+									local r,g,b = Variables.ESP_TeamColor.R,Variables.ESP_TeamColor.G,Variables.ESP_TeamColor.B
+									color = Color3.fromRGB(r,g,b)
 								end
-								Size(c)
 							end
-						else
-							for o,c in pairs(v.Boxlib) do
-								c.Visible = false
-							end
+							v.Boxlib = {
+								black = NewQuad(Color3.fromRGB(0,0,0)),
+								box = NewQuad(color),
+							}
 						end
-					else
-						--// turning off
-						for o,c in pairs(v.Boxlib) do
-							c:Remove()
-						end
-						v.Boxlib = nil
-					end
-				end
-				if v.HealthBar and Variables[v.HealthBar] then
-					if not v.HealthBarlib then
-						v.HealthBarlib = {
-							healthbar = NewLine(3, Color3.fromRGB(0,0,0)),
-							greenhealth = NewLine(1.5, Color3.fromRGB(0,0,0))
-						}
-					end
-					if Variables[v.HealthBar] == true then
-						local hum = v.Part.Parent:FindFirstChildOfClass('Humanoid')
-						if not hum then
-							for o,c in pairs(v.HealthBarlib) do
-								c:Remove()
-								c = nil
-							end
-							v.HealthBarlib = nil
-							v.HealthBarlib = nil
-						else
+						if Variables[v.Box] == true then
 							--// track
 							local Pos, screen = workspace.CurrentCamera:WorldToViewportPoint(v.Part.Position)
 							if screen then
-								if v.HealthBarlib.greenhealth.Visible == false then v.HealthBarlib.greenhealth.Visible = true end
-								if v.HealthBarlib.healthbar.Visible == false then v.HealthBarlib.healthbar.Visible = true end
-								
-								local head = workspace.CurrentCamera:WorldToViewportPoint(v.Part.Position + Vector3.new(0,2.5,0))
-								local DistanceY = math.clamp((Vector2.new(head.X, head.Y) - Vector2.new(Pos.X, Pos.Y)).magnitude, 2, math.huge)
+								for o,c in pairs(v.Boxlib) do
+									if c.Visible == false then c.Visible = true end
+									local head = workspace.CurrentCamera:WorldToViewportPoint(v.Part.Position + Vector3.new(0,2.5,0))
+									local DistanceY = math.clamp((Vector2.new(head.X, head.Y) - Vector2.new(Pos.X, Pos.Y)).magnitude, 2, math.huge)
 
-								local d = (Vector2.new(Pos.X - DistanceY, Pos.Y - DistanceY*2) - Vector2.new(Pos.X - DistanceY, Pos.Y + DistanceY*2)).magnitude 
-								local healthoffset = hum.Health/hum.MaxHealth * d
-
-								v.HealthBarlib.greenhealth.From = Vector2.new(Pos.X - DistanceY - 4, Pos.Y + DistanceY*2)
-								v.HealthBarlib.greenhealth.To = Vector2.new(Pos.X - DistanceY - 4, Pos.Y + DistanceY*2 - healthoffset)
-
-								v.HealthBarlib.healthbar.From = Vector2.new(Pos.X - DistanceY - 4, Pos.Y + DistanceY*2)
-								v.HealthBarlib.healthbar.To = Vector2.new(Pos.X - DistanceY - 4, Pos.Y - DistanceY*2)
-
-								local green = Color3.fromRGB(0, 255, 0)
-								local red = Color3.fromRGB(255, 0, 0)
-
-								v.HealthBarlib.greenhealth.Color = red:lerp(green, hum.Health/hum.MaxHealth);
+									local function Size(item)
+										item.PointA = Vector2.new(Pos.X + DistanceY, Pos.Y - DistanceY*2)
+										item.PointB = Vector2.new(Pos.X - DistanceY, Pos.Y - DistanceY*2)
+										item.PointC = Vector2.new(Pos.X - DistanceY, Pos.Y + DistanceY*2)
+										item.PointD = Vector2.new(Pos.X + DistanceY, Pos.Y + DistanceY*2)
+									end
+									Size(c)
+								end
 							else
-								for o,c in pairs(v.HealthBarlib) do
+								for o,c in pairs(v.Boxlib) do
 									c.Visible = false
 								end
 							end
+						else
+							--// turning off
+							for o,c in pairs(v.Boxlib) do
+								c:Remove()
+							end
+							v.Boxlib = nil
 						end
-					else
-						--// turning off
+					end
+					if v.HealthBar and Variables[v.HealthBar] then
+						if not v.HealthBarlib then
+							v.HealthBarlib = {
+								healthbar = NewLine(3, Color3.fromRGB(0,0,0)),
+								greenhealth = NewLine(1.5, Color3.fromRGB(0,0,0))
+							}
+						end
+						if Variables[v.HealthBar] == true then
+							local hum = v.Part.Parent:FindFirstChildOfClass('Humanoid')
+							if not hum then
+								for o,c in pairs(v.HealthBarlib) do
+									c:Remove()
+									c = nil
+								end
+								v.HealthBarlib = nil
+								v.HealthBarlib = nil
+							else
+								--// track
+								local Pos, screen = workspace.CurrentCamera:WorldToViewportPoint(v.Part.Position)
+								if screen then
+									if v.HealthBarlib.greenhealth.Visible == false then v.HealthBarlib.greenhealth.Visible = true end
+									if v.HealthBarlib.healthbar.Visible == false then v.HealthBarlib.healthbar.Visible = true end
+
+									local head = workspace.CurrentCamera:WorldToViewportPoint(v.Part.Position + Vector3.new(0,2.5,0))
+									local DistanceY = math.clamp((Vector2.new(head.X, head.Y) - Vector2.new(Pos.X, Pos.Y)).magnitude, 2, math.huge)
+
+									local d = (Vector2.new(Pos.X - DistanceY, Pos.Y - DistanceY*2) - Vector2.new(Pos.X - DistanceY, Pos.Y + DistanceY*2)).magnitude 
+									local healthoffset = hum.Health/hum.MaxHealth * d
+
+									v.HealthBarlib.greenhealth.From = Vector2.new(Pos.X - DistanceY - 4, Pos.Y + DistanceY*2)
+									v.HealthBarlib.greenhealth.To = Vector2.new(Pos.X - DistanceY - 4, Pos.Y + DistanceY*2 - healthoffset)
+
+									v.HealthBarlib.healthbar.From = Vector2.new(Pos.X - DistanceY - 4, Pos.Y + DistanceY*2)
+									v.HealthBarlib.healthbar.To = Vector2.new(Pos.X - DistanceY - 4, Pos.Y - DistanceY*2)
+
+									local green = Color3.fromRGB(0, 255, 0)
+									local red = Color3.fromRGB(255, 0, 0)
+
+									v.HealthBarlib.greenhealth.Color = red:lerp(green, hum.Health/hum.MaxHealth);
+								else
+									for o,c in pairs(v.HealthBarlib) do
+										c.Visible = false
+									end
+								end
+							end
+						else
+							--// turning off
+							for o,c in pairs(v.HealthBarlib) do
+								c:Remove()
+							end
+							v.HealthBarlib = nil
+						end
+					end
+					if v.Layers then
+						local text = ""
+						for layer = 1,#v.Layers do --// Fetching layers
+							for priority = 1,#(v.Layers[layer]) do
+								local args = v.Layers[layer][priority]
+
+								local Text_front = args.Text_front or ''
+								local Text_end = args.Text_end or ''
+								local TrackInst = args.TrackInst
+								local TrackValue = args.TrackValue
+
+								--// Special Arguments
+								local Flag = args.Flag
+								local TrackDistance = args.TrackDistance
+								local TrackInst_2 = args.TrackInst_2
+								local TrackValue_2 = args.TrackValue_2
+
+								--// Loading Functions
+								if Flag then
+									if not Variables[Flag] then
+										return
+									end
+								end
+
+								text = text..Text_front
+
+								if TrackDistance and TrackInst and typeof(TrackInst) == 'Instance' and TrackInst.Position then
+									text = text..tostring(math.round(tonumber((game:GetService('Players').LocalPlayer.Character.HumanoidRootPart.Position - TrackInst.Position).Magnitude)))
+								else
+									if TrackInst_2 and TrackValue_2 then
+										if TrackInst and TrackValue then
+											text = text..tostring(math.round(math.clamp(tonumber(TrackInst[TrackValue]/TrackInst_2[TrackValue_2]),0,1)*100))..'%'
+										end
+									else
+										if TrackInst and TrackValue then
+											text = text..tostring(TrackInst[TrackValue])
+										end
+									end
+								end
+
+								text = text..Text_end
+							end
+							text = text..'\n'
+						end
+						v.Tag.Text = text
+					end
+				else
+					print('Deleting '..v.Part.Parent.Name)
+					if v.HealthBarlib then
 						for o,c in pairs(v.HealthBarlib) do
 							c:Remove()
+							c = nil
 						end
-						v.HealthBarlib = nil
 					end
-				end
-				if v.Layers then
-					local text = ""
-					for layer = 1,#v.Layers do --// Fetching layers
-						for priority = 1,#(v.Layers[layer]) do
-							local args = v.Layers[layer][priority]
-							
-							local Text_front = args.Text_front or ''
-							local Text_end = args.Text_end or ''
-							local TrackInst = args.TrackInst
-							local TrackValue = args.TrackValue
-													
-							--// Special Arguments
-							local Flag = args.Flag
-							local TrackDistance = args.TrackDistance
-							local TrackInst_2 = args.TrackInst_2
-							local TrackValue_2 = args.TrackValue_2
-							
-							--// Loading Functions
-							if Flag then
-								if not Variables[Flag] then
-									return
-								end
-							end
-							
-							text = text..Text_front
-							
-							if TrackDistance and TrackInst and typeof(TrackInst) == 'Instance' and TrackInst.Position then
-								text = text..tostring(math.round(tonumber((game:GetService('Players').LocalPlayer.Character.HumanoidRootPart.Position - TrackInst.Position).Magnitude)))
-							else
-								if TrackInst_2 and TrackValue_2 then
-									if TrackInst and TrackValue then
-										text = text..tostring(math.round(math.clamp(tonumber(TrackInst[TrackValue]/TrackInst_2[TrackValue_2]),0,1)*100))..'%'
-									end
-								else
-									if TrackInst and TrackValue then
-										text = text..tostring(TrackInst[TrackValue])
-									end
-								end
-							end
-							
-							text = text..Text_end
+					if v.Boxlib then
+						for o,c in pairs(v.Boxlib) do
+							c:Remove()
+							c = nil
 						end
-						text = text..'\n'
 					end
+					v.Tag:Remove()
+					table.remove(data.Track,table.find(data.Track,v))
 				end
-				v.Tag.Text = text
-			else
-				print('Deleting '..v.Part.Parent.Name)
-				if v.HealthBarlib then
-					for o,c in pairs(v.HealthBarlib) do
-						c:Remove()
-						c = nil
-					end
-				end
-				if v.Boxlib then
-					for o,c in pairs(v.Boxlib) do
-						c:Remove()
-						c = nil
-					end
-				end
-				v.Tag:Remove()
-				table.remove(data.Track,table.find(data.Track,v))
-			end
+			end)
 		end
 	end)
 	pcall(function()
