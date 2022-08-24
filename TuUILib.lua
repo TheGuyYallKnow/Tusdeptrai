@@ -1153,7 +1153,7 @@ local con_2 = UIS.InputBegan:Connect(function(input,processed)
 	end
 end)
 function snap(number, increment, max)
-	local newstep = math.ceil(number/increment)
+	local newstep = math.floor(number/increment)
 	local newnumber = newstep * increment
 	if newnumber > max then
 		return max
@@ -1179,12 +1179,13 @@ local con_3 = RuS.RenderStepped:connect(function(delta)
 		local ap = Vector2.new(Slider.Parent.AbsolutePosition.X, Slider.Parent.AbsolutePosition.Y)
 		local as = Vector2.new(Slider.Parent.AbsoluteSize.X, Slider.Parent.AbsoluteSize.Y)
 		
-		local roundupto = #(string.split(tostring(increment),'.')[2]) - 1
-		
 		local newnumber = snap(((mouse.X - ap.X)/Slider.Parent.AbsoluteSize.X)*max,increment,max)
-		local get = string.split(tostring(newnumber),'.')
-		local rounded = string.sub(get[2],1,roundupto)
-		newnumber = tonumber(get[1]..'.'..rounded)
+		if string.split(tostring(increment),'.')[2] then
+			local roundupto = #(string.split(tostring(increment),'.')[2]) - 1
+			local get = string.split(tostring(newnumber),'.')
+			local rounded = string.sub(get[2],1,roundupto)
+			newnumber = tonumber(get[1]..'.'..rounded)
+		end
 		
 		local newpercentage = math.clamp(newnumber/max,0,1)
 		--[[
