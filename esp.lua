@@ -424,6 +424,7 @@ game:GetService('RunService').RenderStepped:Connect(function()
 											end
 
 											text = text..Text_end
+											print(text)
 										end
 										text = text..'\n'
 									end
