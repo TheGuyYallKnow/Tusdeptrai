@@ -550,7 +550,7 @@ setmetatable(toreturn,{
 		})
 		data_UI.PESP_color = Tab:AddTextBox({
 			Name = 'Color, From RBG, You can search on google!',
-			Default  =Variables.ESP_PlayerColor.R..","..Variables.ESP_PlayerColor.G..","..Variables.ESP_PlayerColor.B,
+			Default = tostring(Variables.ESP_PlayerColor.R)..","..tostring(Variables.ESP_PlayerColor.G)..","..tostring(Variables.ESP_PlayerColor.B),
 			TextDisappear = true,
 			Callback = function(str)
 				--// Fetching
@@ -596,7 +596,7 @@ setmetatable(toreturn,{
 		})
 		data_UI.TESP_color = Tab:AddTextBox({
 			Name = 'Color, From RBG, You can search on google!',
-			Default  =Variables.ESP_PlayerColor.R..","..Variables.ESP_PlayerColor.G..","..Variables.ESP_PlayerColor.B,
+			Default = tostring(Variables.ESP_TeamColor.R)..","..tostring(Variables.ESP_TeamColor.G)..","..tostring(Variables.ESP_TeamColor.B),
 			TextDisappear = true,
 			Callback = function(str)
 				--// Fetching
