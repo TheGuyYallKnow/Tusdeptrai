@@ -380,63 +380,66 @@ game:GetService('RunService').RenderStepped:Connect(function()
 			task.spawn(function()
 				if v.Part and v.Part:IsDescendantOf(workspace) then
 					if v.Tag and Variables[v.Flag] then
-						if Variables[v.Flag] == true then
-							if v.Layers then
-								local text = ""
-								for layer = 1,#v.Layers do --// Fetching layers
-									for priority = 1,#(v.Layers[layer]) do
-										local args = v.Layers[layer][priority]
+						task.spawn(function()
+							if Variables[v.Flag] == true then
+								if v.Layers then
+									local text = ""
+									for layer = 1,#v.Layers do --// Fetching layers
+										for priority = 1,#(v.Layers[layer]) do
+											local args = v.Layers[layer][priority]
 
-										local Text_front = args.Text_front or ''
-										local Text_end = args.Text_end or ''
-										local TrackInst = args.TrackInst
-										local TrackValue = args.TrackValue
+											local Text_front = args.Text_front or ''
+											local Text_end = args.Text_end or ''
+											local TrackInst = args.TrackInst
+											local TrackValue = args.TrackValue
 
-										--// Special Arguments
-										local Flag = args.Flag
-										local TrackDistance = args.TrackDistance
-										local TrackInst_2 = args.TrackInst_2
-										local TrackValue_2 = args.TrackValue_2
+											--// Special Arguments
+											local Flag = args.Flag
+											local TrackDistance = args.TrackDistance
+											local TrackInst_2 = args.TrackInst_2
+											local TrackValue_2 = args.TrackValue_2
 
-										--// Loading Functions
-										if Flag then
-											if not Variables[Flag] then
-												return
-											end
-										end
-
-										text = text..Text_front
-
-										if TrackDistance and TrackInst and typeof(TrackInst) == 'Instance' and TrackInst.Position then
-											text = text..tostring(math.round(tonumber((game:GetService('Players').LocalPlayer.Character.HumanoidRootPart.Position - TrackInst.Position).Magnitude)))
-										else
-											if TrackInst_2 and TrackValue_2 then
-												if TrackInst and TrackValue then
-													text = text..tostring(math.round(math.clamp(tonumber(TrackInst[TrackValue]/TrackInst_2[TrackValue_2]),0,1)*100))..'%'
+											--// Loading Functions
+											if Flag then
+												if not Variables[Flag] then
+													return
 												end
+											end
+
+											text = text..Text_front
+
+											if TrackDistance and TrackInst and typeof(TrackInst) == 'Instance' and TrackInst.Position then
+												text = text..tostring(math.round(tonumber((game:GetService('Players').LocalPlayer.Character.HumanoidRootPart.Position - TrackInst.Position).Magnitude)))
 											else
-												if TrackInst and TrackValue then
-													text = text..tostring(TrackInst[TrackValue])
+												if TrackInst_2 and TrackValue_2 then
+													if TrackInst and TrackValue then
+														text = text..tostring(math.round(math.clamp(tonumber(TrackInst[TrackValue]/TrackInst_2[TrackValue_2]),0,1)*100))..'%'
+													end
+												else
+													if TrackInst and TrackValue then
+														text = text..tostring(TrackInst[TrackValue])
+													end
 												end
 											end
-										end
 
-										text = text..Text_end
+											text = text..Text_end
+										end
+										text = text..'\n'
 									end
-									text = text..'\n'
+									v.Tag.Text = text
+									print(text)
 								end
-								v.Tag.Text = text
-							end
-							v.Tag.Position = WTS(v.Part)
-							local _, screen = workspace.CurrentCamera:WorldToViewportPoint(v.Part.Position)
-							if screen then
-								v.Tag.Visible = true
+								v.Tag.Position = WTS(v.Part)
+								local _, screen = workspace.CurrentCamera:WorldToViewportPoint(v.Part.Position)
+								if screen then
+									v.Tag.Visible = true
+								else
+									v.Tag.Visible = false
+								end
 							else
 								v.Tag.Visible = false
 							end
-						else
-							v.Tag.Visible = false
-						end
+						end)
 					end
 					if v.Box and Variables[v.Box]then
 						if not v.Boxlib then
