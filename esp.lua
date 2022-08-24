@@ -104,7 +104,7 @@ function AddESP(part, color, args, Flag, Features)
 	elseif typeof(part) == 'CFrame' or typeof(part) == 'Instance' then
 		pos = part.Position
 	end
-	print('Added: '..part.Name)
+	print('Added: '..part.Parent.Name)
 	if pos then
 		--// Fetching Layers
 		local layers,Result = {},{}
@@ -160,6 +160,7 @@ function AddESP(part, color, args, Flag, Features)
 			end
 			
 			table.insert(data.Track,argto)
+			print(game:GetService('HttpService'):JSONEncode(data.Track))
 		end
 	end
 end
@@ -538,6 +539,7 @@ game:GetService('RunService').RenderStepped:Connect(function()
 					end
 				end
 			else
+				print('Deleting '..v.Part.Parent.Name)
 				if v.HealthBarlib then
 					for o,c in pairs(v.HealthBarlib) do
 						c:Remove()
