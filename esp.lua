@@ -553,7 +553,7 @@ game:GetService('RunService').RenderStepped:Connect(function()
 					end
 				end
 				v.Tag:Remove()
-				table.remove(data.Track,table.find(data.Track,i))
+				table.remove(data.Track,table.find(data.Track,v))
 			end
 		end
 	end)
