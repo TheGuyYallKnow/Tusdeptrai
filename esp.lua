@@ -139,7 +139,7 @@ function AddESP(part, color, args, Flag, Features)
 		name.Size = Variables.ESP_Size
 		name.Outline = true
 		name.Center = true
-		name.Visible = true
+		name.Visible = false
 		
 		if args.Anchored then --// Ill script this later?... or not necessary. im lzazy
 			table.insert(data.Anchored,{
@@ -236,7 +236,7 @@ function getChar(inst)
 						Box = 'ESP_ShowBox',
 						HealthBar = 'ESP_ShowHealthBar',
 					}
-					AddESP(inst.Character:FindFirstChild('HumanoidRootPart'), Color3.fromRGB(rgb.R,rgb.G,rgb.B), args, 'ESP Player',Features)
+					AddESP(inst.Character:FindFirstChild('HumanoidRootPart'), Color3.fromRGB(rgb.R,rgb.G,rgb.B), args, 'ESP_Player',Features)
 				end
 			end)
 			conn = nil
@@ -307,7 +307,7 @@ function getChar(inst)
 					Box = 'ESP_ShowBox',
 					HealthBar = 'ESP_ShowHealthBar',
 				}
-				AddESP(inst.Character:FindFirstChild('HumanoidRootPart'), Color3.fromRGB(rgb.R,rgb.G,rgb.B), args, 'ESP Player',Features)
+				AddESP(inst.Character:FindFirstChild('HumanoidRootPart'), Color3.fromRGB(rgb.R,rgb.G,rgb.B), args, 'ESP_Player',Features)
 			end
 		end)
 	end
@@ -379,13 +379,54 @@ game:GetService('RunService').RenderStepped:Connect(function()
 		for i,v in pairs(data.Track) do
 			task.spawn(function()
 				if v.Part and v.Part:IsDescendantOf(workspace) then
-					print(v.Part.Parent.Name)
-					if v.Tag then
-						if typeof(v.Tag) == 'table' then
-							for o,c in pairs(v.Tag) do
+					if v.Tag and Variables[v.Flag] then
+						if Variables[v.Flag] == true then
+							if v.Layers then
+								local text = ""
+								for layer = 1,#v.Layers do --// Fetching layers
+									for priority = 1,#(v.Layers[layer]) do
+										local args = v.Layers[layer][priority]
 
+										local Text_front = args.Text_front or ''
+										local Text_end = args.Text_end or ''
+										local TrackInst = args.TrackInst
+										local TrackValue = args.TrackValue
+
+										--// Special Arguments
+										local Flag = args.Flag
+										local TrackDistance = args.TrackDistance
+										local TrackInst_2 = args.TrackInst_2
+										local TrackValue_2 = args.TrackValue_2
+
+										--// Loading Functions
+										if Flag then
+											if not Variables[Flag] then
+												return
+											end
+										end
+
+										text = text..Text_front
+
+										if TrackDistance and TrackInst and typeof(TrackInst) == 'Instance' and TrackInst.Position then
+											text = text..tostring(math.round(tonumber((game:GetService('Players').LocalPlayer.Character.HumanoidRootPart.Position - TrackInst.Position).Magnitude)))
+										else
+											if TrackInst_2 and TrackValue_2 then
+												if TrackInst and TrackValue then
+													text = text..tostring(math.round(math.clamp(tonumber(TrackInst[TrackValue]/TrackInst_2[TrackValue_2]),0,1)*100))..'%'
+												end
+											else
+												if TrackInst and TrackValue then
+													text = text..tostring(TrackInst[TrackValue])
+												end
+											end
+										end
+
+										text = text..Text_end
+									end
+									text = text..'\n'
+								end
+								v.Tag.Text = text
 							end
-						else
 							v.Tag.Position = WTS(v.Part)
 							local _, screen = workspace.CurrentCamera:WorldToViewportPoint(v.Part.Position)
 							if screen then
@@ -393,6 +434,8 @@ game:GetService('RunService').RenderStepped:Connect(function()
 							else
 								v.Tag.Visible = false
 							end
+						else
+							v.Tag.Visible = false
 						end
 					end
 					if v.Box and Variables[v.Box]then
@@ -434,6 +477,7 @@ game:GetService('RunService').RenderStepped:Connect(function()
 								end
 							end
 						else
+							print('Its Offline')
 							--// turning off
 							for o,c in pairs(v.Boxlib) do
 								c:Remove()
@@ -493,52 +537,6 @@ game:GetService('RunService').RenderStepped:Connect(function()
 							end
 							v.HealthBarlib = nil
 						end
-					end
-					if v.Layers then
-						local text = ""
-						for layer = 1,#v.Layers do --// Fetching layers
-							for priority = 1,#(v.Layers[layer]) do
-								local args = v.Layers[layer][priority]
-
-								local Text_front = args.Text_front or ''
-								local Text_end = args.Text_end or ''
-								local TrackInst = args.TrackInst
-								local TrackValue = args.TrackValue
-
-								--// Special Arguments
-								local Flag = args.Flag
-								local TrackDistance = args.TrackDistance
-								local TrackInst_2 = args.TrackInst_2
-								local TrackValue_2 = args.TrackValue_2
-
-								--// Loading Functions
-								if Flag then
-									if not Variables[Flag] then
-										return
-									end
-								end
-
-								text = text..Text_front
-
-								if TrackDistance and TrackInst and typeof(TrackInst) == 'Instance' and TrackInst.Position then
-									text = text..tostring(math.round(tonumber((game:GetService('Players').LocalPlayer.Character.HumanoidRootPart.Position - TrackInst.Position).Magnitude)))
-								else
-									if TrackInst_2 and TrackValue_2 then
-										if TrackInst and TrackValue then
-											text = text..tostring(math.round(math.clamp(tonumber(TrackInst[TrackValue]/TrackInst_2[TrackValue_2]),0,1)*100))..'%'
-										end
-									else
-										if TrackInst and TrackValue then
-											text = text..tostring(TrackInst[TrackValue])
-										end
-									end
-								end
-
-								text = text..Text_end
-							end
-							text = text..'\n'
-						end
-						v.Tag.Text = text
 					end
 				else
 					print('Deleting '..v.Part.Parent.Name)
