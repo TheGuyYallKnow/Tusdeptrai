@@ -151,13 +151,15 @@ function AddESP(part, color, args, Flag, Features)
 				Tag = name,
 				Flag = Flag	,
 				Layers = Result,
+				Part = part,
 			}
 			if Features then
 				for i,v in pairs(Features) do
 					argto[i] = v
 				end
 			end
-			data.Track[part] = argto
+			
+			table.insert(data.Track,argto)
 		end
 	end
 end
@@ -375,15 +377,15 @@ end
 game:GetService('RunService').RenderStepped:Connect(function()
 	pcall(function()
 		for i,v in pairs(data.Track) do
-			if i and i:IsDescendantOf(workspace) then
+			if v.Part and v.Part:IsDescendantOf(workspace) then
 				if v.Tag then
 					if typeof(v.Tag) == 'table' then
 						for o,c in pairs(v.Tag) do
 
 						end
 					else
-						v.Tag.Position = WTS(i)
-						local _, screen = workspace.CurrentCamera:WorldToViewportPoint(i.Position)
+						v.Tag.Position = WTS(v.Part)
+						local _, screen = workspace.CurrentCamera:WorldToViewportPoint(v.Part.Position)
 						if screen then
 							v.Tag.Visible = true
 						else
@@ -409,11 +411,11 @@ game:GetService('RunService').RenderStepped:Connect(function()
 					end
 					if Variables[v.Box] == true then
 						--// track
-						local Pos, screen = workspace.CurrentCamera:WorldToViewportPoint(i.Position)
+						local Pos, screen = workspace.CurrentCamera:WorldToViewportPoint(v.Part.Position)
 						if screen then
 							for o,c in pairs(v.Boxlib) do
 								if c.Visible == false then c.Visible = true end
-								local head = workspace.CurrentCamera:WorldToViewportPoint(i.Position + Vector3.new(0,2.5,0))
+								local head = workspace.CurrentCamera:WorldToViewportPoint(v.Part.Position + Vector3.new(0,2.5,0))
 								local DistanceY = math.clamp((Vector2.new(head.X, head.Y) - Vector2.new(Pos.X, Pos.Y)).magnitude, 2, math.huge)
 
 								local function Size(item)
@@ -432,8 +434,9 @@ game:GetService('RunService').RenderStepped:Connect(function()
 					else
 						--// turning off
 						for o,c in pairs(v.Boxlib) do
-							c.Visible = false
+							c:Remove()
 						end
+						v.Boxlib = nil
 					end
 				end
 				if v.HealthBar and Variables[v.HealthBar] then
@@ -444,7 +447,7 @@ game:GetService('RunService').RenderStepped:Connect(function()
 						}
 					end
 					if Variables[v.HealthBar] == true then
-						local hum = i.Parent:FindFirstChildOfClass('Humanoid')
+						local hum = v.Part.Parent:FindFirstChildOfClass('Humanoid')
 						if not hum then
 							for o,c in pairs(v.HealthBarlib) do
 								c:Remove()
@@ -454,12 +457,12 @@ game:GetService('RunService').RenderStepped:Connect(function()
 							v.HealthBarlib = nil
 						else
 							--// track
-							local Pos, screen = workspace.CurrentCamera:WorldToViewportPoint(i.Position)
+							local Pos, screen = workspace.CurrentCamera:WorldToViewportPoint(v.Part.Position)
 							if screen then
 								if v.HealthBarlib.greenhealth.Visible == false then v.HealthBarlib.greenhealth.Visible = true end
 								if v.HealthBarlib.healthbar.Visible == false then v.HealthBarlib.healthbar.Visible = true end
 								
-								local head = workspace.CurrentCamera:WorldToViewportPoint(i.Position + Vector3.new(0,2.5,0))
+								local head = workspace.CurrentCamera:WorldToViewportPoint(v.Part.Position + Vector3.new(0,2.5,0))
 								local DistanceY = math.clamp((Vector2.new(head.X, head.Y) - Vector2.new(Pos.X, Pos.Y)).magnitude, 2, math.huge)
 
 								local d = (Vector2.new(Pos.X - DistanceY, Pos.Y - DistanceY*2) - Vector2.new(Pos.X - DistanceY, Pos.Y + DistanceY*2)).magnitude 
@@ -484,8 +487,9 @@ game:GetService('RunService').RenderStepped:Connect(function()
 					else
 						--// turning off
 						for o,c in pairs(v.HealthBarlib) do
-							c.Visible = false
+							c:Remove()
 						end
+						v.HealthBarlib = nil
 					end
 				end
 				if v.Layers then
@@ -553,7 +557,7 @@ game:GetService('RunService').RenderStepped:Connect(function()
 	end)
 	pcall(function()
 		if getgenv().RUS and typeof(getgenv().RUS) == 'table' then
-			for i,v in pairs(getgenv().RUS) do
+			for i,v in pairs(getgenv().RS) do
 				v()
 			end
 		end
