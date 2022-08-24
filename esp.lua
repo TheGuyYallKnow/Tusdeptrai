@@ -104,7 +104,7 @@ function AddESP(part, color, args, Flag, Features)
 	elseif typeof(part) == 'CFrame' or typeof(part) == 'Instance' then
 		pos = part.Position
 	end
-	
+	print('Added: '..part.Name)
 	if pos then
 		--// Fetching Layers
 		local layers,Result = {},{}
@@ -169,6 +169,74 @@ function getChar(inst)
 		local conn
 		conn = inst.CharacterAdded:Connect(function(c)
 			conn:Disconnect()
+			repeat 
+				wait(0.1)
+			until inst.Character:FindFirstChild('HumanoidRootPart') or not inst:IsDescendantOf(game) or not inst.Character:IsDescendantOf(game:GetService('Workspace'))
+			pcall(function()
+				if inst.Character:FindFirstChild('HumanoidRootPart') then
+					local rgb = Variables.ESP_PlayerColor
+					local args = {
+						{
+							Text_front = '[',
+							TrackInst = inst.Character,
+							TrackValue = 'Name',
+							Text_end = ']',
+							Layer = 1,
+							Priority = 1,
+						},
+						{
+							Text_front = '[',
+							TrackInst = inst.Character:FindFirstChild('HumanoidRootPart'),
+							TrackDistance = true,
+							Text_end = ']',
+							Flag = 'ESP_ShowDistance',
+							Layer = 1,
+							Priority = 2,
+						},
+						{
+							Text_front = '[',
+							TrackInst = inst.Character:FindFirstChildOfClass('Humanoid'),
+							TrackValue = 'Health',
+							Layer = 2,
+							Flag = 'ESP_ShowHealth',
+							Priority = 1,
+						},
+						{
+							Text_front = '/',
+							TrackInst = inst.Character:FindFirstChildOfClass('Humanoid'),
+							TrackValue = 'MaxHealth',
+							Text_end = ']',
+							Layer = 2,
+							Flag = 'ESP_ShowHealth',
+							Priority = 2,
+						},
+						{
+							Text_front = '[',
+							TrackInst = inst.Character:FindFirstChildOfClass('Humanoid'),
+							TrackInst_2 = inst.Character:FindFirstChildOfClass('Humanoid'),
+							TrackValue = 'Health',
+							TrackValue2 = 'MaxHealth',
+							Layer = 2,
+							Flag = 'ESP_ShowHealth',
+							Priority = 3,
+						},
+					}
+					if next(LoadedModule) then
+						for i,v in pairs(LoadedModule) do
+							if v.Tag == 'Player' then
+								local new = v
+								new.Tag = nil
+								table.insert(args,new)
+							end
+						end
+					end
+					local Features = {
+						Box = 'ESP_ShowBox',
+						HealthBar = 'ESP_ShowHealthBar',
+					}
+					AddESP(inst.Character:FindFirstChild('HumanoidRootPart'), Color3.fromRGB(rgb.R,rgb.G,rgb.B), args, 'ESP Player',Features)
+				end
+			end)
 			conn = nil
 		end)
 	else
