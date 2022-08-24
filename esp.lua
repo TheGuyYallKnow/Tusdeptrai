@@ -386,6 +386,7 @@ game:GetService('RunService').RenderStepped:Connect(function()
 								if v.Layers then
 									local text = ""
 									for layer = 1,#v.Layers do --// Fetching layers
+										print(v.Layers[layer])
 										for priority = 1,#(v.Layers[layer]) do
 											local args = v.Layers[layer][priority]
 
@@ -422,9 +423,7 @@ game:GetService('RunService').RenderStepped:Connect(function()
 													end
 												end
 											end
-
 											text = text..Text_end
-											print(text)
 										end
 										text = text..'\n'
 									end
