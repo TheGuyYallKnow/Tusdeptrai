@@ -218,6 +218,7 @@ function getChar(inst)
 							TrackInst_2 = inst.Character:FindFirstChildOfClass('Humanoid'),
 							TrackValue = 'Health',
 							TrackValue2 = 'MaxHealth',
+							Text_end = ']',
 							Layer = 2,
 							Flag = 'ESP_ShowHealth',
 							Priority = 3,
@@ -288,7 +289,7 @@ function getChar(inst)
 						TrackInst = inst.Character:FindFirstChildOfClass('Humanoid'),
 						TrackInst_2 = inst.Character:FindFirstChildOfClass('Humanoid'),
 						TrackValue = 'Health',
-						TrackValue2 = 'MaxHealth',
+						TrackValue_2 = 'MaxHealth',
 						Layer = 2,
 						Flag = 'ESP_ShowHealth',
 						Priority = 3,
@@ -427,7 +428,6 @@ game:GetService('RunService').RenderStepped:Connect(function()
 										text = text..'\n'
 									end
 									v.Tag.Text = text
-									print(text)
 								end
 								v.Tag.Position = WTS(v.Part)
 								local _, screen = workspace.CurrentCamera:WorldToViewportPoint(v.Part.Position)
