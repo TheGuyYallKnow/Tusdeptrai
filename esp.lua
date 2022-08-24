@@ -160,7 +160,6 @@ function AddESP(part, color, args, Flag, Features)
 			end
 			
 			table.insert(data.Track,argto)
-			print(game:GetService('HttpService'):JSONEncode(data.Track))
 		end
 	end
 end
@@ -379,6 +378,7 @@ game:GetService('RunService').RenderStepped:Connect(function()
 	pcall(function()
 		for i,v in pairs(data.Track) do
 			if v.Part and v.Part:IsDescendantOf(workspace) then
+				print(v.Part.Parent.Name)
 				if v.Tag then
 					if typeof(v.Tag) == 'table' then
 						for o,c in pairs(v.Tag) do
@@ -538,6 +538,7 @@ game:GetService('RunService').RenderStepped:Connect(function()
 						text = text..'\n'
 					end
 				end
+				v.Tag.Text = text
 			else
 				print('Deleting '..v.Part.Parent.Name)
 				if v.HealthBarlib then
@@ -560,7 +561,7 @@ game:GetService('RunService').RenderStepped:Connect(function()
 	pcall(function()
 		if getgenv().RUS and typeof(getgenv().RUS) == 'table' then
 			for i,v in pairs(getgenv().RS) do
-				v()
+				task.spawn(v)
 			end
 		end
 	end)
