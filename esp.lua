@@ -385,7 +385,7 @@ game:GetService('RunService').RenderStepped:Connect(function()
 							if v.Layers then
 								local text = ""
 								for layer = 1,#v.Layers do --// Fetching layers
-									print(v.Layers[layer])
+									print(#v.Layers[layer])
 									for priority = 1,#(v.Layers[layer]) do
 										local args = v.Layers[layer][priority]
 
@@ -466,10 +466,10 @@ game:GetService('RunService').RenderStepped:Connect(function()
 								local DistanceY = math.clamp((Vector2.new(head.X, head.Y) - Vector2.new(Pos.X, Pos.Y)).magnitude, 2, math.huge)
 
 								local function Size(item)
-									item.PointA = Vector2.new(Pos.X + DistanceY, Pos.Y - DistanceY*1.5)
-									item.PointB = Vector2.new(Pos.X - DistanceY, Pos.Y - DistanceY*1.5)
-									item.PointC = Vector2.new(Pos.X - DistanceY, Pos.Y + DistanceY*1.5)
-									item.PointD = Vector2.new(Pos.X + DistanceY, Pos.Y + DistanceY*1.5)
+									item.PointA = Vector2.new(Pos.X + DistanceY, Pos.Y - DistanceY*1.75)
+									item.PointB = Vector2.new(Pos.X - DistanceY, Pos.Y - DistanceY*1.75)
+									item.PointC = Vector2.new(Pos.X - DistanceY, Pos.Y + DistanceY*1.75)
+									item.PointD = Vector2.new(Pos.X + DistanceY, Pos.Y + DistanceY*1.75)
 								end
 								Size(c)
 							end
@@ -516,11 +516,11 @@ game:GetService('RunService').RenderStepped:Connect(function()
 								local d = (Vector2.new(Pos.X - DistanceY, Pos.Y - DistanceY*2) - Vector2.new(Pos.X - DistanceY, Pos.Y + DistanceY*2)).magnitude 
 								local healthoffset = hum.Health/hum.MaxHealth * d
 
-								v.HealthBarlib.greenhealth.From = Vector2.new(Pos.X - DistanceY - 4, Pos.Y + DistanceY*1.5)
-								v.HealthBarlib.greenhealth.To = Vector2.new(Pos.X - DistanceY - 4, Pos.Y + DistanceY*1.5 - healthoffset)
+								v.HealthBarlib.greenhealth.From = Vector2.new(Pos.X - DistanceY - 4, Pos.Y + DistanceY*1)
+								v.HealthBarlib.greenhealth.To = Vector2.new(Pos.X - DistanceY - 4, Pos.Y + DistanceY*1 - healthoffset)
 
-								v.HealthBarlib.healthbar.From = Vector2.new(Pos.X - DistanceY - 4, Pos.Y + DistanceY*1.5)
-								v.HealthBarlib.healthbar.To = Vector2.new(Pos.X - DistanceY - 4, Pos.Y - DistanceY*1.5)
+								v.HealthBarlib.healthbar.From = Vector2.new(Pos.X - DistanceY - 4, Pos.Y + DistanceY*1)
+								v.HealthBarlib.healthbar.To = Vector2.new(Pos.X - DistanceY - 4, Pos.Y - DistanceY*1)
 
 								local green = Color3.fromRGB(0, 255, 0)
 								local red = Color3.fromRGB(255, 0, 0)
