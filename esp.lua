@@ -404,33 +404,36 @@ task.spawn(function()
 									local TrackValue_2 = args.TrackValue_2
 
 									--// Loading Functions
-									if Flag then
-										if not Variables[Flag] then
-											return
-										end
-									end
+									local function nexto()
+										text = text..Text_front
 
-									text = text..Text_front
-									
-									print('Next')
-									if TrackDistance and TrackInst and typeof(TrackInst) == 'Instance' and TrackInst.Position then
-										print('tracking pos')
-										text = text..tostring(math.round(tonumber((game:GetService('Players').LocalPlayer.Character.HumanoidRootPart.Position - TrackInst.Position).Magnitude)))
-									else
-										if TrackInst_2 and TrackValue_2 then
-											if TrackInst and TrackValue then
-												print('tracking %')
-												text = text..tostring(math.round(math.clamp(tonumber(TrackInst[TrackValue]/TrackInst_2[TrackValue_2]),0,1)*100))..'%'
-											end
+										print('Next')
+										if TrackDistance and TrackInst and typeof(TrackInst) == 'Instance' and TrackInst.Position then
+											print('tracking pos')
+											text = text..tostring(math.round(tonumber((game:GetService('Players').LocalPlayer.Character.HumanoidRootPart.Position - TrackInst.Position).Magnitude)))
 										else
-											if TrackInst and TrackValue then
-												print('tracking value')
-												text = text..tostring(TrackInst[TrackValue])
+											if TrackInst_2 and TrackValue_2 then
+												if TrackInst and TrackValue then
+													print('tracking %')
+													text = text..tostring(math.round(math.clamp(tonumber(TrackInst[TrackValue]/TrackInst_2[TrackValue_2]),0,1)*100))..'%'
+												end
+											else
+												if TrackInst and TrackValue then
+													print('tracking value')
+													text = text..tostring(TrackInst[TrackValue])
+												end
 											end
 										end
+										text = text..Text_end
+										print(text)
 									end
-									text = text..Text_end
-									print(text)
+									if Flag then
+										if Variables[Flag] and Variables[Flag] == true then
+											nexto()
+										end
+									else
+										nexto()
+									end
 								end
 								text = text..'\n'
 							end
