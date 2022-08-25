@@ -1153,7 +1153,15 @@ local con_2 = UIS.InputBegan:Connect(function(input,processed)
 	end
 end)
 function snap(number, increment, max)
-	local newstep = math.floor(number/increment)
+	local maxstep = max/increment
+	local newstep
+	if number/increment < 1 then
+		newstep = 0
+	elseif number/increment > maxstep - 1 then
+		newstep = maxstep
+	else
+		newstep =  math.floor(number/increment)
+	end
 	local newnumber = newstep * increment
 	if newnumber > max then
 		return max
