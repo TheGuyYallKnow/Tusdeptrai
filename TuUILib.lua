@@ -1167,12 +1167,12 @@ local con_2 = UIS.InputBegan:Connect(function(input,processed)
 	end
 end)
 function snap(number, increment, max, min)
-	local maxstep = max/increment
+	local maxstep = (max-min)/increment
 	local minstep = min/increment
 	local newstep
-	if number/increment > maxstep - 1 then
+	if number/increment > (maxstep - 1) then
 		newstep = maxstep
-	elseif number/increment < minstep +1 then
+	elseif number/increment < (minstep + 1) then
 		newstep = minstep
 	else
 		newstep =  math.floor(number/increment)
