@@ -385,9 +385,7 @@ task.spawn(function()
 							local text = ""
 							for layer = 1,#v.Layers do --// Fetching layers
 								print('Looping through layer: '..tostring(layer))
-								print(game:GetService('HttpService'):JSONEncode(v.Layers[layer]))
 								for priority = 1,#(v.Layers[layer]) do
-									print(#v.Layers[layer])
 									print('priority: '..priority)
 									local args = v.Layers[layer][priority]
 									print(game:GetService('HttpService'):JSONEncode(args))
@@ -437,7 +435,7 @@ task.spawn(function()
 								end
 								text = text..'\n'
 							end
-							print(text)
+							print('Final result: '..text)
 							v.Tag.Text = text
 						end
 						v.Tag.Position = WTS(v.Part)
