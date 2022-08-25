@@ -388,6 +388,7 @@ task.spawn(function()
 								print(game:GetService('HttpService'):JSONEncode(v.Layers[layer]))
 								for priority = 1,#(v.Layers[layer]) do
 									print(#v.Layers[layer])
+									print('priority: '..priority)
 									local args = v.Layers[layer][priority]
 
 									local Text_front = args.Text_front or ''
