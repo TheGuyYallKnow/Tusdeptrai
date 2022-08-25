@@ -384,7 +384,10 @@ task.spawn(function()
 						if v.Layers then
 							local text = ""
 							for layer = 1,#v.Layers do --// Fetching layers
+								print('Looping through layer: '..tostring(layer))
+								print(game:GetService('HttpService'):JSONEncode(v.Layers[layer]))
 								for priority = 1,#(v.Layers[layer]) do
+									print(#v.Layers[layer])
 									local args = v.Layers[layer][priority]
 
 									local Text_front = args.Text_front or ''
