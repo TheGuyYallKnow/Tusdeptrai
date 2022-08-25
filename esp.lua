@@ -286,6 +286,7 @@ function getChar(inst)
 					},
 					{
 						Text_front = '[',
+						Text_end = ']',
 						TrackInst = inst.Character:FindFirstChildOfClass('Humanoid'),
 						TrackInst_2 = inst.Character:FindFirstChildOfClass('Humanoid'),
 						TrackValue = 'Health',
@@ -384,11 +385,8 @@ task.spawn(function()
 						if v.Layers then
 							local text = ""
 							for layer = 1,#v.Layers do --// Fetching layers
-								print('Looping through layer: '..tostring(layer))
 								for priority = 1,#(v.Layers[layer]) do
-									print('priority: '..priority)
 									local args = v.Layers[layer][priority]
-									print(game:GetService('HttpService'):JSONEncode(args))
 
 									local Text_front = args.Text_front or ''
 									local Text_end = args.Text_end or ''
@@ -405,25 +403,20 @@ task.spawn(function()
 									local function nexto()
 										text = text..Text_front
 
-										print('Next')
 										if TrackDistance and TrackInst and typeof(TrackInst) == 'Instance' and TrackInst.Position then
-											print('tracking pos')
 											text = text..tostring(math.round(tonumber((game:GetService('Players').LocalPlayer.Character.HumanoidRootPart.Position - TrackInst.Position).Magnitude)))
 										else
 											if TrackInst_2 and TrackValue_2 then
 												if TrackInst and TrackValue then
-													print('tracking %')
 													text = text..tostring(math.round(math.clamp(tonumber(TrackInst[TrackValue]/TrackInst_2[TrackValue_2]),0,1)*100))..'%'
 												end
 											else
 												if TrackInst and TrackValue then
-													print('tracking value')
 													text = text..tostring(TrackInst[TrackValue])
 												end
 											end
 										end
 										text = text..Text_end
-										print(text)
 									end
 									if Flag then
 										if Variables[Flag] and Variables[Flag] == true then
@@ -435,10 +428,9 @@ task.spawn(function()
 								end
 								text = text..'\n'
 							end
-							print('Final result: '..text)
 							v.Tag.Text = text
 						end
-						v.Tag.Position = WTS(v.Part)
+						v.Tag.Position = WTS(v.Part.Position)
 						local _, screen = workspace.CurrentCamera:WorldToViewportPoint(v.Part.Position)
 						if screen then
 							v.Tag.Visible = true
@@ -488,7 +480,6 @@ task.spawn(function()
 							end
 						end
 					else
-						print('Its Offline')
 						--// turning off
 						for o,c in pairs(v.Boxlib) do
 							c:Remove()
