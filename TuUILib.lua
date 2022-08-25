@@ -417,6 +417,7 @@ modules.side.AddSlider = function(args)
 					local SliderPos = Sliderr.AbsolutePosition.X
 					
 					local newnumber = snap(Set,Increment,Max,Min)
+
 					if string.split(tostring(Increment),'.')[2] then
 						local roundupto = #(string.split(tostring(Increment),'.')[2]) - 1
 						local get = string.split(tostring(newnumber),'.')
@@ -425,6 +426,13 @@ modules.side.AddSlider = function(args)
 					end
 
 					local newpercentage = math.clamp(newnumber/Max,0,1)
+
+					local fakenumber,fakemax
+					if Max < 0 then
+						fakenumber = 0
+						fakemax = Max + math.abs(Min)
+						newpercentage = math.clamp(newnumber/fakemax,0,1)
+					end
 					
 					SliderBtn.Size = UDim2.new(newpercentage, 0, 1, 0)
 
