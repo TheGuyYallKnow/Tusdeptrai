@@ -375,7 +375,7 @@ local function NewLine(thickness, color)
 end
 
 --// RUS
-game:GetService('RunService').RenderStepped:Connect(function()
+while true do
 	for i,v in pairs(data.Track) do
 		task.spawn(function()
 			if v.Part and v.Part:IsDescendantOf(workspace) then
@@ -466,8 +466,8 @@ game:GetService('RunService').RenderStepped:Connect(function()
 								local DistanceY = math.clamp((Vector2.new(head.X, head.Y) - Vector2.new(Pos.X, Pos.Y)).magnitude, 2, math.huge)
 
 								local function Size(item)
-									item.PointA = Vector2.new(Pos.X + DistanceY, Pos.Y - DistanceY*1.75)
-									item.PointB = Vector2.new(Pos.X - DistanceY, Pos.Y - DistanceY*1.75)
+									item.PointA = Vector2.new(Pos.X + DistanceY, Pos.Y - DistanceY*2)
+									item.PointB = Vector2.new(Pos.X - DistanceY, Pos.Y - DistanceY*2)
 									item.PointC = Vector2.new(Pos.X - DistanceY, Pos.Y + DistanceY*1.75)
 									item.PointD = Vector2.new(Pos.X + DistanceY, Pos.Y + DistanceY*1.75)
 								end
@@ -558,14 +558,8 @@ game:GetService('RunService').RenderStepped:Connect(function()
 			end
 		end)
 	end
-	pcall(function()
-		if getgenv().RUS and typeof(getgenv().RUS) == 'table' then
-			for i,v in pairs(getgenv().RS) do
-				task.spawn(v)
-			end
-		end
-	end)
-end)
+	game:GetService('RunService').Heartbeat:Wait()
+end
 
 local toreturn = {}
 setmetatable(toreturn,{
