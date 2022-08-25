@@ -415,19 +415,33 @@ modules.side.AddSlider = function(args)
 					local BtnPos = SliderBtn.Position
 					local SliderSize = Sliderr.AbsoluteSize.X
 					local SliderPos = Sliderr.AbsolutePosition.X
-					local pos = snap((MousePos-SliderPos)/SliderSize,1)
-					local percentage = math.clamp(pos,0,1)
-					SliderBtn.Position = UDim2.new(percentage/100,-1,(BtnPos.Y.Scale), BtnPos.Y.Offset)
-					SliderBtn.Size = UDim2.new(percentage,0,1,0)
 					
+					local newnumber = snap(Set,Increment,Max,Min)
+					if string.split(tostring(Increment),'.')[2] then
+						local roundupto = #(string.split(tostring(Increment),'.')[2]) - 1
+						local get = string.split(tostring(newnumber),'.')
+						local rounded = string.sub(get[2],1,roundupto)
+						newnumber = tonumber(get[1]..'.'..rounded)
+					end
+
+					local newpercentage = math.clamp(newnumber/Max,0,1)
+					
+					SliderBtn.Size = UDim2.new(newpercentage, 0, 1, 0)
+
 					local Val = {
 						Variables.CurrentSlider:FindFirstChild('Value'),
 						Variables.CurrentSlider.Parent:FindFirstChild('Value'),
 					}
-					for i,v in pairs(Val) do
-						v.Text = tostring(Set)..' '..Name
+
+					local Nameto = Variables.CurrentSlider:FindFirstChild('Nameto')
+					local function changeval(text)
+						for i,v in pairs(Val) do
+							v.Text = tostring(text)..' '..Nameto.Value
+						end
 					end
-					Callback(args)
+
+					changeval(newnumber)
+					Callback(newnumber)
 				end
 			end
 		end
@@ -1152,24 +1166,26 @@ local con_2 = UIS.InputBegan:Connect(function(input,processed)
 		end
 	end
 end)
-function snap(number, increment, max)
+function snap(number, increment, max, min)
 	local maxstep = max/increment
+	local minstep = min/increment
 	local newstep
-	if number/increment < 1 then
-		newstep = 0
-	elseif number/increment > maxstep - 1 then
+	if number/increment > maxstep - 1 then
 		newstep = maxstep
+	elseif number/increment < minstep +1 then
+		newstep = minstep
 	else
 		newstep =  math.floor(number/increment)
 	end
+	
 	local newnumber = newstep * increment
 	if newnumber > max then
 		return max
+	elseif newnumber < min then
+		return min
+	else
+		return newnumber
 	end
-	if newnumber < 0 then
-		return 0
-	end
-	return newnumber
 end
 local RuS = game:GetService('RunService')
 local con_3 = RuS.RenderStepped:connect(function(delta)
@@ -1187,7 +1203,7 @@ local con_3 = RuS.RenderStepped:connect(function(delta)
 		local ap = Vector2.new(Slider.Parent.AbsolutePosition.X, Slider.Parent.AbsolutePosition.Y)
 		local as = Vector2.new(Slider.Parent.AbsoluteSize.X, Slider.Parent.AbsoluteSize.Y)
 		
-		local newnumber = snap(((mouse.X - ap.X)/Slider.Parent.AbsoluteSize.X)*max,increment,max)
+		local newnumber = snap(((mouse.X - ap.X)/Slider.Parent.AbsoluteSize.X)*max,increment,max,min)
 		if string.split(tostring(increment),'.')[2] then
 			local roundupto = #(string.split(tostring(increment),'.')[2]) - 1
 			local get = string.split(tostring(newnumber),'.')
