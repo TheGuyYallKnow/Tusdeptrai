@@ -384,7 +384,6 @@ task.spawn(function()
 						if v.Layers then
 							local text = ""
 							for layer = 1,#v.Layers do --// Fetching layers
-								print(#v.Layers[layer])
 								for priority = 1,#(v.Layers[layer]) do
 									local args = v.Layers[layer][priority]
 
@@ -422,9 +421,11 @@ task.spawn(function()
 										end
 									end
 									text = text..Text_end
+									print(text)
 								end
 								text = text..'\n'
 							end
+							print(text)
 							v.Tag.Text = text
 						end
 						v.Tag.Position = WTS(v.Part)
