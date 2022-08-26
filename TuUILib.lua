@@ -1229,9 +1229,10 @@ local con_3 = RuS.RenderStepped:connect(function(delta)
 		if min < 0 then
 			fakemax = max + math.abs(min)
 			if newnumber < 0 then
-				newpercentage = math.clamp(math.abs(newnumber)/fakemax,0,1)
+				newpercentage = math.clamp(math.abs((min + math.abs(newnumber)))/fakemax,0,1)
 			else
-				newpercentage = math.clamp(newnumber + math.abs(min)/fakemax,0,1)
+				print('Maxteo: '..tostring((newnumber + math.abs(min))/fakemax))
+				newpercentage = math.clamp((newnumber + math.abs(min))/fakemax,0,1)
 			end
 			print('Fakemax = '..tostring(fakemax)..', Newpct = '..tostring(newpercentage))
 		end
