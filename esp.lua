@@ -636,6 +636,13 @@ setmetatable(toreturn,{
 			Callback = function(Value,set)
 				if not set then
 					Variables.ESP_Player = Value
+					if Value == false then
+						for i,v in pairs(data.Track) do
+							if v.Tag then
+								v.Tag.Visible = false
+							end
+						end
+					end
 				end
 			end,
 		})
