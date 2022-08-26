@@ -1146,19 +1146,6 @@ modules.side.AddTab = function(args)
 end
 
 gsTween = game:GetService("TweenService")
-local Drag
-local dragging
-local dragInput
-local dragStart
-local startPos
-local function update(input)
-	local delta = input.Position - dragStart
-	local dragTime = 0.04
-	local SmoothDrag = {}
-	SmoothDrag.Position = UDim2.new(startPos.X.Scale, startPos.X.Offset + delta.X, startPos.Y.Scale, startPos.Y.Offset + delta.Y)
-	local dragSmoothFunction = gsTween:Create(Drag, TweenInfo.new(dragTime, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut), SmoothDrag)
-	dragSmoothFunction:Play()
-end
 
 local ex_connections = {}
 local con_1 = UIS.InputEnded:connect(function(input, processed)
@@ -1170,9 +1157,6 @@ end)
 local con_2 = UIS.InputBegan:Connect(function(input,processed)
 	if input.UserInputType == Enum.UserInputType.MouseButton1 then
 		Variables.mousepressed = true
-	end
-	if input == dragInput and dragging and Drag.Size then
-		update(input)
 	end
 	if not processed then
 		if Variables.Keybinds[input.KeyCode] or Variables.Keybinds[input.UserInputType] then
@@ -1367,7 +1351,7 @@ function hub:MakeWindow(args)
 		local TextLabel = Instance.new("TextLabel")
 		local Frame_7 = Instance.new("Frame")
 		
-		getgenv().MakeDrag(Frame)
+		getgenv().MakeDrag(TopBar,Frame)
 
 		--Properties:
 
@@ -1524,26 +1508,6 @@ function hub:MakeWindow(args)
 		UIListLayout.Padding = UDim.new(0, 5)
 
 		Hub.Enabled = false
-
-		Drag = Frame
-
-		Drag.InputBegan:Connect(function(input)
-			if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
-				dragging = true
-				dragStart = input.Position
-				startPos = Drag.Position
-				input.Changed:Connect(function()
-					if input.UserInputState == Enum.UserInputState.End then
-						dragging = false
-					end
-				end)
-			end
-		end)
-		Drag.InputChanged:Connect(function(input)
-			if input.UserInputType == Enum.UserInputType.MouseMovement or input.UserInputType == Enum.UserInputType.Touch then
-				dragInput = input
-			end
-		end)
 
 		if Flag then
 			Variables.Flags[Flag] = function(boolean)
