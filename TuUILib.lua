@@ -1189,6 +1189,7 @@ function snap(pct, increment, max, min)
 	end
 	
 	local newnumber = min + (newstep*increment)
+	print('Percentage = '..tostring(pct)..'.Curstep = '..tostring(curstep)..'.Maxstep = '..tostring(maxstep)..'.Minstep = '..tostring(minstep))
 	if newnumber > max then
 		return max
 	elseif newnumber < min then
