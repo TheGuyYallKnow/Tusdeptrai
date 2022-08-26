@@ -124,7 +124,7 @@ function AddESP(part, color, args, Flag, Features)
 			local layer = {}
 			for o,c in pairs(v) do
 				local pri = c.Priority
-				if not pri then error('I dont see the priority.From: '..game:GetService('HttpService'):JSONEncode(v)) end
+				if not pri then error('I dont see the priority. From: '..game:GetService('HttpService'):JSONEncode(v)) end
 				c.Priority = nil
 				layer[pri] = c
 			end
@@ -452,6 +452,9 @@ task.spawn(function()
 								v.Tag.Position = WTS(v.Part.Position)
 								local _, screen = workspace.CurrentCamera:WorldToViewportPoint(v.Part.Position)
 								if screen then
+									if v.Tag.Size ~= Variables.ESP_Size then
+										v.Tag.Size = Variables.ESP_Size
+									end
 									v.Tag.Visible = true
 								else
 									v.Tag.Visible = false
