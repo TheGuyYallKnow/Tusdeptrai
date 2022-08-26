@@ -1178,7 +1178,7 @@ end)
 function snap(pct, increment, max, min)
 	local curstep = pct*(max + math.abs(min))
 	local maxstep = (max-min)/increment
-	local minstep = min/increment
+	local minstep = 1
 	local newstep
 	if curstep > (maxstep - 1) then
 		newstep = maxstep
