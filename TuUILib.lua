@@ -18,6 +18,8 @@ local Variables = {
 	mousepressed = false,
 	CurrentSlider = nil,
 	CurrentSlider_callback = nil,
+	
+	Selection = nil,
 }
 local modules = {
 	main = {},
@@ -1107,6 +1109,9 @@ modules.side.AddTab = function(args)
 		end)
 
 		button.MouseButton1Down:Connect(function()
+			if Variables.Selection then
+				Variables.Selection.BackgroundTransparency = 1
+			end
 			for i,v in pairs(Variables.Buttons) do
 				if v.Visible then
 					if Variables.Tab_Closedfuncs[i] then
@@ -1119,6 +1124,8 @@ modules.side.AddTab = function(args)
 			if Callback then
 				Callback()
 			end
+			Variables.Selection = button
+			Variables.Selection.BackgroundTransparency = 0.1
 		end)
 
 		if Flag then
@@ -1195,7 +1202,6 @@ function snap(pct, increment, max, min)
 	end
 	
 	local newnumber = min + (newstep*increment)
-	print('Percentage = '..tostring(pct)..'.Curstep = '..tostring(curstep)..'.Maxstep = '..tostring(maxstep)..'.Newstep = '..tostring(newstep))
 	if newnumber > max then
 		return max
 	elseif newnumber < min then
@@ -1221,7 +1227,6 @@ local con_3 = RuS.RenderStepped:connect(function(delta)
 		local as = Vector2.new(Slider.Parent.AbsoluteSize.X, Slider.Parent.AbsoluteSize.Y)
 		
 		local newnumber = snap(((mouse.X - ap.X)/Slider.Parent.AbsoluteSize.X),increment,max,min)
-		print('Max = '..tostring(max)..', Min = '..tostring(min)..' \n Newnumber = '..tostring(newnumber))
 		
 		if string.split(tostring(increment),'.')[2] then
 			local roundupto = #(string.split(tostring(increment),'.')[2]) - 1
@@ -1240,12 +1245,9 @@ local con_3 = RuS.RenderStepped:connect(function(delta)
 			if newnumber < 0 then
 				newpercentage = math.clamp(math.abs((min + math.abs(newnumber)))/fakemax,0,1)
 			else
-				print('Maxteo: '..tostring((newnumber + math.abs(min))/fakemax))
 				newpercentage = math.clamp((newnumber + math.abs(min))/fakemax,0,1)
 			end
-			print('Fakemax = '..tostring(fakemax)..', Newpct = '..tostring(newpercentage))
 		end
-		print('Final Result = '..tostring(newpercentage))
 		--[[
 		local percentage = math.clamp((mouse.X - ap.X)/Slider.Parent.AbsoluteSize.X,0,1)
 		--// Snapping, the increment thingy
@@ -1364,6 +1366,8 @@ function hub:MakeWindow(args)
 		local UICorner_4 = Instance.new("UICorner")
 		local TextLabel = Instance.new("TextLabel")
 		local Frame_7 = Instance.new("Frame")
+		
+		getgenv().MakeDrag(Frame)
 
 		--Properties:
 
