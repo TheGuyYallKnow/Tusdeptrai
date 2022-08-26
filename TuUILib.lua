@@ -1224,7 +1224,9 @@ local con_3 = RuS.RenderStepped:connect(function(delta)
 			newnumber = tonumber(get[1]..'.'..rounded)
 		end
 		
-		local newpercentage = math.clamp(newnumber/math.abs((max-min)),0,1)
+		local fakemax = max-min
+		local fakenumber = newnumber-min
+		local newpercentage = math.clamp(fakenumber/fakemax,0,1)
 		
 		local fakenumber,fakemax
 		if min < 0 then
