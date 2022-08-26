@@ -1224,7 +1224,7 @@ local con_3 = RuS.RenderStepped:connect(function(delta)
 			newnumber = tonumber(get[1]..'.'..rounded)
 		end
 		
-		local newpercentage = math.clamp(newnumber/(max+min),0,1)
+		local newpercentage = math.clamp(newnumber/math.abs((max-min)),0,1)
 		
 		local fakenumber,fakemax
 		if min < 0 then
@@ -1237,6 +1237,7 @@ local con_3 = RuS.RenderStepped:connect(function(delta)
 			end
 			print('Fakemax = '..tostring(fakemax)..', Newpct = '..tostring(newpercentage))
 		end
+		print('Final Result = '..tostring(newpercentage))
 		--[[
 		local percentage = math.clamp((mouse.X - ap.X)/Slider.Parent.AbsoluteSize.X,0,1)
 		--// Snapping, the increment thingy
