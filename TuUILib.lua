@@ -58,6 +58,7 @@ local function create_LeftButton(buttonname)
 	Title.Text = tostring(buttonname)
 	Title.TextColor3 = Color3.fromRGB(240, 240, 240)
 	Title.TextSize = 14.000
+	Title.TextXAlignment = Enum.TextXAlignment.Left
 
 	UICorner.CornerRadius = UDim.new(1, 10)
 	UICorner.Parent = Title
@@ -1226,9 +1227,9 @@ local con_3 = RuS.RenderStepped:connect(function(delta)
 		
 		local fakenumber,fakemax
 		if min < 0 then
-			fakenumber = 0
-			fakemax = max + math.abs(min)
+			fakemax = max + math.abs(min) + 1
 			newpercentage = math.clamp((math.abs(newnumber)+math.abs(min))/fakemax,0,1)
+			print('Fakemax = '..tostring(fakemax)..', Newpct = '..tostring(newpercentage))
 		end
 		--[[
 		local percentage = math.clamp((mouse.X - ap.X)/Slider.Parent.AbsoluteSize.X,0,1)
@@ -1574,7 +1575,7 @@ function hub:Notify(args)
 		Content.Parent = TextButton
 		Content.BackgroundTransparency = 1.000
 		Content.BorderColor3 = Color3.fromRGB(27, 42, 53)
-		Content.Position = UDim2.new(0, 0, 0, 0)
+		Content.Position = UDim2.new(0, 5, 0, 2)
 		Content.Size = UDim2.new(1, -12, 0.953333139, 0)
 		Content.ZIndex = 3
 		Content.Font = Enum.Font.SourceSansBold
