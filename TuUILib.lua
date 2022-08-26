@@ -1176,9 +1176,15 @@ local con_2 = UIS.InputBegan:Connect(function(input,processed)
 	end
 end)
 function snap(pct, increment, max, min)
-	local curstep = pct*(max + math.abs(min))
+	local curstep = pct*(math.abs(max-min))
 	local maxstep = (max-min)/increment
 	local minstep = 0
+	if min > 0 then
+		local distance = max-min
+		local delta = pct * distance
+		curstep = (min+delta - min)/increment
+	end
+	--local curstep = pct*(max + math.abs(min))
 	local newstep
 	if curstep > (maxstep - 1) then
 		newstep = maxstep
@@ -1189,7 +1195,7 @@ function snap(pct, increment, max, min)
 	end
 	
 	local newnumber = min + (newstep*increment)
-	print('Percentage = '..tostring(pct)..'.Curstep = '..tostring(curstep)..'.Maxstep = '..tostring(maxstep)..'.Minstep = '..tostring(minstep))
+	print('Percentage = '..tostring(pct)..'.Curstep = '..tostring(curstep)..'.Maxstep = '..tostring(maxstep)..'.Newstep = '..tostring(newstep))
 	if newnumber > max then
 		return max
 	elseif newnumber < min then
@@ -1584,7 +1590,7 @@ function hub:Notify(args)
 		Content.Parent = TextButton
 		Content.BackgroundTransparency = 1.000
 		Content.BorderColor3 = Color3.fromRGB(27, 42, 53)
-		Content.Position = UDim2.new(0, 5, 0, 2)
+		Content.Position = UDim2.new(0, 5, 0.001, 0)
 		Content.Size = UDim2.new(1, -12, 0.953333139, 0)
 		Content.ZIndex = 3
 		Content.Font = Enum.Font.SourceSansBold
