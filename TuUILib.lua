@@ -1178,7 +1178,7 @@ end)
 function snap(pct, increment, max, min)
 	local curstep = pct*(max + math.abs(min))
 	local maxstep = (max-min)/increment
-	local minstep = 1
+	local minstep = 0
 	local newstep
 	if curstep > (maxstep - 1) then
 		newstep = maxstep
@@ -1224,7 +1224,7 @@ local con_3 = RuS.RenderStepped:connect(function(delta)
 			newnumber = tonumber(get[1]..'.'..rounded)
 		end
 		
-		local newpercentage = math.clamp(newnumber/max,0,1)
+		local newpercentage = math.clamp(newnumber/(max+min),0,1)
 		
 		local fakenumber,fakemax
 		if min < 0 then
