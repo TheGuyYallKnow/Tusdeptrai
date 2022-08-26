@@ -1213,6 +1213,7 @@ local con_3 = RuS.RenderStepped:connect(function(delta)
 		local as = Vector2.new(Slider.Parent.AbsoluteSize.X, Slider.Parent.AbsoluteSize.Y)
 		
 		local newnumber = snap(((mouse.X - ap.X)/Slider.Parent.AbsoluteSize.X),increment,max,min)
+		print('Max = '..tostring(max)..', Min = '..tostring(min)..' \n Newnumber = '..tostring(newnumber))
 		
 		if string.split(tostring(increment),'.')[2] then
 			local roundupto = #(string.split(tostring(increment),'.')[2]) - 1
@@ -1227,8 +1228,7 @@ local con_3 = RuS.RenderStepped:connect(function(delta)
 		if min < 0 then
 			fakenumber = 0
 			fakemax = max + math.abs(min)
-			local newnew = newnumber-math.abs(min)
-			newpercentage = math.clamp(newnew/fakemax,0,1)
+			newpercentage = math.clamp(math.abs(newnumber)/fakemax,0,1)
 		end
 		--[[
 		local percentage = math.clamp((mouse.X - ap.X)/Slider.Parent.AbsoluteSize.X,0,1)
