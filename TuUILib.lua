@@ -1650,5 +1650,5 @@ function hub:FireFlag(flagname,args)
 	end
 end
 
-print('Version: 1')
+print('Version: 2')
 return hub
