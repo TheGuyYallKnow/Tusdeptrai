@@ -35,7 +35,7 @@ UserInputService.InputChanged:Connect(function(input)
 	end
 end)
 
-function module.MakeDragable(Drag)
+function module.MakeDragable(hitbox,Drag)
 	local tab = {}
 	local dragging
 	local dragInput
@@ -52,7 +52,7 @@ function module.MakeDragable(Drag)
 	end
 
 	local connections = {}
-	connections.Began = Drag.InputBegan:Connect(function(input)
+	connections.Began = hitbox.InputBegan:Connect(function(input)
 		if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
 			dragging = true
 			dragStart = input.Position
@@ -66,7 +66,7 @@ function module.MakeDragable(Drag)
 			end)
 		end
 	end)
-	connections.Changed = Drag.InputChanged:Connect(function(input)
+	connections.Changed = hitbox.InputChanged:Connect(function(input)
 		if input.UserInputType == Enum.UserInputType.MouseMovement or input.UserInputType == Enum.UserInputType.Touch then
 			dragInput = input
 			adjust()
