@@ -360,7 +360,22 @@ modules.side.AddSlider = function(args)
 		Frame_3.BackgroundTransparency = 0.300
 		Frame_3.BorderSizePixel = 0
 		Frame_3.ClipsDescendants = true
-		Frame_3.Size = UDim2.new(math.clamp(Default/Max,0,1), 0, 1, 0)
+		
+		local fakemax = Max-Min
+		local fakenumber = Default-Min
+		local newpercentage = math.clamp(fakenumber/fakemax,0,1)
+
+		local fakenumber,fakemax
+		if Min < 0 then
+			fakemax = Max + math.abs(Min)
+			if Default < 0 then
+				newpercentage = math.clamp(math.abs((Min + math.abs(Default)))/fakemax,0,1)
+			else
+				newpercentage = math.clamp((Default + math.abs(Min))/fakemax,0,1)
+			end
+		end
+		
+		Frame_3.Size = UDim2.new(newpercentage, 0, 1, 0)
 
 		UICorner_3.CornerRadius = UDim.new(0, 5)
 		UICorner_3.Parent = Frame_3
