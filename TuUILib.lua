@@ -618,9 +618,10 @@ modules.side.AddBind = function(args)
 			if not Variables.Keybinds[Default] then
 				Variables.Keybinds[Default] = {}
 			end
-			table.insert(Variables.Keybinds[Default],Callback_)
 			Value.Text = EnumtoString(Default) or '???'
 			Callback(Default,true)
+			wait()
+			table.insert(Variables.Keybinds[Default],Callback_)
 		end
 		
 		TextButton.MouseButton1Down:Connect(function()
