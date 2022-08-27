@@ -624,7 +624,7 @@ modules.side.AddBind = function(args)
 		end
 		
 		TextButton.MouseButton1Down:Connect(function()
-			Value.Text = ''
+			Value.Text = '...'
 			wait()
 			local connection
 			connection = UIS.InputBegan:Connect(function(input)
@@ -1211,9 +1211,10 @@ local con_3 = RuS.RenderStepped:connect(function(delta)
 		local as = Vector2.new(Slider.Parent.AbsoluteSize.X, Slider.Parent.AbsoluteSize.Y)
 		
 		local newnumber = snap(((mouse.X - ap.X)/Slider.Parent.AbsoluteSize.X),increment,max,min)
-		
+		print('Snapped to: '..newnumber)
 		if string.split(tostring(increment),'.')[2] then
 			local roundupto = #(string.split(tostring(increment),'.')[2]) - 1
+			print('roundupto = '..tostring(roundupto))
 			local get = string.split(tostring(newnumber),'.')
 			if get[2] then
 				local rounded = string.sub(get[2],1,roundupto)
@@ -1234,6 +1235,8 @@ local con_3 = RuS.RenderStepped:connect(function(delta)
 				newpercentage = math.clamp((newnumber + math.abs(min))/fakemax,0,1)
 			end
 		end
+		
+		
 		--[[
 		local percentage = math.clamp((mouse.X - ap.X)/Slider.Parent.AbsoluteSize.X,0,1)
 		--// Snapping, the increment thingy
