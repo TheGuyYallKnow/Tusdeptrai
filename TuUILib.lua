@@ -1212,7 +1212,6 @@ local con_3 = RuS.RenderStepped:connect(function(delta)
 		
 		local newnumber = snap(((mouse.X - ap.X)/Slider.Parent.AbsoluteSize.X),increment,max,min)
 		
-		--[[
 		if string.split(tostring(increment),'.')[2] then
 			local roundupto = #(string.split(tostring(increment),'.')[2]) - 1
 			local get = string.split(tostring(newnumber),'.')
@@ -1221,7 +1220,6 @@ local con_3 = RuS.RenderStepped:connect(function(delta)
 				newnumber = tonumber(get[1]..'.'..rounded)
 			end
 		end
-		]]
 		
 		local fakemax = max-min
 		local fakenumber = newnumber-min
