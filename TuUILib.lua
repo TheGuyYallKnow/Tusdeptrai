@@ -232,8 +232,8 @@ modules.side.AddLabel = function(args)
 			Destroy = function()
 				frame:Destroy()
 			end,
-			Set = function(args)
-				content.Text = args[1]
+			Set = function(text)
+				content.Text = text
 			end,
 		}
 		return methods
