@@ -360,7 +360,7 @@ modules.side.AddSlider = function(args)
 		Frame_3.BackgroundTransparency = 0.300
 		Frame_3.BorderSizePixel = 0
 		Frame_3.ClipsDescendants = true
-		Frame_3.Size = UDim2.new(0.25, 0, 1, 0)
+		Frame_3.Size = UDim2.new(math.clamp(Default/Max,0,1), 0, 1, 0)
 
 		UICorner_3.CornerRadius = UDim.new(0, 5)
 		UICorner_3.Parent = Frame_3
@@ -422,19 +422,26 @@ modules.side.AddSlider = function(args)
 					local newnumber = snap(Set,Increment,Max,Min)
 
 					if string.split(tostring(Increment),'.')[2] then
-						local roundupto = #(string.split(tostring(Increment),'.')[2]) - 1
+						local roundupto = #(string.split(tostring(Increment),'.')[2])
 						local get = string.split(tostring(newnumber),'.')
-						local rounded = string.sub(get[2],1,roundupto)
-						newnumber = tonumber(get[1]..'.'..rounded)
+						if get[2] then
+							local rounded = string.sub(get[2],1,roundupto)
+							newnumber = tonumber(get[1]..'.'..rounded)
+						end
 					end
 
-					local newpercentage = math.clamp(newnumber/Max,0,1)
+					local fakemax = Max-Min
+					local fakenumber = newnumber-Min
+					local newpercentage = math.clamp(fakenumber/fakemax,0,1)
 
 					local fakenumber,fakemax
-					if Max < 0 then
-						fakenumber = 0
+					if Min < 0 then
 						fakemax = Max + math.abs(Min)
-						newpercentage = math.clamp(newnumber/fakemax,0,1)
+						if newnumber < 0 then
+							newpercentage = math.clamp(math.abs((Min + math.abs(newnumber)))/fakemax,0,1)
+						else
+							newpercentage = math.clamp((newnumber + math.abs(Min))/fakemax,0,1)
+						end
 					end
 					
 					SliderBtn.Size = UDim2.new(newpercentage, 0, 1, 0)
