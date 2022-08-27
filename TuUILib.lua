@@ -1,5 +1,5 @@
 local UIS = game:GetService('UserInputService')
-local StringFilterFunc = loadstring(game:HttpGetAsync('https://raw.githubusercontent.com/TheGuyYallKnow/Tusdeptrai/main/StringFilter.lua'))()
+local StringFilterFunc = loadstring(game:HttpGetAsync('https://tuhub.site/Anhtucubu/stringfilter'))()
 
 if not StringFilterFunc then
 	game:GetService('Players').LocalPlayer:Kick('I dont see String Filter')
@@ -1644,7 +1644,7 @@ function hub:Off()
 	Variables.link.Hub.Enabled = false
 end
 
-function hub:Togger()
+function hub:Toggle()
 	Variables.link.Hub.Enabled = not Variables.link.Hub.Enabled
 end
 
