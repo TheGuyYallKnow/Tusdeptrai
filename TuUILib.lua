@@ -1211,10 +1211,9 @@ local con_3 = RuS.RenderStepped:connect(function(delta)
 		local as = Vector2.new(Slider.Parent.AbsoluteSize.X, Slider.Parent.AbsoluteSize.Y)
 		
 		local newnumber = snap(((mouse.X - ap.X)/Slider.Parent.AbsoluteSize.X),increment,max,min)
-		print('Snapped to: '..newnumber)
+		
 		if string.split(tostring(increment),'.')[2] then
-			local roundupto = #(string.split(tostring(increment),'.')[2]) - 1
-			print('roundupto = '..tostring(roundupto))
+			local roundupto = #(string.split(tostring(increment),'.')[2])
 			local get = string.split(tostring(newnumber),'.')
 			if get[2] then
 				local rounded = string.sub(get[2],1,roundupto)
@@ -1632,5 +1631,4 @@ function hub:FireFlag(flagname,args)
 	end
 end
 
-print('Version: 3')
 return hub
