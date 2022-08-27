@@ -1644,6 +1644,10 @@ function hub:Off()
 	Variables.link.Hub.Enabled = false
 end
 
+function hub:Togger()
+	Variables.link.Hub.Enabled = not Variables.link.Hub.Enabled
+end
+
 function hub:Destroy()
 	for i,v in pairs(ex_connections) do
 		v:Disconnect()
