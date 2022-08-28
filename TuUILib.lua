@@ -233,6 +233,7 @@ modules.side.AddLabel = function(args)
 				frame:Destroy()
 			end,
 			Set = function(text)
+				print(text)
 				content.Text = text
 			end,
 		}
