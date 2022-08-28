@@ -233,8 +233,6 @@ modules.side.AddLabel = function(args)
 				frame:Destroy()
 			end,
 			Set = function(get)
-				print(get)
-				print(game:GetService('HttpService'):JSONEncode(get))
 				content.Text = get
 			end,
 		}
@@ -1304,22 +1302,26 @@ end
 modules.side.Tabfunc = function(parento)
 	function parento:AddSection(args)
 		args.Frame = parento.self
-		return modules.side.AddSection(args)
+		local methods = modules.side.AddSection(args) or nil
+		return methods
 	end
 	
 	function parento:AddSlider(args)
 		args.Frame = parento.self
-		return modules.side.AddSlider(args)
+		local methods = modules.side.AddSlider(args) or nil
+		return methods
 	end
 	
 	function parento:AddButton(args)
 		args.Frame = parento.self
-		return modules.side.AddButton(args)
+		local methods = modules.side.AddButton(args) or nil
+		return methods
 	end
 	
 	function parento:AddToggle(args)
 		args.Frame = parento.self
-		return modules.side.AddToggle(args)
+		local methods = modules.side.AddToggle(args) or nil
+		return methods
 	end
 	
 	function parento:AddLabel(...)
@@ -1327,27 +1329,32 @@ modules.side.Tabfunc = function(parento)
 		local args = {}
 		args.Frame = parento.self
 		args.Name = faketo[1]
-		return modules.side.AddLabel(args)
+		local methods = modules.side.AddLabel(args) or nil
+		return methods
 	end
 	
 	function parento:AddParagraph(args)
 		args.Frame = parento.self
-		return modules.side.AddParagraph(args)
+		local methods = modules.side.AddParagraph(args)
+		return methods or nil
 	end
 	
 	function parento:AddBind(args)
 		args.Frame = parento.self
-		return modules.side.AddBind(args)
+		local methods = modules.side.AddBind(args)
+		return methods or nil
 	end
 	
 	function parento:AddTextbox(args)
 		args.Frame = parento.self
-		return modules.side.AddTextBox(args)
+		local methods = modules.side.AddTextBox(args)
+		return methods or nil
 	end
 	
 	function parento:AddDropdown(args)
 		args.Frame = parento.self
-		return modules.side.AddDropdown(args)
+		local methods = modules.side.AddDropdown(args)
+		return methods or nil
 	end
 end
 
@@ -1393,7 +1400,7 @@ function hub:MakeWindow(args)
 		Frame.BackgroundColor3 = Color3.fromRGB(25, 25, 25)
 		Frame.BorderSizePixel = 0
 		Frame.ClipsDescendants = true
-		Frame.Position = UDim2.new(0.5, -307, 0.5, -172)
+		Frame.Position = UDim2.new(0, 0, 0.75, 0)
 		Frame.Size = UDim2.new(0, 615, 0, 344)
 
 		UICorner.CornerRadius = UDim.new(0, 10)
