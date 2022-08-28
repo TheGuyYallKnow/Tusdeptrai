@@ -234,6 +234,7 @@ modules.side.AddLabel = function(args)
 			end,
 			Set = function(text)
 				print(text)
+				print(game:GetService('HttpService'):JSONEncode(text))
 				content.Text = text
 			end,
 		}
