@@ -392,10 +392,8 @@ task.spawn(function()
 																if getdec[2] and getdec[1] then
 																	rounded = getdec[1]..','..string.sub(getdec[2],1,2)
 																end
-															else
-																rounded = stringto
 															end
-															text = text..rounded
+															text = text..(rounded or stringto)
 														end
 													end
 												end
