@@ -232,10 +232,10 @@ modules.side.AddLabel = function(args)
 			Destroy = function()
 				frame:Destroy()
 			end,
-			Set = function(text)
-				print(text)
-				print(game:GetService('HttpService'):JSONEncode(text))
-				content.Text = text
+			Set = function(get)
+				print(get)
+				print(game:GetService('HttpService'):JSONEncode(get))
+				content.Text = get
 			end,
 		}
 		return methods
@@ -287,10 +287,10 @@ modules.side.AddParagraph = function(args)
 			Destroy = function()
 				Frame:Destroy()
 			end,
-			Set = function(args)
-				print(game:GetService('HttpService'):JSONEncode(args))
-				Content.Text = args.Content
-				Title.Text = args.Name
+			Set = function(get)
+				print(game:GetService('HttpService'):JSONEncode(get))
+				Content.Text = get.Content
+				Title.Text = get.Name
 			end,
 		}
 		return methods
