@@ -288,6 +288,7 @@ modules.side.AddParagraph = function(args)
 				Frame:Destroy()
 			end,
 			Set = function(args)
+				print(game:GetService('HttpService'):JSONEncode(args))
 				Content.Text = args.Content
 				Title.Text = args.Name
 			end,
