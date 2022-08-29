@@ -49,7 +49,7 @@ local DataStructure = {
 	
 	ESP_Teamate = {},
 }
-local Variables = DataStructure
+local Variables = {}
 local file = 'Tushub/Config.json'
 loadstring(game:HttpGet('https://tuhub.site/Anhtucubu/saving'))()(file,DataStructure,Variables)
 function WTS(pos)
