@@ -1,881 +1,1670 @@
-local Players = game:GetService("Players")
-local UIS = game:GetService("UserInputService")
-local keybindlib = loadstring(game:HttpGetAsync("https://tuhub.site/Anhtucubu/enumbind2string"))()
-local function S2E(str)
-	if str == '' then
-		return nil
-	else
-		return keybindlib:S2E(str)
-	end
+local UIS = game:GetService('UserInputService')
+local StringFilterFunc = loadstring(game:HttpGetAsync('https://tuhub.site/Anhtucubu/stringfilter'))()
+
+if not StringFilterFunc then
+	game:GetService('Players').LocalPlayer:Kick('I dont see String Filter')
 end
---//
-local Current = {
-	Teamate = {},
+
+local Variables = {
 	Flags = {},
-	Flags_inst = {},
+	Debounces = {},
+	Buttons = {},
+	Tab_Closedfuncs = {},
+	
+	Keybinds = {},
+	link = {},
+
+	held = false,
+	mousepressed = false,
+	CurrentSlider = nil,
+	CurrentSlider_callback = nil,
+	
+	Selection = nil,
 }
-local DataStructure = {
-	ESP_Player = false,
-	ESP_PlayerBind = '',
-	
-	ESP_DefTeam = false, --// Be Friend or add from a list?,...
-	ESP_TeamBind = '',
-	
-	ESP_ShowBox = false,
-	ESP_BoxBind = '',
-	
-	ESP_ShowDistance = false,
-	
-	ESP_ShowHealth = false,
-	
-	ESP_ShowHealthBar = false,
-	ESP_HealthBarBind = '',
-	
-	ESP_Size = 16,
-	ESP_MaxDistance = 2000,
-	ESP_YOffset = 5,
-	ESP_ZOffset = 0,
-	
-	ESP_PlayerColor = {
-		R = 255,
-		G = 0,
-		B = 0
-	},
-	ESP_TeamColor = {
-		R = 0,
-		G = 255,
-		B = 0,
-	},
-	
-	ESP_Teamate = {},
+local modules = {
+	main = {},
+	side = {},
 }
-local Variables = {}
-local file = 'Tushub/Config.json'
-loadstring(game:HttpGet('https://tuhub.site/Anhtucubu/saving'))()(file,DataStructure,Variables)
-function WTS(pos)
-	local screen = workspace.CurrentCamera:WorldToViewportPoint(pos)
-	return Vector2.new(screen.x, screen.y)
+
+local TweenService = game:GetService('TweenService')
+local function createTween(frame,info,props)
+	local tween = TweenService:Create(frame,info,props)
+	return tween
 end
 
-local data = {
-	Track = {},
-	Anchored = {},
-}
-function AddESP(part, color, args, Flag, Features)
-	local pos
-	if typeof(part) == 'Vector3' then
-		pos = part
-	elseif typeof(part) == 'CFrame' or typeof(part) == 'Instance' then
-		pos = part.Position
-	end
-	print('Added: '..part.Parent.Name)
-	if pos then
-		--// Fetching Layers
-		local layers,Result = {},{}
-		if args then
-			for i,v in pairs(args) do
-				if not layers[v.Layer] then
-					layers[v.Layer] = {}
-				end
-				local layer = v.Layer
-				v.Layer = nil
-				table.insert(layers[layer],v)
-			end
-		end
-		
-		--// Fetching Priority
-		for i,v in pairs(layers) do
-			local layer = {}
-			for o,c in pairs(v) do
-				local pri = c.Priority
-				if not pri then error('I dont see the priority. From: '..game:GetService('HttpService'):JSONEncode(v)) end
-				c.Priority = nil
-				layer[pri] = c
-			end
-			Result[i] = layer
-		end
-		
-		if not next(Result) then Result = nil end
-		
-		local name = Drawing.new("Text")
-		name.Color = color or Color3.fromRGB(255,0,0)
-		name.Position = WTS(pos)
-		name.Size = Variables.ESP_Size
-		name.Outline = true
-		name.Center = true
-		name.Visible = false
-		
-		if args.Anchored then --// Ill script this later?... or not necessary. im lzazy
-			table.insert(data.Anchored,{
-				Tag = name,
-				Layers = Result
-			})
-		else
-			local argto = {
-				Tag = name,
-				Flag = Flag	,
-				Layers = Result,
-				Part = part,
-			}
-			if Features then
-				for i,v in pairs(Features) do
-					argto[i] = v
-				end
-			end
-			
-			table.insert(data.Track,argto)
-		end
-	end
+local function updateCs(scrollingFrame,listLayout,plus)
+	scrollingFrame.CanvasSize = UDim2.new(0, 0, 0, listLayout.AbsoluteContentSize.Y + plus)
 end
 
-local LoadedModule = {}
-local LoadedGuiModule = {}
-function getChar(inst)
-	if not inst.Character then
-		local conn
-		conn = inst.CharacterAdded:Connect(function(c)
-			conn:Disconnect()
-			repeat 
-				wait(0.1)
-			until inst.Character:FindFirstChild('HumanoidRootPart') or not inst:IsDescendantOf(game) or not inst.Character:IsDescendantOf(game:GetService('Workspace'))
-			pcall(function()
-				if inst.Character:FindFirstChild('HumanoidRootPart') then
-					local rgb = Variables.ESP_PlayerColor
-					local args = {
-						{
-							Text_front = '[',
-							TrackInst = inst.Character,
-							TrackValue = 'Name',
-							Text_end = ']',
-							Layer = 1,
-							Priority = 1,
-						},
-						{
-							Text_front = '[',
-							TrackInst = inst.Character:FindFirstChild('HumanoidRootPart'),
-							TrackDistance = true,
-							Text_end = ']',
-							Flag = 'ESP_ShowDistance',
-							Layer = 1,
-							Priority = 2,
-						},
-						{
-							Text_front = '[',
-							TrackInst = inst.Character:FindFirstChildOfClass('Humanoid'),
-							TrackValue = 'Health',
-							Layer = 2,
-							Flag = 'ESP_ShowHealth',
-							Priority = 1,
-						},
-						{
-							Text_front = '/',
-							TrackInst = inst.Character:FindFirstChildOfClass('Humanoid'),
-							TrackValue = 'MaxHealth',
-							Text_end = ']',
-							Layer = 2,
-							Flag = 'ESP_ShowHealth',
-							Priority = 2,
-						},
-						{
-							Text_front = '[',
-							TrackInst = inst.Character:FindFirstChildOfClass('Humanoid'),
-							TrackInst_2 = inst.Character:FindFirstChildOfClass('Humanoid'),
-							TrackValue = 'Health',
-							TrackValue2 = 'MaxHealth',
-							Text_end = ']',
-							Layer = 2,
-							Flag = 'ESP_ShowHealth',
-							Priority = 3,
-						},
-					}
-					if next(LoadedModule) then
-						for i,v in pairs(LoadedModule) do
-							if v.Tag == 'Player' then
-								local new = v
-								new.Tag = nil
-								table.insert(args,new)
-							end
+local function create_LeftButton(buttonname)
+	local TextButton = Instance.new("TextButton")
+	local Title = Instance.new("TextLabel")
+	local UICorner = Instance.new("UICorner")
+	local UICorner_2 = Instance.new("UICorner")
+
+	--Properties:
+
+	TextButton.BackgroundTransparency = 1.000
+	TextButton.BorderSizePixel = 0
+	TextButton.Size = UDim2.new(1, 0, 0, 30)
+	TextButton.AutoButtonColor = false
+	TextButton.Text = ""
+
+	Title.Name = "Title"
+	Title.Parent = TextButton
+	Title.BackgroundColor3 = Color3.fromRGB(72, 72, 72)
+	Title.BackgroundTransparency = 1.000
+	Title.Position = UDim2.new(0.0333333351, 0, 0.0333333351, 0)
+	Title.Size = UDim2.new(0.933333337, 0, 0.933333337, 0)
+	Title.Font = Enum.Font.GothamBlack
+	Title.Text = tostring(buttonname)
+	Title.TextColor3 = Color3.fromRGB(240, 240, 240)
+	Title.TextSize = 14.000
+	Title.TextXAlignment = Enum.TextXAlignment.Left
+
+	UICorner.CornerRadius = UDim.new(1, 10)
+	UICorner.Parent = Title
+
+	UICorner_2.CornerRadius = UDim.new(1, 10)
+	UICorner_2.Parent = TextButton
+
+	return TextButton
+end
+
+modules.side.AddFrame = function()
+	local Frame = Instance.new("Frame")
+	local UICorner = Instance.new("UICorner")
+	local Content = Instance.new("TextLabel")
+
+	Frame.BackgroundColor3 = Color3.fromRGB(32, 32, 32)
+	Frame.BorderSizePixel = 0
+	Frame.Size = UDim2.new(1, 0, 0, 33)
+
+	UICorner.CornerRadius = UDim.new(0, 5)
+	UICorner.Parent = Frame
+
+	Content.Name = "Content"
+	Content.Parent = Frame
+	Content.BackgroundTransparency = 1.000
+	Content.Position = UDim2.new(0, 12, 0, 0)
+	Content.Size = UDim2.new(1, -12, 1, 0)
+	Content.Font = Enum.Font.GothamBold
+	Content.Text = ""
+	Content.TextColor3 = Color3.fromRGB(240, 240, 240)
+	Content.TextSize = 15.000
+	Content.TextXAlignment = Enum.TextXAlignment.Left
+	return Frame, Content
+end
+modules.side.AddToggle = function(args)
+	local frameto = args.Frame
+	local Name = args.Name
+	local Callback = args.Callback
+	local Flag = args.Flag
+	local Default = args.Default
+	if Name and Callback and frameto then
+		local Frame = Instance.new("Frame")
+		local UICorner = Instance.new("UICorner")
+		local Content = Instance.new("TextLabel")
+		local TextButton = Instance.new("TextButton")
+		local UIStroke = Instance.new('UIStroke')
+
+		--Properties:
+
+		Frame.Parent = frameto
+		Frame.BackgroundColor3 = Color3.fromRGB(80, 211, 40)
+		Frame.BorderColor3 = Color3.fromRGB(255, 255, 255)
+		Frame.BorderSizePixel = 0
+		Frame.Size = UDim2.new(1, 0, 0, 38)
+
+		UICorner.CornerRadius = UDim.new(0, 5)
+		UICorner.Parent = Frame
+
+		Content.Name = "Content"
+		Content.Parent = Frame
+		Content.BackgroundTransparency = 1.000
+		Content.Position = UDim2.new(0, 12, 0, 0)
+		Content.Size = UDim2.new(1, -12, 1, 0)
+		Content.Font = Enum.Font.GothamBold
+		Content.Text = Name
+		Content.TextColor3 = Color3.fromRGB(240, 240, 240)
+		Content.TextSize = 15.000
+		Content.TextXAlignment = Enum.TextXAlignment.Left
+
+		TextButton.Parent = Frame
+		TextButton.BackgroundTransparency = 1.000
+		TextButton.BorderSizePixel = 0
+		TextButton.Size = UDim2.new(1, 0, 1, 0)
+		TextButton.AutoButtonColor = false
+		TextButton.Text = ""
+		
+		UIStroke.Parent = Frame
+		UIStroke.Thickness = 1
+		UIStroke.LineJoinMode = Enum.LineJoinMode.Round
+		UIStroke.Transparency = 0
+		UIStroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Contextual
+		UIStroke.Enabled = true
+
+		if not Variables.Debounces[Frame] then
+			Variables.Debounces[Frame] = Default
+		end
+
+		local function changeColor()
+			if Variables.Debounces[Frame] == true then
+				Frame.BackgroundColor3 = Color3.fromRGB(80, 211, 40)
+				UIStroke.Color = Color3.fromRGB(255,255,255)
+			else
+				Frame.BackgroundColor3 = Color3.fromRGB(32, 32, 32)
+				UIStroke.Color = Color3.fromRGB(60, 60, 60)
+			end
+		end
+
+		changeColor()
+		local Click = function()
+			Variables.Debounces[Frame] = not Variables.Debounces[Frame]
+			changeColor()
+			Callback(Variables.Debounces[Frame])
+		end
+		TextButton.MouseButton1Down:Connect(Click)
+
+		if Flag then
+			Variables.Flags[Flag] = function(args)
+				Variables.Debounces[Frame] = args.Set
+				changeColor(args.Set)
+				Callback(args.Set)
+			end
+		end
+		
+		local methods = {}
+		function methods:Destroy()
+			Frame:Destroy()
+			Variables.Flags[Flag] = nil
+		end
+		return methods
+	end
+end
+modules.side.AddButton = function(args)
+	local Frame = args.Frame
+	local Name = args.Name
+	local Callback = args.Callback
+	if Name and Callback and Frame then
+		local frame,content = modules.side.AddFrame()
+		frame.Parent = Frame
+		content.Text = Name
+
+		local TextButton = Instance.new("TextButton")
+		TextButton.Parent = frame
+		TextButton.BackgroundTransparency = 1.000
+		TextButton.BorderSizePixel = 0
+		TextButton.Size = UDim2.new(1, 0, 1, 0)
+		TextButton.AutoButtonColor = false
+		TextButton.Text = ""
+
+		TextButton.MouseButton1Down:Connect(function()
+			local ti = TweenInfo.new(0.15,Enum.EasingStyle.Quart,Enum.EasingDirection.Out)
+			local props_1 = {BackgroundColor3 = Color3.fromRGB(100,100,100)}
+			local props_2 = {BackgroundColor3 = Color3.fromRGB(32,32,32)}
+			local tween_1 = createTween(frame,ti,props_1)
+			local tween_2 = createTween(frame,ti,props_2)
+			tween_1:Play()
+			tween_1.Completed:Wait()
+			Callback()
+			tween_2:Play()
+		end)
+		
+		local methods = {}
+		function methods:Destroy()
+			TextButton:Destroy()
+		end
+		return methods
+	end
+end
+modules.side.AddLabel = function(args)
+	local Frame = args.Frame
+	local Name = args.Name
+	if Frame and Name then
+		local frame,content = modules.side.AddFrame()
+		frame.Parent = Frame
+		content.Text = Name
+		
+		local methods = {}
+		function methods:Destroy()
+			frame:Destroy()
+		end
+		function methods:Set(get)
+			content.Text = get
+		end
+		return methods
+	end
+end
+modules.side.AddParagraph = function(args)
+	local Frameto = args.Frame
+	local Name = args.Name
+	local Contento = args.Content
+	if Frameto and Name and Contento then
+		local Frame = Instance.new("Frame")
+		local UICorner = Instance.new("UICorner")
+		local Title = Instance.new("TextLabel")
+		local Content = Instance.new("TextLabel")
+
+		Frame.Parent = Frameto
+		Frame.BackgroundColor3 = Color3.fromRGB(32, 32, 32)
+		Frame.BackgroundTransparency = 0.700
+		Frame.BorderSizePixel = 0
+		Frame.Size = UDim2.new(1, 0, 0, 48)
+
+		UICorner.CornerRadius = UDim.new(0, 5)
+		UICorner.Parent = Frame
+
+		Title.Name = "Title"
+		Title.Parent = Frame
+		Title.BackgroundTransparency = 1.000
+		Title.Position = UDim2.new(0, 12, 0, 10)
+		Title.Size = UDim2.new(1, -12, 0, 14)
+		Title.Font = Enum.Font.GothamBold
+		Title.Text = Name
+		Title.TextColor3 = Color3.fromRGB(240, 240, 240)
+		Title.TextSize = 15.000
+		Title.TextXAlignment = Enum.TextXAlignment.Left
+
+		Content.Name = "Content"
+		Content.Parent = Frame
+		Content.BackgroundTransparency = 1.000
+		Content.Position = UDim2.new(0, 12, 0, 26)
+		Content.Size = UDim2.new(1, -24, 0, 13)
+		Content.Font = Enum.Font.GothamMedium
+		Content.Text = Contento
+		Content.TextColor3 = Color3.fromRGB(150, 150, 150)
+		Content.TextSize = 13.000
+		Content.TextWrapped = true
+		Content.TextXAlignment = Enum.TextXAlignment.Left
+		
+		local methods = {}
+		function methods:Destroy()
+			Frame:Destroy()
+		end
+		function methods:Set(get)
+			Content.Text = get.Content
+			Title.Text = get.Name
+		end
+		return methods
+	end
+end
+modules.side.AddSlider = function(args)
+	local Frameto = args.Frame
+	local Name = args.Name
+	local Min = args.Min
+	local Max = args.Max
+	local Default = args.Default
+	local Increment = args.Increment or 1
+	local ValueName = args.ValueName or ''
+	local Callback = args.Callback
+	local Flag = args.Flag
+	if Frameto and Name and Min and Max and Default and Increment and ValueName then
+		local Frame = Instance.new("Frame")
+		local UICorner = Instance.new("UICorner")
+		local Content = Instance.new("TextLabel")
+		local Frame_2 = Instance.new("Frame")
+		local UICorner_2 = Instance.new("UICorner")
+		local Value = Instance.new("TextLabel")
+		local Frame_3 = Instance.new("Frame")
+		local UICorner_3 = Instance.new("UICorner")
+		local Value_2 = Instance.new("TextLabel")
+
+		Frame.Parent = Frameto
+		Frame.BackgroundColor3 = Color3.fromRGB(32, 32, 32)
+		Frame.BorderSizePixel = 0
+		Frame.Size = UDim2.new(1, 0, 0, 65)
+
+		UICorner.CornerRadius = UDim.new(0, 4)
+		UICorner.Parent = Frame
+
+		Content.Name = "Content"
+		Content.Parent = Frame
+		Content.BackgroundTransparency = 1.000
+		Content.Position = UDim2.new(0, 12, 0, 10)
+		Content.Size = UDim2.new(1, -12, 0, 14)
+		Content.Font = Enum.Font.GothamBold
+		Content.Text = Name
+		Content.TextColor3 = Color3.fromRGB(240, 240, 240)
+		Content.TextSize = 15.000
+		Content.TextXAlignment = Enum.TextXAlignment.Left
+
+		Frame_2.Parent = Frame
+		Frame_2.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+		Frame_2.BackgroundTransparency = 0.900
+		Frame_2.BorderSizePixel = 0
+		Frame_2.Position = UDim2.new(0, 12, 0, 30)
+		Frame_2.Size = UDim2.new(1, -24, 0, 26)
+
+		UICorner_2.CornerRadius = UDim.new(0, 5)
+		UICorner_2.Parent = Frame_2
+
+		Value.Name = "Value"
+		Value.Parent = Frame_2
+		Value.BackgroundTransparency = 1.000
+		Value.Position = UDim2.new(0, 12, 0, 6)
+		Value.Size = UDim2.new(1, -12, 0, 14)
+		Value.Font = Enum.Font.GothamBold
+		Value.Text = tostring(Default)..' '..ValueName
+		Value.TextColor3 = Color3.fromRGB(240, 240, 240)
+		Value.TextSize = 13.000
+		Value.TextTransparency = 0.800
+		Value.TextXAlignment = Enum.TextXAlignment.Left
+
+		Frame_3.Parent = Frame_2
+		Frame_3.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+		Frame_3.BackgroundTransparency = 0.300
+		Frame_3.BorderSizePixel = 0
+		Frame_3.ClipsDescendants = true
+		
+		local fakemax = Max-Min
+		local fakenumber = Default-Min
+		local newpercentage = math.clamp(fakenumber/fakemax,0,1)
+
+		local fakenumber,fakemax
+		if Min < 0 then
+			fakemax = Max + math.abs(Min)
+			if Default < 0 then
+				newpercentage = math.clamp(math.abs((Min + math.abs(Default)))/fakemax,0,1)
+			else
+				newpercentage = math.clamp((Default + math.abs(Min))/fakemax,0,1)
+			end
+		end
+		
+		Frame_3.Size = UDim2.new(newpercentage, 0, 1, 0)
+
+		UICorner_3.CornerRadius = UDim.new(0, 5)
+		UICorner_3.Parent = Frame_3
+
+		Value_2.Name = "Value"
+		Value_2.Parent = Frame_3
+		Value_2.BackgroundTransparency = 1.000
+		Value_2.Position = UDim2.new(0, 12, 0, 6)
+		Value_2.Size = UDim2.new(1, -12, 0, 14)
+		Value_2.Font = Enum.Font.GothamBold
+		Value_2.Text = ""
+		Value_2.TextColor3 = Color3.fromRGB(240, 240, 240)
+		Value_2.TextSize = 13.000
+		Value_2.TextXAlignment = Enum.TextXAlignment.Left
+
+		local Value_3 = Instance.new('StringValue',Frame_3)
+		Value_3.Name = 'Nameto'
+		Value_3.Value = Name
+
+		local maxto = Instance.new('NumberValue',Frame_3)
+		maxto.Name = 'Maxto'
+		maxto.Value = Max
+
+		local minto = Instance.new('NumberValue',Frame_3)
+		minto.Name = 'Minto'
+		minto.Value = Min
+		
+		local incremento = Instance.new('NumberValue',Frame_3)
+		incremento.Name = 'Increment'
+		incremento.Value = Increment
+
+		local connection = Frame.MouseEnter:connect(function()
+			local cancel = false
+			local con_ = Frame.MouseLeave:Connect(function()
+				cancel = true
+			end)
+			repeat
+				if Variables.mousepressed then
+					Variables.held = true
+					Variables.CurrentSlider = Frame_3
+					Variables.CurrentSlider_callback = Callback
+				end
+				task.wait()
+			until cancel == true
+			con_:Disconnect()
+		end)
+		
+		if Flag then
+			Variables.Flags[Flag] = function(args)
+				local Set = args.Set
+				if Set then
+					local SliderBtn = Variables.CurrentSlider.Parent
+					local Sliderr = Variables.CurrentSlider
+					local MousePos = UIS:GetMouseLocation().X
+					local BtnPos = SliderBtn.Position
+					local SliderSize = Sliderr.AbsoluteSize.X
+					local SliderPos = Sliderr.AbsolutePosition.X
+					
+					local newnumber = snap(Set,Increment,Max,Min)
+
+					if string.split(tostring(Increment),'.')[2] then
+						local roundupto = #(string.split(tostring(Increment),'.')[2])
+						local get = string.split(tostring(newnumber),'.')
+						if get[2] then
+							local rounded = string.sub(get[2],1,roundupto)
+							newnumber = tonumber(get[1]..'.'..rounded)
 						end
 					end
-					local Features = {
-						Box = 'ESP_ShowBox',
-						HealthBar = 'ESP_ShowHealthBar',
+
+					local fakemax = Max-Min
+					local fakenumber = newnumber-Min
+					local newpercentage = math.clamp(fakenumber/fakemax,0,1)
+
+					local fakenumber,fakemax
+					if Min < 0 then
+						fakemax = Max + math.abs(Min)
+						if newnumber < 0 then
+							newpercentage = math.clamp(math.abs((Min + math.abs(newnumber)))/fakemax,0,1)
+						else
+							newpercentage = math.clamp((newnumber + math.abs(Min))/fakemax,0,1)
+						end
+					end
+					
+					SliderBtn.Size = UDim2.new(newpercentage, 0, 1, 0)
+
+					local Val = {
+						Variables.CurrentSlider:FindFirstChild('Value'),
+						Variables.CurrentSlider.Parent:FindFirstChild('Value'),
 					}
-					AddESP(inst.Character:FindFirstChild('HumanoidRootPart'), Color3.fromRGB(rgb.R,rgb.G,rgb.B), args, 'ESP_Player',Features)
+
+					local Nameto = Variables.CurrentSlider:FindFirstChild('Nameto')
+					local function changeval(text)
+						for i,v in pairs(Val) do
+							v.Text = tostring(text)..' '..Nameto.Value
+						end
+					end
+
+					changeval(newnumber)
+					Callback(newnumber)
+				end
+			end
+		end
+		
+		local methods = {}
+		function methods:Destroy()
+			Variables.Flags[Flag] = nil
+			connection:Disconnect()
+			connection = nil
+			Frame:Destroy()
+		end
+		function methods:Set(valueto)
+			local argto = {
+				Set = valueto
+			}
+			Variables.Flags[Flag](argto)
+		end
+		return methods
+	end
+end
+modules.side.AddSection = function(args)
+	local Name = args.Name
+	local Parent = args.Frame
+	if Name and Parent then
+		local Frame = Instance.new("Frame")
+		local TextLabel = Instance.new("TextLabel")
+		--Properties:
+		Frame.Parent = Parent
+		Frame.BackgroundTransparency = 1.000
+		Frame.Size = UDim2.new(1, 0, 0, 26)
+
+		TextLabel.Parent = Frame
+		TextLabel.BackgroundTransparency = 1.000
+		TextLabel.Position = UDim2.new(0, 0, 0, 3)
+		TextLabel.Size = UDim2.new(1, -12, 0, 16)
+		TextLabel.Font = Enum.Font.GothamMedium
+		TextLabel.Text = Name
+		TextLabel.TextColor3 = Color3.fromRGB(150, 150, 150)
+		TextLabel.TextSize = 14.000
+		TextLabel.TextXAlignment = Enum.TextXAlignment.Left
+		
+		local methods = {}
+		function methods:Destroy()
+			Frame:Destroy()
+		end
+		return methods
+	end
+end
+modules.side.AddBind = function(args)
+	local frameto = args.Frame
+	local Name = args.Name
+	local Default = args.Default
+	local Callback = args.Callback
+	local Flag = args.Flag
+	
+	if Name and Callback then
+		local function EnumtoString(enum)
+			local give = string.split(tostring(enum),'.')[3]
+			local tab = {
+				MouseButton1 = 'LMB',
+				MouseButton2 = 'RMB',
+				MouseButton3 = 'MMB',
+			}
+			if tab[tostring(give)] then
+				give = tab[tostring(give)]
+			end
+			return give
+		end
+		
+		local Frame = Instance.new("Frame")
+		local UICorner = Instance.new("UICorner")
+		local Content = Instance.new("TextLabel")
+		local Frame_2 = Instance.new("Frame")
+		local UICorner_2 = Instance.new("UICorner")
+		local Value = Instance.new("TextLabel")
+		local TextButton = Instance.new("TextButton")
+
+		--Properties:
+
+		Frame.Parent = frameto
+		Frame.BackgroundColor3 = Color3.fromRGB(32, 32, 32)
+		Frame.BorderSizePixel = 0
+		Frame.Size = UDim2.new(1, 0, 0, 38)
+
+		UICorner.CornerRadius = UDim.new(0, 5)
+		UICorner.Parent = Frame
+
+		Content.Name = "Content"
+		Content.Parent = Frame
+		Content.BackgroundTransparency = 1.000
+		Content.Position = UDim2.new(0, 12, 0, 0)
+		Content.Size = UDim2.new(1, -12, 1, 0)
+		Content.Font = Enum.Font.GothamBold
+		Content.Text = Name
+		Content.TextColor3 = Color3.fromRGB(240, 240, 240)
+		Content.TextSize = 15.000
+		Content.TextXAlignment = Enum.TextXAlignment.Left
+
+		Frame_2.Parent = Frame
+		Frame_2.AnchorPoint = Vector2.new(1, 0.5)
+		Frame_2.BackgroundColor3 = Color3.fromRGB(25, 25, 25)
+		Frame_2.BorderSizePixel = 0
+		Frame_2.Position = UDim2.new(1, -12, 0.5, 0)
+		Frame_2.Size = UDim2.new(0, 25, 0, 24)
+
+		UICorner_2.CornerRadius = UDim.new(0, 4)
+		UICorner_2.Parent = Frame_2
+
+		Value.Name = "Value"
+		Value.Parent = Frame_2
+		Value.BackgroundTransparency = 1.000
+		Value.Size = UDim2.new(1, 0, 1, 0)
+		Value.Font = Enum.Font.GothamBold
+		local Default_ = EnumtoString(Default) or ''
+		Value.Text = Default_
+		Value.TextColor3 = Color3.fromRGB(240, 240, 240)
+		Value.TextSize = 14.000
+
+		TextButton.Parent = Frame
+		TextButton.BackgroundTransparency = 1.000
+		TextButton.BorderSizePixel = 0
+		TextButton.Size = UDim2.new(1, 0, 1, 0)
+		TextButton.AutoButtonColor = false
+		TextButton.Text = ""
+		
+		local Callback_ = function()
+			Callback(Default,false)
+		end
+		
+		--//Flag
+		if Flag then
+			Variables.Flags[Flag] = Callback_
+		end
+		
+		if Default then
+			if not Variables.Keybinds[Default] then
+				Variables.Keybinds[Default] = {}
+			end
+			table.insert(Variables.Keybinds[Default],Callback_)
+		end
+		
+		local function setkey(input)
+			--// Old
+			if Default then
+				if Variables.Keybinds[Default] then
+					if table.find(Variables.Keybinds[Default],Callback_) then
+						table.remove(Variables.Keybinds[Default],table.find(Variables.Keybinds[Default],Callback_))
+						if #Variables.Keybinds[Default] == 0 then
+							Variables.Keybinds[Default] = nil
+						end
+					end
+				end
+			end
+			--// New
+			if input.UserInputType == Enum.UserInputType.Keyboard then
+				Default = input.KeyCode
+			else
+				Default = input.UserInputType
+			end
+			if input.KeyCode == Enum.KeyCode.Backspace then
+				Default = nil
+			end
+			if Default and not Variables.Keybinds[Default] then
+				Variables.Keybinds[Default] = {}
+			end
+			Value.Text = EnumtoString(Default) or '???'
+			Callback(Default,true)
+			wait()
+			table.insert(Variables.Keybinds[Default],Callback_)
+		end
+		
+		TextButton.MouseButton1Down:Connect(function()
+			Value.Text = '...'
+			wait()
+			local connection
+			connection = UIS.InputBegan:Connect(function(input)
+				connection:Disconnect()
+				connection = nil
+				setkey(input)
+			end)
+		end)
+		
+		local methods = {}
+		function methods:Destroy()
+			Frame:Destroy()
+			Variables.Flags[Flag] = nil
+			if Default then
+				if Variables.Keybinds[Default] then
+					if table.find(Variables.Keybinds[Default],Callback_) then
+						table.remove(Variables.Keybinds[Default],table.find(Variables.Keybinds[Default],Callback_))
+					end
+				end
+			end
+		end
+		function methods:Set(keycode)
+			setkey(keycode)
+		end
+		return methods
+	end
+end
+modules.side.AddTextBox = function(args)
+	local Frameto = args.Frame
+	local Name = args.Name
+	local Default = args.Default
+	local TextDisappear = args.TextDisappear
+	local Callback = args.Callback
+	if Name and Frameto then
+		local Frame = Instance.new("Frame")
+		local UICorner = Instance.new("UICorner")
+		local Content = Instance.new("TextLabel")
+		local Frame_2 = Instance.new("Frame")
+		local UICorner_2 = Instance.new("UICorner")
+		local TextBox = Instance.new("TextBox")
+		local TextButton = Instance.new("TextButton")
+
+		--Properties:
+
+		Frame.Parent = Frameto
+		Frame.BackgroundColor3 = Color3.fromRGB(32, 32, 32)
+		Frame.BorderSizePixel = 0
+		Frame.Size = UDim2.new(1, 0, 0, 38)
+
+		UICorner.CornerRadius = UDim.new(0, 5)
+		UICorner.Parent = Frame
+
+		Content.Name = "Content"
+		Content.Parent = Frame
+		Content.BackgroundTransparency = 1.000
+		Content.Position = UDim2.new(0, 12, 0, 0)
+		Content.Size = UDim2.new(1, -12, 1, 0)
+		Content.Font = Enum.Font.GothamBold
+		Content.Text = "Textbox"
+		Content.TextColor3 = Color3.fromRGB(240, 240, 240)
+		Content.TextSize = 15.000
+		Content.TextXAlignment = Enum.TextXAlignment.Left
+
+		Frame_2.Parent = Frame
+		Frame_2.AnchorPoint = Vector2.new(1, 0.5)
+		Frame_2.BackgroundColor3 = Color3.fromRGB(25, 25, 25)
+		Frame_2.BorderSizePixel = 0
+		Frame_2.Position = UDim2.new(1, -12, 0.5, 0)
+		Frame_2.Size = UDim2.new(0, 130, 0, 24)
+
+		UICorner_2.CornerRadius = UDim.new(0, 4)
+		UICorner_2.Parent = Frame_2
+
+		TextBox.Parent = Frame_2
+		TextBox.BackgroundTransparency = 1.000
+		TextBox.Size = UDim2.new(1, 0, 1, 0)
+		TextBox.ClearTextOnFocus = TextDisappear or false
+		TextBox.Font = Enum.Font.GothamMedium
+		TextBox.PlaceholderColor3 = Color3.fromRGB(210, 210, 210)
+		TextBox.PlaceholderText = "???"
+		TextBox.Text = Default or ''
+		TextBox.TextColor3 = Color3.fromRGB(240, 240, 240)
+		TextBox.TextSize = 14.000
+
+		TextButton.Parent = Frame
+		TextButton.BackgroundTransparency = 1.000
+		TextButton.BorderSizePixel = 0
+		TextButton.Size = UDim2.new(1, 0, 1, 0)
+		TextButton.AutoButtonColor = false
+		TextButton.Text = ""
+		
+		TextButton.MouseButton1Down:Connect(function()
+			TextBox:CaptureFocus()
+			TextBox.FocusLost:Connect(function()
+				Callback(TextBox.Text)
+			end)
+		end)
+		
+		local methods = {}
+		function methods:Destroy()
+			Frame:Destroy()
+		end
+		function methods:Set(texto)
+			TextBox.Text = texto
+			Callback(TextBox.Value)
+		end
+		return methods
+	end
+end
+modules.side.AddDropdown = function(args)
+	local Var = {
+		normal = 38,
+		plus = 28
+	}
+	local frameto = args.Frame
+	local Name = args.Name
+	local Default = args.Default
+	local Options = args.Options or {}
+	local Callback = args.Callback
+	local Filter = args.Filter
+	local TextDisappear = args.TextDisappear or false
+	local Quantity = args.Quantity
+	if Name and Callback and frameto then
+		local Frame = Instance.new("Frame")
+		local UICorner = Instance.new("UICorner")
+		local ScrollingFrame = Instance.new("ScrollingFrame")
+		local UIListLayout = Instance.new("UIListLayout")
+		local F = Instance.new("Frame")
+		local Content = Instance.new("TextLabel")
+		local Ico = Instance.new("ImageLabel")
+		local Selected = Instance.new("TextLabel")
+		local Line = Instance.new("Frame")
+		local TextButton = Instance.new("TextButton")
+		local UICorner_2 = Instance.new("UICorner")
+
+		--Properties:
+
+		Frame.Parent = frameto
+		Frame.BackgroundColor3 = Color3.fromRGB(32, 32, 32)
+		Frame.BorderSizePixel = 0
+		Frame.ClipsDescendants = true
+		Frame.Size = UDim2.new(1, 0, 0, 38)
+
+		UICorner.CornerRadius = UDim.new(0, 5)
+		UICorner.Parent = Frame
+
+		ScrollingFrame.Parent = Frame
+		ScrollingFrame.BackgroundTransparency = 1.000
+		ScrollingFrame.BorderSizePixel = 0
+		ScrollingFrame.Position = UDim2.new(0, 0, 0, 38)
+		ScrollingFrame.Size = UDim2.new(1, 0, 1, -38)
+		ScrollingFrame.BottomImage = "rbxassetid://7445543667"
+		ScrollingFrame.CanvasSize = UDim2.new(0, 0, 0, 112)
+		ScrollingFrame.MidImage = "rbxassetid://7445543667"
+		ScrollingFrame.ScrollBarThickness = 5
+		ScrollingFrame.TopImage = "rbxassetid://7445543667"
+
+		UIListLayout.Parent = ScrollingFrame
+		UIListLayout.SortOrder = Enum.SortOrder.LayoutOrder
+
+		F.Name = "F"
+		F.Parent = Frame
+		F.BackgroundTransparency = 1.000
+		F.ClipsDescendants = true
+		F.Size = UDim2.new(1, 0, 0, 38)
+
+		Content.Name = "Content"
+		Content.Parent = F
+		Content.BackgroundTransparency = 1.000
+		Content.Position = UDim2.new(0, 12, 0, 0)
+		Content.Size = UDim2.new(1, -12, 1, 0)
+		Content.Font = Enum.Font.GothamBold
+		Content.Text = Name
+		Content.TextColor3 = Color3.fromRGB(240, 240, 240)
+		Content.TextSize = 15.000
+		Content.TextXAlignment = Enum.TextXAlignment.Left
+
+		Ico.Name = "Ico"
+		Ico.Parent = F
+		Ico.AnchorPoint = Vector2.new(0, 0.5)
+		Ico.BackgroundTransparency = 1.000
+		Ico.Position = UDim2.new(1, -30, 0.5, 0)
+		Ico.Size = UDim2.new(0, 20, 0, 20)
+		Ico.Image = "rbxassetid://7072706796"
+		Ico.ImageColor3 = Color3.fromRGB(150, 150, 150)
+
+		Selected.Name = "Selected"
+		Selected.Parent = F
+		Selected.BackgroundTransparency = 1.000
+		Selected.Size = UDim2.new(1, -40, 1, 0)
+		Selected.Font = Enum.Font.Gotham
+		Selected.Text = Default or ''
+		Selected.TextColor3 = Color3.fromRGB(150, 150, 150)
+		Selected.TextSize = 13.000
+		Selected.TextXAlignment = Enum.TextXAlignment.Right
+
+		Line.Name = "Line"
+		Line.Parent = F
+		Line.BackgroundColor3 = Color3.fromRGB(60, 60, 60)
+		Line.BorderSizePixel = 0
+		Line.Position = UDim2.new(0, 0, 1, -1)
+		Line.Size = UDim2.new(1, 0, 0, 1)
+		Line.Visible = false
+
+		TextButton.Parent = F
+		TextButton.BackgroundTransparency = 1.000
+		TextButton.BorderSizePixel = 0
+		TextButton.Size = UDim2.new(1, 0, 1, 0)
+		TextButton.AutoButtonColor = false
+		TextButton.Text = ""
+
+		UICorner_2.CornerRadius = UDim.new(0, 10)
+		UICorner_2.Parent = Frame
+		
+		Variables.Debounces[Frame] = false
+		local Textbuttons = {}
+		local Holder
+		
+		local function migrate()
+			for i,v in pairs(ScrollingFrame:GetChildren()) do
+				if v ~= UIListLayout then
+					v.Parent = Holder
+				end
+			end
+		end
+		
+		UIListLayout.Changed:Connect(function()
+			updateCs(ScrollingFrame,UIListLayout,0)
+		end)
+		
+		--// Filter
+		if Filter then
+			Holder = Instance.new('Folder',Frame)
+			local FilterButton = Instance.new("TextButton")
+			
+			FilterButton.Name = "FilterButton"
+			FilterButton.Parent = F
+			FilterButton.BorderSizePixel = 0
+			FilterButton.Position = UDim2.new(0.38202247, 0, 0, 0)
+			FilterButton.Size = UDim2.new(0.298876405, 0, 1, 0)
+			FilterButton.Visible = false
+			FilterButton.ZIndex = 2
+			FilterButton.AutoButtonColor = false
+			FilterButton.Text = ""
+			
+			local FilterFrame = Instance.new("Frame")
+			local UICorner = Instance.new("UICorner")
+			local FilterBox = Instance.new("TextBox")
+
+			--Properties:
+
+			FilterFrame.Name = "FilterFrame"
+			FilterFrame.Parent = F
+			FilterFrame.BackgroundColor3 = Color3.fromRGB(25, 25, 25)
+			FilterFrame.BorderSizePixel = 0
+			FilterFrame.Position = UDim2.new(0.388741553, 0, 0.184210524, 0)
+			FilterFrame.Size = UDim2.new(0, 130, 0, 24)
+
+			UICorner.CornerRadius = UDim.new(0, 4)
+			UICorner.Parent = FilterFrame
+
+			FilterBox.Name = "FilterBox"
+			FilterBox.Parent = FilterFrame
+			FilterBox.BackgroundTransparency = 1.000
+			FilterBox.Size = UDim2.new(1, 0, 1, 0)
+			FilterBox.ClearTextOnFocus = false
+			FilterBox.Font = Enum.Font.GothamMedium
+			FilterBox.PlaceholderColor3 = Color3.fromRGB(210, 210, 210)
+			FilterBox.PlaceholderText = "Search..."
+			FilterBox.Text = ""
+			FilterBox.TextColor3 = Color3.fromRGB(240, 240, 240)
+			FilterBox.TextSize = 14.000
+			
+			FilterButton.MouseButton1Down:Connect(function()
+				FilterBox:CaptureFocus()
+			end)
+			
+			FilterBox.Changed:Connect(function()
+				local filtering = FilterBox.Text
+				if filtering == '' then
+					migrate()
+					for i,v in pairs(Textbuttons) do
+						if v and v.Parent ~= ScrollingFrame then
+							v.Parent = ScrollingFrame
+						end
+					end
+				else
+					migrate()
+					local SideTable = {}
+					for i,v in pairs(Textbuttons) do
+						if StringFilterFunc(filtering,tostring(i)) then
+							table.insert(SideTable,v)
+						end
+					end
+					for i,v in pairs(SideTable) do
+						v.Parent = ScrollingFrame
+					end
 				end
 			end)
-			conn = nil
-		end)
-	else
-		repeat 
-			wait(0.1)
-		until inst.Character:FindFirstChild('HumanoidRootPart') or not inst:IsDescendantOf(game) or not inst.Character:IsDescendantOf(game:GetService('Workspace'))
-		pcall(function()
-			if inst.Character:FindFirstChild('HumanoidRootPart') then
-				local rgb = Variables.ESP_PlayerColor
-				local args = {
-					{
-						Text_front = '[',
-						TrackInst = inst.Character,
-						TrackValue = 'Name',
-						Text_end = ']',
-						Layer = 1,
-						Priority = 1,
-					},
-					{
-						Text_front = '[',
-						TrackInst = inst.Character:FindFirstChild('HumanoidRootPart'),
-						TrackDistance = true,
-						Text_end = ']',
-						Flag = 'ESP_ShowDistance',
-						Layer = 1,
-						Priority = 2,
-					},
-					{
-						Text_front = '[',
-						TrackInst = inst.Character:FindFirstChildOfClass('Humanoid'),
-						TrackValue = 'Health',
-						Layer = 2,
-						Flag = 'ESP_ShowHealth',
-						Priority = 1,
-					},
-					{
-						Text_front = '/',
-						TrackInst = inst.Character:FindFirstChildOfClass('Humanoid'),
-						TrackValue = 'MaxHealth',
-						Text_end = ']',
-						Layer = 2,
-						Flag = 'ESP_ShowHealth',
-						Priority = 2,
-					},
-					{
-						Text_front = '[',
-						Text_end = ']',
-						TrackInst = inst.Character:FindFirstChildOfClass('Humanoid'),
-						TrackInst_2 = inst.Character:FindFirstChildOfClass('Humanoid'),
-						TrackValue = 'Health',
-						TrackValue_2 = 'MaxHealth',
-						Layer = 2,
-						Flag = 'ESP_ShowHealth',
-						Priority = 3,
-					},
-				}
-				if next(LoadedModule) then
-					for i,v in pairs(LoadedModule) do
-						if v.Tag == 'Player' then
-							local new = v
-							new.Tag = nil
-							table.insert(args,new)
-						end
-					end
+		end
+		
+		local function turnoff()
+			for i,v in pairs(Textbuttons) do
+				if v then
+					v.BackgroundTransparency = 1
 				end
-				local Features = {
-					Box = 'ESP_ShowBox',
-					HealthBar = 'ESP_ShowHealthBar',
-				}
-				AddESP(inst.Character:FindFirstChild('HumanoidRootPart'), Color3.fromRGB(rgb.R,rgb.G,rgb.B), args, 'ESP_Player',Features)
-			end
-		end)
-	end
-end
-
---// Load Module here
-local userid = game:GetService('Players').LocalPlayer.UserId
-for i,v in pairs(game:GetService('Players'):GetChildren()) do
-	if v ~= game:GetService('Players').LocalPlayer then
-		task.spawn(getChar,v)
-		if v:IsFriendsWith(userid) then
-			if not Current.Teamate[v.Name] then
-				table.insert(Current.Teamate,v.Name)
 			end
 		end
-	end
-end
-game:GetService('Players').PlayerAdded:Connect(function(p)
-	task.spawn(getChar,p)
-	if p:IsFriendsWith(userid) then
-		if not Current.Teamate[p.Name] then
-			table.insert(Current.Teamate,p.Name)
-		end
-	end
-	if getgenv().PAdded and typeof(getgenv().PAdded) then
-		for i,v in pairs(getgenv().PAdded) do
-			pcall(v,p)
-		end
-	end
-end)
-game:GetService('Players').PlayerRemoving:Connect(function(p)
-	if Current.Teamate[p.Name] then
-		Current.Teamate[p.Name] = nil
-	end
-	if getgenv().PRemoving and typeof(getgenv().PRemoving) then
-		for i,v in pairs(getgenv().PRemoving) do
-			pcall(v,p)
-		end
-	end
-end)
+		
+		local function createbuttonto(name)
+			local v = name
+			local TextButton = Instance.new("TextButton")
+			local UICorner = Instance.new("UICorner")
+			local Title = Instance.new("TextLabel")
 
-local function NewQuad(color)
-	local quad = Drawing.new("Quad")
-	quad.Visible = false
-	quad.PointA = Vector2.new(0,0)
-	quad.PointB = Vector2.new(0,0)
-	quad.PointC = Vector2.new(0,0)
-	quad.PointD = Vector2.new(0,0)
-	quad.Color = color
-	quad.Filled = false
-	quad.Thickness = 1
-	quad.Transparency = 1
-	return quad
-end
-local function NewLine(thickness, color)
-	local line = Drawing.new("Line")
-	line.Visible = false
-	line.From = Vector2.new(0, 0)
-	line.To = Vector2.new(0, 0)
-	line.Color = color 
-	line.Thickness = thickness
-	line.Transparency = 1
-	return line
-end
+			--Properties:
 
---// RUS
-task.spawn(function()
-	while true do
-		for i,v in pairs(data.Track) do
-			if v.Part and v.Part:IsDescendantOf(workspace) then
-				local newdistance
-				if Variables.ESP_MaxDistance == 10000 then
-					newdistance = math.huge
+			TextButton.Parent = ScrollingFrame
+			TextButton.BackgroundColor3 = Color3.fromRGB(60, 60, 60)
+			TextButton.BorderSizePixel = 0
+			TextButton.ClipsDescendants = true
+			TextButton.Size = UDim2.new(1, 0, 0, 28)
+			TextButton.AutoButtonColor = false
+			TextButton.Text = ""
+			TextButton.BackgroundTransparency = 1
+
+			UICorner.CornerRadius = UDim.new(0, 6)
+			UICorner.Parent = TextButton
+
+			Title.Name = "Title"
+			Title.Parent = TextButton
+			Title.BackgroundTransparency = 1.000
+			Title.Position = UDim2.new(0, 8, 0, 0)
+			Title.Size = UDim2.new(1, -8, 1, 0)
+			Title.Font = Enum.Font.Gotham
+			Title.Text = tostring(v)
+			Title.TextColor3 = Color3.fromRGB(240, 240, 240)
+			Title.TextSize = 13.000
+			Title.TextXAlignment = Enum.TextXAlignment.Left
+
+			TextButton.MouseButton1Down:Connect(function()
+				turnoff()
+				TextButton.BackgroundTransparency = 0
+				Selected.Text = tostring(v)
+				Callback(tostring(v)) -- same?
+			end)
+
+			Textbuttons[tostring(v)] = TextButton
+		end
+		if Options then
+			for i,v in pairs(Options) do
+				createbuttonto(v)
+			end
+		end
+		
+		if Default then Textbuttons[tostring(Default)].BackgroundTransparency = 0 Callback(tostring(Default)) end
+		if Quantity and Quantity <= 0 then Quantity = 1 end
+		
+		local function Checkdot(real)
+			local str = tostring(real)
+			local split = string.split(str,'.')
+			if split[2] then
+				return math.ceil(real)
+			end
+			return real
+		end
+		Quantity = Checkdot(Quantity)
+		
+		TextButton.MouseButton1Down:Connect(function()
+			Variables.Debounces[Frame] = not Variables.Debounces[Frame]
+			if Variables.Debounces[Frame] == true then
+				if not Quantity then
+					local quantity = #ScrollingFrame:GetChildren() - 1
+					Frame:TweenSize(UDim2.new(1, 0, 0, Var.normal + Var.plus * quantity),Enum.EasingDirection.Out,Enum.EasingStyle.Quart,0.5,true)
+					Ico.Rotation = 180
 				else
-					newdistance = Variables.ESP_MaxDistance
-				end
-				if newdistance ~= 0 then
-					local function espto()
-						if v.Tag and Variables[v.Flag] then
-							if Variables[v.Flag] == true then
-								if v.Layers then
-									local text = ""
-									for layer = 1,#v.Layers do --// Fetching layers
-										for priority = 1,#(v.Layers[layer]) do
-											local args = v.Layers[layer][priority]
-
-											local Text_front = args.Text_front or ''
-											local Text_end = args.Text_end or ''
-											local TrackInst = args.TrackInst
-											local TrackValue = args.TrackValue
-
-											--// Special Arguments
-											local Flag = args.Flag
-											local TrackDistance = args.TrackDistance
-											local TrackInst_2 = args.TrackInst_2
-											local TrackValue_2 = args.TrackValue_2
-
-											--// Loading Functions
-											local function nexto()
-												text = text..Text_front
-
-												if TrackDistance and TrackInst and typeof(TrackInst) == 'Instance' and TrackInst.Position then
-													if game:GetService('Players').LocalPlayer.Character then
-														if game:GetService('Players').LocalPlayer.Character:FindFirstChild('HumanoidRootPart') then
-															text = text..tostring(math.round(tonumber((game:GetService('Players').LocalPlayer.Character.HumanoidRootPart.Position - TrackInst.Position).Magnitude)))
-														end
-													end
-												else
-													if TrackInst_2 and TrackValue_2 then
-														if TrackInst and TrackValue then
-															text = text..tostring(math.round(math.clamp(tonumber(TrackInst[TrackValue]/TrackInst_2[TrackValue_2]),0,1)*100))..'%'
-														end
-													else
-														if TrackInst and TrackValue then
-															--// So we going to round it to 2nd decimal
-															local stringto = tostring(TrackInst[TrackValue])
-															local rounded
-															local getdec = string.split(stringto,'.')
-															if getdec[2] and getdec[1] then
-																rounded = getdec[1]..','..string.sub(getdec[2],1,2)
-															end
-															if rounded then
-																text = text..rounded
-															else
-																text = text..stringto	
-															end
-														end
-													end
-												end
-												text = text..Text_end
-											end
-											if Flag then
-												if Variables[Flag] and Variables[Flag] == true then
-													nexto()
-												end
-											else
-												nexto()
-											end
-										end
-										text = text..'\n'
-									end
-									v.Tag.Text = text
-								end
-								local cfrem = v.Part.CFrame * CFrame.new(0,Variables.ESP_YOffset,Variables.ESP_ZOffset)
-								local pos = cfrem.p
-								v.Tag.Position = WTS(pos)
-								local _, screen = workspace.CurrentCamera:WorldToViewportPoint(pos)
-								if screen then
-									if v.Tag.Size ~= Variables.ESP_Size then
-										v.Tag.Size = Variables.ESP_Size
-									end
-									v.Tag.Visible = true
-								else
-									v.Tag.Visible = false
-								end
-							else
-								v.Tag.Visible = false
-							end
-						end
-						if v.Box and Variables[v.Box]then
-							if not v.Boxlib then
-								local color = Color3.fromRGB(255,0,0)
-								if v.Flag == 'Player ESP' then
-									local r,g,b = Variables.ESP_PlayerColor.R,Variables.ESP_PlayerColor.G,Variables.ESP_PlayerColor.B
-									color = Color3.fromRGB(r,g,b)
-									if v.IsTeam  then
-										local r,g,b = Variables.ESP_TeamColor.R,Variables.ESP_TeamColor.G,Variables.ESP_TeamColor.B
-										color = Color3.fromRGB(r,g,b)
-									end
-								end
-								v.Boxlib = {
-									black = NewQuad(Color3.fromRGB(0,0,0)),
-									box = NewQuad(color),
-								}
-							end
-							if Variables[v.Box] == true then
-								--// track
-								local Pos, screen = workspace.CurrentCamera:WorldToViewportPoint(v.Part.Position)
-								if screen then
-									for o,c in pairs(v.Boxlib) do
-										if c.Visible == false then c.Visible = true end
-										local head = workspace.CurrentCamera:WorldToViewportPoint(v.Part.Position + Vector3.new(0,1.5,0))
-										local DistanceY = math.clamp((Vector2.new(head.X, head.Y) - Vector2.new(Pos.X, Pos.Y)).magnitude, 2, math.huge)
-
-										local function Size(item)
-											item.PointA = Vector2.new(Pos.X + DistanceY, Pos.Y - DistanceY*2)
-											item.PointB = Vector2.new(Pos.X - DistanceY, Pos.Y - DistanceY*2)
-											item.PointC = Vector2.new(Pos.X - DistanceY, Pos.Y + DistanceY*1.75)
-											item.PointD = Vector2.new(Pos.X + DistanceY, Pos.Y + DistanceY*1.75)
-										end
-										Size(c)
-									end
-								else
-									for o,c in pairs(v.Boxlib) do
-										c.Visible = false
-									end
-								end
-							else
-								--// turning off
-								for o,c in pairs(v.Boxlib) do
-									c:Remove()
-								end
-								v.Boxlib = nil
-							end
-						end
-						if v.HealthBar and Variables[v.HealthBar] then
-							if not v.HealthBarlib then
-								v.HealthBarlib = {
-									healthbar = NewLine(3, Color3.fromRGB(0,0,0)),
-									greenhealth = NewLine(1.5, Color3.fromRGB(0,0,0))
-								}
-							end
-							if Variables[v.HealthBar] == true then
-								local hum = v.Part.Parent:FindFirstChildOfClass('Humanoid')
-								if not hum then
-									for o,c in pairs(v.HealthBarlib) do
-										c:Remove()
-										c = nil
-									end
-									v.HealthBarlib = nil
-									v.HealthBarlib = nil
-								else
-									--// track
-									local Pos, screen = workspace.CurrentCamera:WorldToViewportPoint(v.Part.Position)
-									if screen then
-										if v.HealthBarlib.greenhealth.Visible == false then v.HealthBarlib.greenhealth.Visible = true end
-										if v.HealthBarlib.healthbar.Visible == false then v.HealthBarlib.healthbar.Visible = true end
-
-										local head = workspace.CurrentCamera:WorldToViewportPoint(v.Part.Position + Vector3.new(0,1.5,0))
-										local DistanceY = math.clamp((Vector2.new(head.X, head.Y) - Vector2.new(Pos.X, Pos.Y)).magnitude, 2, math.huge)
-
-										local d = (Vector2.new(Pos.X - DistanceY, Pos.Y - DistanceY*2) - Vector2.new(Pos.X - DistanceY, Pos.Y + DistanceY*2)).magnitude 
-										local healthoffset = hum.Health/hum.MaxHealth * d
-
-										v.HealthBarlib.greenhealth.From = Vector2.new(Pos.X - DistanceY - 4, Pos.Y + DistanceY*1)
-										v.HealthBarlib.greenhealth.To = Vector2.new(Pos.X - DistanceY - 4, Pos.Y + DistanceY*1 - healthoffset)
-
-										v.HealthBarlib.healthbar.From = Vector2.new(Pos.X - DistanceY - 4, Pos.Y + DistanceY*1)
-										v.HealthBarlib.healthbar.To = Vector2.new(Pos.X - DistanceY - 4, Pos.Y - DistanceY*1)
-
-										local green = Color3.fromRGB(0, 255, 0)
-										local red = Color3.fromRGB(255, 0, 0)
-
-										v.HealthBarlib.greenhealth.Color = red:lerp(green, hum.Health/hum.MaxHealth);
-									else
-										for o,c in pairs(v.HealthBarlib) do
-											c.Visible = false
-										end
-									end
-								end
-							else
-								--// turning off
-								for o,c in pairs(v.HealthBarlib) do
-									c:Remove()
-								end
-								v.HealthBarlib = nil
-							end
-						end
-					end
-					if not game:GetService('Players').LocalPlayer.Character or (Players.LocalPlayer.Character and not Players.LocalPlayer.Character:FindFirstChild('HumanoidRootPart')) then
-						espto()
-					else
-						if (v.Part.Position - game:GetService('Players').LocalPlayer.Character.HumanoidRootPart.Position).Magnitude <= newdistance then
-							espto()
-						else
-							v.Tag.Visible = false
-							if v.HealthBarlib then
-								for o,c in pairs(v.HealthBarlib) do
-									c.Visible = false
-								end
-								v.HealthBarlib = nil
-							end
-							if v.Boxlib then
-								for o,c in pairs(v.Boxlib) do
-									c.Visible = false
-								end
-							end
-						end
-					end
-				else
-					v.Tag.Visible = false
-					if v.HealthBarlib then
-						for o,c in pairs(v.HealthBarlib) do
-							c.Visible = false
-						end
-						v.HealthBarlib = nil
-					end
-					if v.Boxlib then
-						for o,c in pairs(v.Boxlib) do
-							c.Visible = false
-						end
-					end
+					if #ScrollingFrame:GetChildren() - 1 <= 0 then Quantity = 0 end
+					Frame:TweenSize(UDim2.new(1, 0, 0, Var.normal + Var.plus * Quantity),Enum.EasingDirection.Out,Enum.EasingStyle.Quart,0.5,true)
+					Ico.Rotation = 180
 				end
 			else
-				if v.HealthBarlib then
-					for o,c in pairs(v.HealthBarlib) do
-						c:Remove()
-						c = nil
-					end
+				Ico.Rotation = 0
+				Frame:TweenSize(UDim2.new(1, 0, 0, 38),Enum.EasingDirection.Out,Enum.EasingStyle.Quart,0.5,true)
+			end
+		end)
+		
+		local methods = {}
+		function methods:Destroy()
+			Frame:Destroy()
+		end
+		function methods:Refresh(list,del)
+			if del == true then
+				for i,v in pairs(Textbuttons) do
+					v:Destroy()
+					i = nil
 				end
-				if v.Boxlib then
-					for o,c in pairs(v.Boxlib) do
-						c:Remove()
-						c = nil
-					end
+			end
+			if list and typeof(list) == 'table' then
+				Selected.Text = ''
+				for i,v in pairs(list) do
+					if Textbuttons[i] then Textbuttons[i]:Destroy() Textbuttons[i] = nil end
+					createbuttonto(v)
 				end
-				v.Tag:Remove()
-				table.remove(data.Track,table.find(data.Track,v))
 			end
 		end
-		game:GetService('RunService').Heartbeat:Wait()
+		function methods:Set(val)
+			turnoff()
+			if Textbuttons[val] then
+				Textbuttons[val].BackgroundTransparency = 0
+			end
+			Callback(val)
+		end
+		function methods:SetQuantity(val)
+			if tonumber(val) then
+				Quantity = Checkdot(val)
+				if Variables.Debounces[Frame] == true then
+					if not Quantity then
+						local quantity = #ScrollingFrame:GetChildren() - 1
+						Frame:TweenSize(UDim2.new(1, 0, 0, Var.normal + Var.plus * quantity),Enum.EasingDirection.Out,Enum.EasingStyle.Quart,0.5,true)
+						Ico.Rotation = 180
+					else
+						if #ScrollingFrame:GetChildren() - 1 <= 0 then Quantity = 0 end
+						Frame:TweenSize(UDim2.new(1, 0, 0, Var.normal + Var.plus * Quantity),Enum.EasingDirection.Out,Enum.EasingStyle.Quart,0.5,true)
+						Ico.Rotation = 180
+					end
+				else
+					Ico.Rotation = 0
+					Frame:TweenSize(UDim2.new(1, 0, 0, 38),Enum.EasingDirection.Out,Enum.EasingStyle.Quart,0.5,true)
+				end
+			end
+		end
+		return methods
+	end
+end
+
+modules.side.AddTab = function(args)
+	local Name = args.Name
+	local Closedcallback = args.Closedcallback
+	local Callback = args.Callback
+	local Flag = args.Flag
+
+	if Name then
+		local button = create_LeftButton(Name)
+		button.Parent = Variables.link.ScrollingFrame
+
+		--// Scrolling frames
+		local ItemContainer = Instance.new("ScrollingFrame")
+		local UIListLayout = Instance.new("UIListLayout")
+		local UIPadding = Instance.new("UIPadding")
+		--Properties:
+		ItemContainer.Name = "ItemContainer"
+		ItemContainer.Parent = Variables.link.Main
+		ItemContainer.BackgroundTransparency = 1.000
+		ItemContainer.BorderSizePixel = 0
+		ItemContainer.Position = UDim2.new(0, 150, 0, 50)
+		ItemContainer.Size = UDim2.new(1, -150, 1, -50)
+		ItemContainer.BottomImage = "rbxassetid://7445543667"
+		ItemContainer.CanvasSize = UDim2.new(0, 0, 0, 393)
+		ItemContainer.MidImage = "rbxassetid://7445543667"
+		ItemContainer.ScrollBarThickness = 5
+		ItemContainer.TopImage = "rbxassetid://7445543667"
+		ItemContainer.Visible = false
+
+		UIListLayout.Parent = ItemContainer
+		UIListLayout.SortOrder = Enum.SortOrder.LayoutOrder
+		UIListLayout.Padding = UDim.new(0, 6)
+
+		UIPadding.Parent = ItemContainer
+		UIPadding.PaddingBottom = UDim.new(0, 15)
+		UIPadding.PaddingLeft = UDim.new(0, 10)
+		UIPadding.PaddingRight = UDim.new(0, 10)
+		UIPadding.PaddingTop = UDim.new(0, 15)
+
+		Variables.Buttons[Name] = ItemContainer
+		Variables.Tab_Closedfuncs[Name] = Closedcallback
+		
+		UIListLayout.Changed:Connect(function()
+			updateCs(ItemContainer,UIListLayout,30)
+		end)
+
+		button.MouseButton1Down:Connect(function()
+			if Variables.Selection then
+				Variables.Selection.BackgroundTransparency = 1
+			end
+			for i,v in pairs(Variables.Buttons) do
+				if v.Visible then
+					if Variables.Tab_Closedfuncs[i] then
+						Variables.Tab_Closedfuncs[i]()
+					end
+					v.Visible = false
+				end
+			end
+			Variables.Buttons[Name].Visible = true
+			if Callback then
+				Callback()
+			end
+			Variables.Selection = button
+			Variables.Selection.BackgroundTransparency = 0.1
+		end)
+
+		if Flag then
+			Variables.Flags[Flag] = Callback
+		end
+		
+		local methods = {}
+		function methods:Destroy()
+			button:Destroy()
+			ItemContainer:Destroy()
+			Variables.Flags[Flag] = nil
+		end
+		methods.self = ItemContainer
+		modules.side.Tabfunc(methods)
+		return methods
+	end
+end
+
+gsTween = game:GetService("TweenService")
+
+local ex_connections = {}
+local con_1 = UIS.InputEnded:connect(function(input, processed)
+	if input.UserInputType == Enum.UserInputType.MouseButton1 then
+		Variables.held = false
+		Variables.mousepressed = false
 	end
 end)
+local con_2 = UIS.InputBegan:Connect(function(input,processed)
+	if input.UserInputType == Enum.UserInputType.MouseButton1 then
+		Variables.mousepressed = true
+	end
+	if not processed then
+		if Variables.Keybinds[input.KeyCode] or Variables.Keybinds[input.UserInputType] then
+			for i,v in pairs(Variables.Keybinds[input.KeyCode] or Variables.Keybinds[input.UserInputType]) do
+				v()
+			end
+		end
+	end
+end)
+function snap(pct, increment, max, min)
+	local curstep = pct*(math.abs(max-min))
+	local maxstep = (max-min)/increment
+	local minstep = 0
+	if min > 0 then
+		local distance = max-min
+		local delta = pct * distance
+		curstep = (min+delta - min)/increment
+	end
+	--local curstep = pct*(max + math.abs(min))
+	local newstep
+	if curstep > (maxstep - 1) then
+		newstep = maxstep
+	elseif curstep < (minstep + 1) then
+		newstep = minstep
+	else
+		newstep =  math.floor(curstep)
+	end
+	
+	local newnumber = min + (newstep*increment)
+	if newnumber > max then
+		return max
+	elseif newnumber < min then
+		return min
+	else
+		return newnumber
+	end
+end
+local RuS = game:GetService('RunService')
+local con_3 = RuS.RenderStepped:connect(function(delta)
+	if Variables.held and Variables.CurrentSlider then
+		local max = Variables.CurrentSlider:FindFirstChild('Maxto').Value
+		local min = Variables.CurrentSlider:FindFirstChild('Minto').Value
+		local increment = Variables.CurrentSlider:FindFirstChild('Increment').Value
+		
+		local Slider = Variables.CurrentSlider
+		local mouse = UIS:GetMouseLocation() -- LEFTEST
+		local Range = {
+			min = Slider.AbsolutePosition.X,
+			max = Slider.AbsolutePosition.X + Slider.Parent.AbsoluteSize.X,
+		}
+		local ap = Vector2.new(Slider.Parent.AbsolutePosition.X, Slider.Parent.AbsolutePosition.Y)
+		local as = Vector2.new(Slider.Parent.AbsoluteSize.X, Slider.Parent.AbsoluteSize.Y)
+		
+		local newnumber = snap(((mouse.X - ap.X)/Slider.Parent.AbsoluteSize.X),increment,max,min)
+		
+		if string.split(tostring(increment),'.')[2] then
+			local roundupto = #(string.split(tostring(increment),'.')[2])
+			local get = string.split(tostring(newnumber),'.')
+			if get[2] then
+				local rounded = string.sub(get[2],1,roundupto)
+				newnumber = tonumber(get[1]..'.'..rounded)
+			end
+		end
+		
+		local fakemax = max-min
+		local fakenumber = newnumber-min
+		local newpercentage = math.clamp(fakenumber/fakemax,0,1)
+		
+		local fakenumber,fakemax
+		if min < 0 then
+			fakemax = max + math.abs(min)
+			if newnumber < 0 then
+				newpercentage = math.clamp(math.abs((min + math.abs(newnumber)))/fakemax,0,1)
+			else
+				newpercentage = math.clamp((newnumber + math.abs(min))/fakemax,0,1)
+			end
+		end
+		
+		
+		--[[
+		local percentage = math.clamp((mouse.X - ap.X)/Slider.Parent.AbsoluteSize.X,0,1)
+		--// Snapping, the increment thingy
+		local realnumber = max * percentage
+		local bry = math.floor(realnumber)
+		--//Check incremento
+		local coun = math.floor(((bry - min)/increment) + 1)
+		local newnumber = min + (coun - 1) * increment
+		local newpercentage = math.clamp(newnumber/max,0,1)
+		]]
+		
+		Slider.Size = UDim2.new(newpercentage, 0, 1, 0)
 
-local toreturn = {}
-setmetatable(toreturn,{
-	__call = function(t,Lib,Window)
-		print('Distance is: '..tostring(Variables.ESP_ShowDistance))
-		local data_UI = {}
-		local Tab = Window:MakeTab({
-			Name = "ESP",
-		})
-		--// Category: Player
-		Tab:AddSection({
-			Name = 'Player Esp',
-		})
-		data_UI.PESP_toggle = Tab:AddToggle({
-			Name = 'Player Esp',
-			Default = Variables.ESP_Player,
-			Flag = 'Player Esp',
-			Callback = function(Value,set)
-				if not set then
-					Variables.ESP_Player = Value
-					if Value == false then
-						for i,v in pairs(data.Track) do
-							if v.Tag then
-								v.Tag.Visible = false
-							end
-						end
-					end
-				end
-			end,
-		})
-		data_UI.PESP_health = Tab:AddToggle({
-			Name = 'Show Health',
-			Default = Variables.ESP_ShowHealth,
-			Flag = 'Player Esp Health',
-			Callback = function(Value,set)
-				if not set then
-					Variables.ESP_ShowHealth = Value
-				end
-			end,
-		})
-		data_UI.PESP_distance = Tab:AddToggle({
-			Name = 'Show Distance',
-			Default = Variables.ESP_ShowHealth,
-			Flag = 'Player Esp Distance',
-			Callback = function(Value,set)
-				if not set then
-					Variables.ESP_ShowDistance = Value
-				end
-			end,
-		})
-		data_UI.PESP_healthbar = Tab:AddToggle({
-			Name = 'Show Health Bar',
-			Default = Variables.ESP_ShowHealthBar,
-			Flag = 'Player Esp Health',
-			Callback = function(Value,set)
-				if not set then
-					Variables.ESP_ShowHealthBar = Value
-					if Value == false then
-						for i,v in pairs(data.Track) do
-							if v.HealthBarlib then
-								for o,c in pairs(v.HealthBarlib) do
-									c:Remove()
-								end
-								v.HealthBarlib = nil
-							end
-						end
-					end
-				end
-			end,
-		})
-		data_UI.PESP_box = Tab:AddToggle({
-			Name = 'Show Box',
-			Default = Variables.ESP_ShowBox,
-			Flag = 'Player Esp Box',
-			Callback = function(Value,set)
-				if not set then
-					Variables.ESP_ShowBox = Value
-					if Value == false then
-						for i,v in pairs(data.Track) do
-							if v.Boxlib then
-								for o,c in pairs(v.Boxlib) do
-									c:Remove()
-								end
-								v.Boxlib = nil
-							end
-						end
-					end
-				end
-			end,
-		})
-		data_UI.PESP_color = Tab:AddTextbox({
-			Name = 'Color, From RBG, You can search on google!',
-			Default = tostring(Variables.ESP_PlayerColor.R)..","..tostring(Variables.ESP_PlayerColor.G)..","..tostring(Variables.ESP_PlayerColor.B),
-			TextDisappear = true,
-			Callback = function(str)
-				--// Fetching
-				local get = tostring(str)
-				if get then
-					local split = string.split(str,',')
-					local r = tonumber(str[1])
-					local g = tonumber(str[2])
-					local b = tonumber(str[3])
-					if r and g and b then
-						Variables.ESP_PlayerColor.R = r
-						Variables.ESP_PlayerColor.G = g
-						Variables.ESP_PlayerColor.B = b
+		local Val = {
+			Variables.CurrentSlider:FindFirstChild('Value'),
+			Variables.CurrentSlider.Parent:FindFirstChild('Value'),
+		}
 
-						--// Do Change Color
-						for i,v in pairs(data.Track) do
-							if i:IsDescendantOf(workspace) and v.Tag and v.Flag == 'Player ESP' then
-								v.Tag.Color = Color3.fromRGB(r,g,b)
-								if v.Boxlib then
-									v.Boxlib.box.Color = Color3.fromRGB(r,g,b)
-								end
-							end
-						end
-					end
-				end
-			end,
-		})
-		--// Loaded Module for Player Esp
+		local Nameto = Variables.CurrentSlider:FindFirstChild('Nameto')
+		local function changeval(text)
+			for i,v in pairs(Val) do
+				v.Text = tostring(text)..' '..Nameto.Value
+			end
+		end
 
-		--// Category: Team Esp
-		Tab:AddSection({
-			Name = 'Team ESP',
-		})
-		data_UI.TESP_toggle = Tab:AddToggle({
-			Name = 'Specify team members',
-			Default = Variables.ESP_Teamate,
-			Flag = 'Team ESP',
-			Callback = function(Value,set)
-				if not set then
-					Variables.ESP_Teamate = true
-				end
-			end,
-		})
-		data_UI.TESP_color = Tab:AddTextbox({
-			Name = 'Color, From RBG, You can search on google!',
-			Default = tostring(Variables.ESP_TeamColor.R)..","..tostring(Variables.ESP_TeamColor.G)..","..tostring(Variables.ESP_TeamColor.B),
-			TextDisappear = true,
-			Callback = function(str)
-				--// Fetching
-				local get = tostring(str)
-				if get then
-					local split = string.split(str,',')
-					local r = tonumber(str[1])
-					local g = tonumber(str[2])
-					local b = tonumber(str[3])
-					if r and g and b then
-						Variables.ESP_PlayerColor.R = r
-						Variables.ESP_PlayerColor.G = g
-						Variables.ESP_PlayerColor.B = b
+		changeval(newnumber)
 
-						--// Do Change Color
-						for i,v in pairs(data.Track) do
-							if i:IsDescendantOf(workspace) and v.Tag and v.Flag == 'Player ESP' and v.IsTeam then
-								v.Tag.Color = Color3.fromRGB(r,g,b)
-								if v.Box then
-									v.Boxlib.box.Color = Color3.fromRGB(r,g,b)
-								end
-							end
-						end
-					end
-				end
-			end,
-		})
-		--// Loaded Module For Team
+		if Variables.CurrentSlider_callback then
+			Variables.CurrentSlider_callback(newnumber)
+		end
+	end
+end)
+table.insert(ex_connections,{con_1,con_2,con_3})
 
-		--// Loaded module for more...
+modules.side.Windowfunc = function(parento)
+	function parento:MakeTab(args)
+		return modules.side.AddTab(args)
+	end
+end
+modules.side.Tabfunc = function(parento)
+	function parento:AddSection(args)
+		args.Frame = parento.self
+		local methods = modules.side.AddSection(args) or nil
+		return methods
+	end
+	
+	function parento:AddSlider(args)
+		args.Frame = parento.self
+		local methods = modules.side.AddSlider(args) or nil
+		return methods
+	end
+	
+	function parento:AddButton(args)
+		args.Frame = parento.self
+		local methods = modules.side.AddButton(args) or nil
+		return methods
+	end
+	
+	function parento:AddToggle(args)
+		args.Frame = parento.self
+		local methods = modules.side.AddToggle(args) or nil
+		return methods
+	end
+	
+	function parento:AddLabel(...)
+		local faketo = {...}
+		local args = {}
+		args.Frame = parento.self
+		args.Name = faketo[1]
+		local methods = modules.side.AddLabel(args) or nil
+		return methods
+	end
+	
+	function parento:AddParagraph(args)
+		args.Frame = parento.self
+		local methods = modules.side.AddParagraph(args)
+		return methods or nil
+	end
+	
+	function parento:AddBind(args)
+		args.Frame = parento.self
+		local methods = modules.side.AddBind(args)
+		return methods or nil
+	end
+	
+	function parento:AddTextbox(args)
+		args.Frame = parento.self
+		local methods = modules.side.AddTextBox(args)
+		return methods or nil
+	end
+	
+	function parento:AddDropdown(args)
+		args.Frame = parento.self
+		local methods = modules.side.AddDropdown(args)
+		return methods or nil
+	end
+end
 
-		--// Settings board
-		local Tab_2 = Window:MakeTab({
-			Name = "ESP Settings",
-		})
-		--// Category: Global
-		Tab_2:AddSection({
-			Name = 'Global Settings'
-		})
-		Tab_2:AddSlider({
-			Name = 'Size',
-			Min = 10,
-			Max = 25,
-			Default = Variables.ESP_Size,
-			Increment = 1,
-			ValueName = 'px',
-			Flag = 'Size',
-			Callback = function(Value)
-				Variables.ESP_Size = Value
-			end,
-		})
-		Tab_2:AddSlider({
-			Name = 'Max Distance',
-			Min = 0,
-			Max = 10000,
-			Default = Variables.ESP_MaxDistance,
-			Increment = 1,
-			ValueName = 'ft',
-			Flag = 'Max Distance',
-			Callback = function(Value)
-				Variables.ESP_MaxDistance = Value
-			end,
-		})
-		Tab_2:AddSlider({
-			Name = 'YOffset',
-			Min = -20,
-			Max = 20,
-			Default = Variables.ESP_YOffset,
-			Increment = 1,
-			ValueName = 'ft',
-			Flag = 'YOffset',
-			Callback = function(Value)
-				Variables.ESP_YOffset = Value
-			end,
-		})
-		Tab_2:AddSlider({
-			Name = 'ZOffset',
-			Min = -10,
-			Max = 10,
-			Default = Variables.ESP_ZOffset,
-			Increment = 1,
-			ValueName = 'ft',
-			Flag = 'ZOffset',
-			Callback = function(Value)
-				Variables.ESP_ZOffset = Value
-			end,
-		})
-		Tab_2:AddButton({
-			Name = 'Refresh Teammate list',
-			Callback = function()
-				Current.Teamate = {}
-				for i,v in pairs(game:GetService('Players'):GetChildren()) do
-					if v ~= game:GetService('Players').LocalPlayer then
-						if v:IsFriendsWith(userid) then
-							if not Current.Teamate[v.Name] then
-								table.insert(Current.Teamate,v.Name)
-							end
-						end
-					end
-				end
-			end,
-		})
-		--// Loaded module
-		--// Category: Player
-		Tab_2:AddSection({
-			Name = 'Player Esp',
-		})
-		Tab_2:AddBind({
-			Name = 'Keybind Toggle',
-			Default = S2E(Variables.ESP_PlayerBind),
-			Callback = function(newkey,issetingkey)
-				if newkey and issetingkey then
-					print(newkey)
-					Variables.ESP_PlayerBind = keybindlib:E2S(newkey)
-				else
-					Lib.FireFlag('Player ESP')
-				end
-			end,
-		})
-		Tab_2:AddBind({
-			Name = 'Keybind Box',
-			Default = S2E(Variables.ESP_BoxBind),
-			Callback = function(newkey,issetingkey)
-				if newkey and issetingkey then
-					Variables.ESP_BoxBind = keybindlib:E2S(newkey)
-				else
-					Lib.FireFlag('Player ESP Box')
-				end
-			end,
-		})
-		--// Loaded Module...
+local hub = {}
 
-		--// Category: Team
-		Tab_2:AddSection({
-			Name = 'Team ESP'
-		})
-		Tab_2:AddBind({
-			Name = 'Keybind Toggle',
-			Default = S2E(Variables.ESP_TeamBind),
-			Callback = function(newkey,issetingkey)
-				if newkey and issetingkey then
-					Variables.ESP_TeamBind = keybindlib:E2S(newkey)
-				else
-					Lib.FireFlag('Team ESP')
-				end
-			end,
-		})
-		--// Loaded Module...
+function hub:MakeWindow(args)
+	local Name = args.Name
+	local Flag = args.Flag
+	local Callback = args.Callback
+	if Name then
+		local Hub = Instance.new("ScreenGui")
+		local Frame = Instance.new("Frame")
+		local UICorner = Instance.new("UICorner")
+		local TopBar = Instance.new("Frame")
+		local Tushub = Instance.new("TextLabel")
+		local Frame_2 = Instance.new("Frame")
+		local Gameto = Instance.new("TextLabel")
+		local Frame_3 = Instance.new("Frame")
+		local UICorner_2 = Instance.new("UICorner")
+		local ScrollingFrame = Instance.new("ScrollingFrame")
+		local UIListLayout = Instance.new("UIListLayout")
+		local UIPadding = Instance.new("UIPadding")
+		local CharBoard = Instance.new("Frame")
+		local Frame_4 = Instance.new("Frame")
+		local Frame_5 = Instance.new("Frame")
+		local ImageLabel = Instance.new("ImageLabel")
+		local ImageLabel_2 = Instance.new("ImageLabel")
+		local UICorner_3 = Instance.new("UICorner")
+		local Frame_6 = Instance.new("Frame")
+		local UICorner_4 = Instance.new("UICorner")
+		local TextLabel = Instance.new("TextLabel")
+		local Frame_7 = Instance.new("Frame")
+		
+		getgenv().MakeDrag(TopBar,Frame)
 
-		--// Category:?
-	end,
-})
-return toreturn
+		--Properties:
+
+		Hub.Name = "Hub"
+		syn.protect_gui(Hub)
+		Hub.Parent = game:GetService("CoreGui")
+
+		Frame.Parent = Hub
+		Frame.BackgroundColor3 = Color3.fromRGB(25, 25, 25)
+		Frame.BorderSizePixel = 0
+		Frame.ClipsDescendants = true
+		Frame.Position = UDim2.new(0.25, 0, 0.25, 0)
+		Frame.Size = UDim2.new(0, 615, 0, 344)
+
+		UICorner.CornerRadius = UDim.new(0, 10)
+		UICorner.Parent = Frame
+
+		TopBar.Name = "TopBar"
+		TopBar.Parent = Frame
+		TopBar.BackgroundTransparency = 1.000
+		TopBar.Size = UDim2.new(1, 0, 0, 50)
+
+		Tushub.Name = "Tushub"
+		Tushub.Parent = TopBar
+		Tushub.BackgroundTransparency = 1.000
+		Tushub.Position = UDim2.new(0, 25, 0, -24)
+		Tushub.Size = UDim2.new(1, -30, 2, 0)
+		Tushub.Font = Enum.Font.GothamBlack
+		Tushub.Text = "Tus Hub"
+		Tushub.TextColor3 = Color3.fromRGB(240, 240, 240)
+		Tushub.TextSize = 20.000
+		Tushub.TextXAlignment = Enum.TextXAlignment.Left
+
+		Frame_2.Parent = TopBar
+		Frame_2.BackgroundColor3 = Color3.fromRGB(60, 60, 60)
+		Frame_2.BorderSizePixel = 0
+		Frame_2.Position = UDim2.new(0, 0, 1, -1)
+		Frame_2.Size = UDim2.new(1, 0, 0, 1)
+
+		Gameto.Name = "Game"
+		Gameto.Parent = TopBar
+		Gameto.BackgroundTransparency = 1.000
+		Gameto.Position = UDim2.new(0, 426, 0, 12)
+		Gameto.Size = UDim2.new(0.339837402, -30, 0.540000021, 0)
+		Gameto.Font = Enum.Font.GothamBlack
+		Gameto.Text = tostring(Name)
+		Gameto.TextColor3 = Color3.fromRGB(129, 129, 129)
+		Gameto.TextSize = 15.000
+		Gameto.TextStrokeTransparency = 0.000
+		Gameto.TextXAlignment = Enum.TextXAlignment.Right
+
+		Frame_3.Parent = Frame
+		Frame_3.BackgroundColor3 = Color3.fromRGB(32, 32, 32)
+		Frame_3.BorderSizePixel = 0
+		Frame_3.Position = UDim2.new(0, 0, 0, 50)
+		Frame_3.Size = UDim2.new(0, 150, 1, -50)
+
+		UICorner_2.CornerRadius = UDim.new(0, 10)
+		UICorner_2.Parent = Frame_3
+
+		ScrollingFrame.Parent = Frame_3
+		ScrollingFrame.BackgroundTransparency = 1.000
+		ScrollingFrame.BorderSizePixel = 0
+		ScrollingFrame.Size = UDim2.new(1, 0, 1, -50)
+		ScrollingFrame.BottomImage = "rbxassetid://7445543667"
+		ScrollingFrame.CanvasSize = UDim2.new(0, 0, 0, 46)
+		ScrollingFrame.MidImage = "rbxassetid://7445543667"
+		ScrollingFrame.ScrollBarThickness = 4
+		ScrollingFrame.TopImage = "rbxassetid://7445543667"
+
+		UIListLayout.Parent = ScrollingFrame
+		UIListLayout.SortOrder = Enum.SortOrder.LayoutOrder
+
+		UIPadding.Parent = ScrollingFrame
+		UIPadding.PaddingBottom = UDim.new(0, 8)
+		UIPadding.PaddingTop = UDim.new(0, 8)
+
+		CharBoard.Name = "CharBoard"
+		CharBoard.Parent = Frame_3
+		CharBoard.BackgroundTransparency = 1.000
+		CharBoard.Position = UDim2.new(0, 0, 1, -50)
+		CharBoard.Size = UDim2.new(1, 0, 0, 50)
+
+		Frame_4.Parent = CharBoard
+		Frame_4.BackgroundColor3 = Color3.fromRGB(60, 60, 60)
+		Frame_4.BorderSizePixel = 0
+		Frame_4.Size = UDim2.new(1, 0, 0, 1)
+
+		Frame_5.Parent = CharBoard
+		Frame_5.AnchorPoint = Vector2.new(0, 0.5)
+		Frame_5.BackgroundColor3 = Color3.fromRGB(60, 60, 60)
+		Frame_5.BorderSizePixel = 0
+		Frame_5.Position = UDim2.new(0, 10, 0.5, 0)
+		Frame_5.Size = UDim2.new(0, 32, 0, 32)
+
+		ImageLabel.Parent = Frame_5
+		ImageLabel.BackgroundTransparency = 1.000
+		ImageLabel.Size = UDim2.new(1, 0, 1, 0)
+		local uid = game:GetService('Players').LocalPlayer.UserId
+		ImageLabel.Image = "https://www.roblox.com/headshot-thumbnail/image?userId="..tostring(uid).."&width=420&height=420&format=png"
+
+		ImageLabel_2.Parent = Frame_5
+		ImageLabel_2.BackgroundTransparency = 1.000
+		ImageLabel_2.Size = UDim2.new(1, 0, 1, 0)
+		ImageLabel_2.Image = "rbxassetid://4031889928"
+		ImageLabel_2.ImageColor3 = Color3.fromRGB(32, 32, 32)
+
+		UICorner_3.CornerRadius = UDim.new(1, 10)
+		UICorner_3.Parent = Frame_5
+
+		Frame_6.Parent = CharBoard
+		Frame_6.AnchorPoint = Vector2.new(0, 0.5)
+		Frame_6.BackgroundTransparency = 1.000
+		Frame_6.Position = UDim2.new(0, 10, 0.5, 0)
+		Frame_6.Size = UDim2.new(0, 32, 0, 32)
+
+		UICorner_4.CornerRadius = UDim.new(1, 10)
+		UICorner_4.Parent = Frame_6
+
+		TextLabel.Parent = CharBoard
+		TextLabel.BackgroundTransparency = 1.000
+		TextLabel.ClipsDescendants = true
+		TextLabel.Position = UDim2.new(0, 50, 0, 18)
+		TextLabel.Size = UDim2.new(1, -60, 0, 13)
+		TextLabel.Font = Enum.Font.GothamBold
+		TextLabel.Text = game:GetService('Players').LocalPlayer.Name or '???'
+		TextLabel.TextColor3 = Color3.fromRGB(240, 240, 240)
+		TextLabel.TextSize = 13.000
+		TextLabel.TextXAlignment = Enum.TextXAlignment.Left
+
+		Frame_7.Parent = Frame_3
+		Frame_7.BackgroundColor3 = Color3.fromRGB(60, 60, 60)
+		Frame_7.BorderSizePixel = 0
+		Frame_7.Position = UDim2.new(1, -1, 0, 0)
+		Frame_7.Size = UDim2.new(0, 1, 1, 0)
+
+		local Notify = Instance.new("Frame")
+		local UIListLayout = Instance.new("UIListLayout")
+
+		--Properties:
+
+		Notify.Name = "Notify"
+		Notify.Parent = Hub
+		Notify.AnchorPoint = Vector2.new(1, 1)
+		Notify.BackgroundTransparency = 1.000
+		Notify.BorderColor3 = Color3.fromRGB(27, 42, 53)
+		Notify.Position = UDim2.new(1, -25, 1, -25)
+		Notify.Size = UDim2.new(0, 300, 1, -25)
+
+		UIListLayout.Parent = Notify
+		UIListLayout.HorizontalAlignment = Enum.HorizontalAlignment.Center
+		UIListLayout.SortOrder = Enum.SortOrder.LayoutOrder
+		UIListLayout.VerticalAlignment = Enum.VerticalAlignment.Bottom
+		UIListLayout.Padding = UDim.new(0, 5)
+
+		Hub.Enabled = false
+
+		if Flag then
+			Variables.Flags[Flag] = function(boolean)
+				Hub.Enabled = boolean
+			end
+		end
+
+		local Argsto = {
+			ScrollingFrame = ScrollingFrame,
+			Main = Frame,
+			Hub = Hub,
+			Notify = Notify,
+		}
+		Variables.link = Argsto
+		Variables.Closedcallback = Callback
+		
+		local methods = {}
+		modules.side.Windowfunc(methods)
+		
+		return methods
+	end
+end
+
+function hub:Notify(args)
+	local Contento = args.Content
+	local Duration = args.Duration or 20
+	if Contento and Duration then
+		local TextButton = Instance.new("TextButton")
+		local Content = Instance.new("TextLabel")
+		local UICorner = Instance.new("UICorner")
+		local Frame = Instance.new("Frame")
+		local UICorner_2 = Instance.new("UICorner")
+		local Frame_2 = Instance.new("Frame")
+		local UICorner_3 = Instance.new("UICorner")
+
+		--Properties:
+
+		TextButton.Parent = Variables.link.Notify
+		TextButton.BackgroundColor3 = Color3.fromRGB(53, 53, 53)
+		TextButton.Size = UDim2.new(0.980000019, 0, 0, 45)
+		TextButton.ZIndex = 3
+		TextButton.Font = Enum.Font.SourceSans
+		TextButton.Text = ""
+		TextButton.TextColor3 = Color3.fromRGB(0, 0, 0)
+		TextButton.TextSize = 14.000
+
+		Content.Name = "Content"
+		Content.Parent = TextButton
+		Content.BackgroundTransparency = 1.000
+		Content.BorderColor3 = Color3.fromRGB(27, 42, 53)
+		Content.Position = UDim2.new(0, 5, 0.001, 0)
+		Content.Size = UDim2.new(1, -12, 0.953333139, 0)
+		Content.ZIndex = 3
+		Content.Font = Enum.Font.SourceSansBold
+		Content.LineHeight = 2.000
+		Content.Text = Contento
+		Content.TextColor3 = Color3.fromRGB(65025, 65025, 65025)
+		Content.TextScaled = true
+		Content.TextSize = 20.000
+		Content.TextWrapped = true
+
+		UICorner.CornerRadius = UDim.new(0, 5)
+		UICorner.Parent = TextButton
+
+		Frame.Parent = TextButton
+		Frame.BackgroundColor3 = Color3.fromRGB(170, 170, 170)
+		Frame.BorderSizePixel = 0
+		Frame.Position = UDim2.new(-0.0102040814, 0, 0, 0)
+		Frame.Size = UDim2.new(1.02040815, 0, 0.266666681, 33)
+		Frame.ZIndex = 2
+
+		UICorner_2.CornerRadius = UDim.new(0, 5)
+		UICorner_2.Parent = Frame
+
+		Frame_2.Parent = TextButton
+		Frame_2.BackgroundColor3 = Color3.fromRGB(162, 251, 255)
+		Frame_2.Position = UDim2.new(0.0136054419, 0, 0.953333855, 0)
+		Frame_2.Size = UDim2.new(0.966394544, 0, 0, 2)
+		Frame_2.ZIndex = 3
+
+		UICorner_3.CornerRadius = UDim.new(0, 5)
+		UICorner_3.Parent = Frame_2
+
+		local slide = Frame_2
+		if tostring(Duration) ~= 'inf' then
+			slide:TweenSize(UDim2.new(0,0,0,2),Enum.EasingDirection.In,Enum.EasingStyle.Linear,Duration,true)
+		else
+			Frame_2.Visible = false
+		end
+
+		game.Debris:AddItem(TextButton,Duration)
+		TextButton.MouseButton1Down:Connect(function()
+			TextButton:Destroy()
+		end)
+	end
+end
+
+function hub:Init()
+	Variables.link.Hub.Enabled = true
+end
+
+function hub:On()
+	Variables.link.Hub.Enabled = true
+end
+
+function hub:Off()
+	Variables.link.Hub.Enabled = false
+end
+
+function hub:Toggle()
+	Variables.link.Hub.Enabled = not Variables.link.Hub.Enabled
+end
+
+function hub:Destroy()
+	for i,v in pairs(ex_connections) do
+		v:Disconnect()
+		v = nil
+	end
+	pcall(function()
+		syn.unprotect_gui(Variables.link.Hub)
+	end)
+	Variables.link.Hub:Destroy()
+	Variables = nil
+end
+
+function hub:FireFlag(flagname,args)
+	if Variables.Flags[flagname] then
+		Variables.Flags[flagname](args)
+	end
+end
+
+return hub
