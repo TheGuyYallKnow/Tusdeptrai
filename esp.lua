@@ -376,7 +376,11 @@ task.spawn(function()
 												text = text..Text_front
 
 												if TrackDistance and TrackInst and typeof(TrackInst) == 'Instance' and TrackInst.Position then
-													text = text..tostring(math.round(tonumber((game:GetService('Players').LocalPlayer.Character.HumanoidRootPart.Position - TrackInst.Position).Magnitude)))
+													if game:GetService('Players').LocalPlayer.Character then
+														if game:GetService('Players').LocalPlayer.Character:FindFirstChild('HumanoidRootPart') then
+															text = text..tostring(math.round(tonumber((game:GetService('Players').LocalPlayer.Character.HumanoidRootPart.Position - TrackInst.Position).Magnitude)))
+														end
+													end
 												else
 													if TrackInst_2 and TrackValue_2 then
 														if TrackInst and TrackValue then
