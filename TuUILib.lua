@@ -1327,11 +1327,13 @@ modules.side.Tabfunc = function(parento)
 	end
 	
 	function parento:AddLabel(...)
+		print('Attempting to add a label...\t Args = '..game:GetService('HttpService'):JSONEncode(...))
 		local faketo = {...}
 		local args = {}
 		args.Frame = parento.self
 		args.Name = faketo[1]
 		local methods = modules.side.AddLabel(args) or nil
+		print('Return Methods for label:\t'..game:GetService('HttpService'):JSONEncode(methods))
 		return methods
 	end
 	
