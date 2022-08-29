@@ -233,7 +233,9 @@ modules.side.AddLabel = function(args)
 				frame:Destroy()
 			end,
 			Set = function(get)
-				content.Text = get
+				print(game:GetService('HttpService'):JSONEncode(get))
+				get.Destroy()--//?
+				--content.Text = get
 			end,
 		}
 		return methods
