@@ -415,8 +415,10 @@ task.spawn(function()
 									end
 									v.Tag.Text = text
 								end
-								v.Tag.Position = WTS(v.Part.Position + Vector3.new(0,Variables.ESP_YOffset,Variables.ESP_ZOffset))
-								local _, screen = workspace.CurrentCamera:WorldToViewportPoint(v.Part.Position + Vector3.new(0,Variables.ESP_YOffset,Variables.ESP_ZOffset))
+								local cfrem = v.Part.CFrame * CFrame.new(0,Variables.ESP_YOffset,Variables.ESP_ZOffset)
+								local pos = cfrem.p
+								v.Tag.Position = WTS(pos)
+								local _, screen = workspace.CurrentCamera:WorldToViewportPoint(pos)
 								if screen then
 									if v.Tag.Size ~= Variables.ESP_Size then
 										v.Tag.Size = Variables.ESP_Size
@@ -587,6 +589,7 @@ end)
 local toreturn = {}
 setmetatable(toreturn,{
 	__call = function(t,Lib,Window)
+		print('Distance is: '..tostring(Variables.ESP_ShowDistance))
 		local data_UI = {}
 		local Tab = Window:MakeTab({
 			Name = "ESP",
