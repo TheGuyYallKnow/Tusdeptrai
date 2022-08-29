@@ -1400,7 +1400,7 @@ function hub:MakeWindow(args)
 		Frame.BackgroundColor3 = Color3.fromRGB(25, 25, 25)
 		Frame.BorderSizePixel = 0
 		Frame.ClipsDescendants = true
-		Frame.Position = UDim2.new(0, 0, 0.75, 0)
+		Frame.Position = UDim2.new(0, 0, 0.25, 0)
 		Frame.Size = UDim2.new(0, 615, 0, 344)
 
 		UICorner.CornerRadius = UDim.new(0, 10)
