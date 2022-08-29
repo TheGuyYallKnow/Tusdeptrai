@@ -391,11 +391,9 @@ task.spawn(function()
 															--// So we going to round it to 2nd decimal
 															local stringto = tostring(TrackInst[TrackValue])
 															local rounded
-															if tonumber(stringto) then
-																local getdec = string.split(stringto,',')
-																if getdec[2] and getdec[1] then
-																	rounded = getdec[1]..','..string.sub(getdec[2],1,2)
-																end
+															local getdec = string.split(stringto,',')
+															if getdec[2] and getdec[1] then
+																rounded = getdec[1]..','..string.sub(getdec[2],1,2)
 															end
 															if rounded then
 																text = text..rounded
