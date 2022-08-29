@@ -174,12 +174,11 @@ modules.side.AddToggle = function(args)
 			end
 		end
 		
-		local methods = {
-			Destroy = function()
-				Frame:Destroy()
-				Variables.Flags[Flag] = nil
-			end,
-		}
+		local methods = {}
+		function methods:Destroy()
+			Frame:Destroy()
+			Variables.Flags[Flag] = nil
+		end
 		return methods
 	end
 end
@@ -212,11 +211,10 @@ modules.side.AddButton = function(args)
 			tween_2:Play()
 		end)
 		
-		local methods = {
-			Destroy = function()
-				TextButton:Destroy()
-			end,
-		}
+		local methods = {}
+		function methods:Destroy()
+			TextButton:Destroy()
+		end
 		return methods
 	end
 end
@@ -227,17 +225,14 @@ modules.side.AddLabel = function(args)
 		local frame,content = modules.side.AddFrame()
 		frame.Parent = Frame
 		content.Text = Name
-
-		local methods = {
-			Destroy = function()
-				frame:Destroy()
-			end,
-			Set = function(get)
-				print(game:GetService('HttpService'):JSONEncode(get))
-				get.Destroy()--//?
-				--content.Text = get
-			end,
-		}
+		
+		local methods = {}
+		function methods:Destroy()
+			frame:Destroy()
+		end
+		function methods:Set(get)
+			content.Text = get
+		end
 		return methods
 	end
 end
@@ -282,17 +277,15 @@ modules.side.AddParagraph = function(args)
 		Content.TextSize = 13.000
 		Content.TextWrapped = true
 		Content.TextXAlignment = Enum.TextXAlignment.Left
-
-		local methods = {
-			Destroy = function()
-				Frame:Destroy()
-			end,
-			Set = function(get)
-				print(game:GetService('HttpService'):JSONEncode(get))
-				Content.Text = get.Content
-				Title.Text = get.Name
-			end,
-		}
+		
+		local methods = {}
+		function methods:Destroy()
+			Frame:Destroy()
+		end
+		function methods:Set(get)
+			Content.Text = get.Content
+			Title.Text = get.Name
+		end
 		return methods
 	end
 end
@@ -482,20 +475,19 @@ modules.side.AddSlider = function(args)
 			end
 		end
 		
-		local methods = {
-			Destroy = function ()
-				Variables.Flags[Flag] = nil
-				connection:Disconnect()
-				connection = nil
-				Frame:Destroy()
-			end,
-			Set = function(valueto)
-				local argto = {
-					Set = valueto
-				}
-				Variables.Flags[Flag](argto)
-			end,
-		}
+		local methods = {}
+		function methods:Destroy()
+			Variables.Flags[Flag] = nil
+			connection:Disconnect()
+			connection = nil
+			Frame:Destroy()
+		end
+		function methods:Set(valueto)
+			local argto = {
+				Set = valueto
+			}
+			Variables.Flags[Flag](argto)
+		end
 		return methods
 	end
 end
@@ -520,9 +512,10 @@ modules.side.AddSection = function(args)
 		TextLabel.TextSize = 14.000
 		TextLabel.TextXAlignment = Enum.TextXAlignment.Left
 		
-		local methods = {Destroy = function()
+		local methods = {}
+		function methods:Destroy()
 			Frame:Destroy()
-		end,}
+		end
 		return methods
 	end
 end
@@ -660,22 +653,21 @@ modules.side.AddBind = function(args)
 			end)
 		end)
 		
-		local methods = {
-			Destroy = function()
-				Frame:Destroy()
-				Variables.Flags[Flag] = nil
-				if Default then
-					if Variables.Keybinds[Default] then
-						if table.find(Variables.Keybinds[Default],Callback_) then
-							table.remove(Variables.Keybinds[Default],table.find(Variables.Keybinds[Default],Callback_))
-						end
+		local methods = {}
+		function methods:Destroy()
+			Frame:Destroy()
+			Variables.Flags[Flag] = nil
+			if Default then
+				if Variables.Keybinds[Default] then
+					if table.find(Variables.Keybinds[Default],Callback_) then
+						table.remove(Variables.Keybinds[Default],table.find(Variables.Keybinds[Default],Callback_))
 					end
 				end
-			end,
-			Set = function(keycode)
-				setkey(keycode)
-			end,
-		}
+			end
+		end
+		function methods:Set(keycode)
+			setkey(keycode)
+		end
 		return methods
 	end
 end
@@ -750,15 +742,14 @@ modules.side.AddTextBox = function(args)
 			end)
 		end)
 		
-		local methods = {
-			Destroy = function()
-				Frame:Destroy()
-			end,
-			Set = function(texto)
-				TextBox.Text = texto
-				Callback(TextBox.Value)
-			end,
-		}
+		local methods = {}
+		function methods:Destroy()
+			Frame:Destroy()
+		end
+		function methods:Set(texto)
+			TextBox.Text = texto
+			Callback(TextBox.Value)
+		end
 		return methods
 	end
 end
@@ -1039,52 +1030,51 @@ modules.side.AddDropdown = function(args)
 			end
 		end)
 		
-		local methods = {
-			Destroy = function()
-				Frame:Destroy()
-			end,
-			Refresh = function(list,del)
-				if del == true then
-					for i,v in pairs(Textbuttons) do
-						v:Destroy()
-						i = nil
-					end
+		local methods = {}
+		function methods:Destroy()
+			Frame:Destroy()
+		end
+		function methods:Refresh(list,del)
+			if del == true then
+				for i,v in pairs(Textbuttons) do
+					v:Destroy()
+					i = nil
 				end
-				if list and typeof(list) == 'table' then
-					Selected.Text = ''
-					for i,v in pairs(list) do
-						if Textbuttons[i] then Textbuttons[i]:Destroy() Textbuttons[i] = nil end
-						createbuttonto(v)
-					end
+			end
+			if list and typeof(list) == 'table' then
+				Selected.Text = ''
+				for i,v in pairs(list) do
+					if Textbuttons[i] then Textbuttons[i]:Destroy() Textbuttons[i] = nil end
+					createbuttonto(v)
 				end
-			end,
-			Set = function(val)
-				turnoff()
-				if Textbuttons[val] then
-					Textbuttons[val].BackgroundTransparency = 0
-				end
-				Callback(val)
-			end,
-			SetQuantity = function(val)
-				if tonumber(val) then
-					Quantity = Checkdot(val)
-					if Variables.Debounces[Frame] == true then
-						if not Quantity then
-							local quantity = #ScrollingFrame:GetChildren() - 1
-							Frame:TweenSize(UDim2.new(1, 0, 0, Var.normal + Var.plus * quantity),Enum.EasingDirection.Out,Enum.EasingStyle.Quart,0.5,true)
-							Ico.Rotation = 180
-						else
-							if #ScrollingFrame:GetChildren() - 1 <= 0 then Quantity = 0 end
-							Frame:TweenSize(UDim2.new(1, 0, 0, Var.normal + Var.plus * Quantity),Enum.EasingDirection.Out,Enum.EasingStyle.Quart,0.5,true)
-							Ico.Rotation = 180
-						end
+			end
+		end
+		function methods:Set(val)
+			turnoff()
+			if Textbuttons[val] then
+				Textbuttons[val].BackgroundTransparency = 0
+			end
+			Callback(val)
+		end
+		function methods:SetQuantity(val)
+			if tonumber(val) then
+				Quantity = Checkdot(val)
+				if Variables.Debounces[Frame] == true then
+					if not Quantity then
+						local quantity = #ScrollingFrame:GetChildren() - 1
+						Frame:TweenSize(UDim2.new(1, 0, 0, Var.normal + Var.plus * quantity),Enum.EasingDirection.Out,Enum.EasingStyle.Quart,0.5,true)
+						Ico.Rotation = 180
 					else
-						Ico.Rotation = 0
-						Frame:TweenSize(UDim2.new(1, 0, 0, 38),Enum.EasingDirection.Out,Enum.EasingStyle.Quart,0.5,true)
+						if #ScrollingFrame:GetChildren() - 1 <= 0 then Quantity = 0 end
+						Frame:TweenSize(UDim2.new(1, 0, 0, Var.normal + Var.plus * Quantity),Enum.EasingDirection.Out,Enum.EasingStyle.Quart,0.5,true)
+						Ico.Rotation = 180
 					end
+				else
+					Ico.Rotation = 0
+					Frame:TweenSize(UDim2.new(1, 0, 0, 38),Enum.EasingDirection.Out,Enum.EasingStyle.Quart,0.5,true)
 				end
-			end,
-		}
+			end
+		end
 		return methods
 	end
 end
@@ -1158,14 +1148,13 @@ modules.side.AddTab = function(args)
 			Variables.Flags[Flag] = Callback
 		end
 		
-		local methods = {
-			Destroy = function()
-				button:Destroy()
-				ItemContainer:Destroy()
-				Variables.Flags[Flag] = nil
-			end,
-			self = ItemContainer,
-		}
+		local methods = {}
+		function methods:Destroy()
+			button:Destroy()
+			ItemContainer:Destroy()
+			Variables.Flags[Flag] = nil
+		end
+		methods.self = ItemContainer
 		modules.side.Tabfunc(methods)
 		return methods
 	end
@@ -1327,13 +1316,11 @@ modules.side.Tabfunc = function(parento)
 	end
 	
 	function parento:AddLabel(...)
-		print('Attempting to add a label...\t Args = '..game:GetService('HttpService'):JSONEncode(...))
 		local faketo = {...}
 		local args = {}
 		args.Frame = parento.self
 		args.Name = faketo[1]
 		local methods = modules.side.AddLabel(args) or nil
-		print('Return Methods for label:\t'..game:GetService('HttpService'):JSONEncode(methods))
 		return methods
 	end
 	
