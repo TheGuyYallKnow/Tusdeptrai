@@ -1662,8 +1662,12 @@ function hub:Destroy()
 end
 
 function hub:FireFlag(flagname,args)
+	print('Flag Name = '..tostring(flagname))
 	if Variables.Flags[flagname] then
+		print('Has Flag')
 		Variables.Flags[flagname](args)
+	else
+		print(game:GetService('HttpService'):JSONEncode(Variables.Flags))
 	end
 end
 
