@@ -612,6 +612,7 @@ setmetatable(toreturn,{
 			Default = Variables.ESP_Player,
 			Flag = 'Player Esp',
 			Callback = function(Value,set)
+				print('Flag fired')
 				if not set then
 					Variables.ESP_Player = Value
 					if Value == false then
