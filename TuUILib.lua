@@ -180,6 +180,9 @@ modules.side.AddToggle = function(args)
 
 		if Flag then
 			Variables.Flags[Flag] = function(args)
+				if not args.Set then
+					args.Set = not Variables.Debounces[Frame]
+				end
 				Variables.Debounces[Frame] = args.Set
 				changeColor(args.Set)
 				Callback(args.Set)
