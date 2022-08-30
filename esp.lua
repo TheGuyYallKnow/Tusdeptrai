@@ -610,7 +610,7 @@ setmetatable(toreturn,{
 		data_UI.PESP_toggle = Tab:AddToggle({
 			Name = 'Player Esp',
 			Default = Variables.ESP_Player,
-			Flag = 'Player Esp',
+			Flag = 'Player_Esp',
 			Callback = function(Value,set)
 				print('Flag fired')
 				if not set then
@@ -628,7 +628,7 @@ setmetatable(toreturn,{
 		data_UI.PESP_health = Tab:AddToggle({
 			Name = 'Show Health',
 			Default = Variables.ESP_ShowHealth,
-			Flag = 'Player Esp Health',
+			Flag = 'Player_Esp_Health',
 			Callback = function(Value,set)
 				if not set then
 					Variables.ESP_ShowHealth = Value
@@ -638,7 +638,7 @@ setmetatable(toreturn,{
 		data_UI.PESP_distance = Tab:AddToggle({
 			Name = 'Show Distance',
 			Default = Variables.ESP_ShowHealth,
-			Flag = 'Player Esp Distance',
+			Flag = 'Player_Esp_Distance',
 			Callback = function(Value,set)
 				if not set then
 					Variables.ESP_ShowDistance = Value
@@ -648,7 +648,7 @@ setmetatable(toreturn,{
 		data_UI.PESP_healthbar = Tab:AddToggle({
 			Name = 'Show Health Bar',
 			Default = Variables.ESP_ShowHealthBar,
-			Flag = 'Player Esp Health',
+			Flag = 'Player_Esp_Health',
 			Callback = function(Value,set)
 				if not set then
 					Variables.ESP_ShowHealthBar = Value
@@ -668,7 +668,7 @@ setmetatable(toreturn,{
 		data_UI.PESP_box = Tab:AddToggle({
 			Name = 'Show Box',
 			Default = Variables.ESP_ShowBox,
-			Flag = 'Player Esp Box',
+			Flag = 'Player_Esp_Box',
 			Callback = function(Value,set)
 				if not set then
 					Variables.ESP_ShowBox = Value
@@ -724,7 +724,7 @@ setmetatable(toreturn,{
 		data_UI.TESP_toggle = Tab:AddToggle({
 			Name = 'Specify team members',
 			Default = Variables.ESP_Teamate,
-			Flag = 'Team ESP',
+			Flag = 'Team_ESP',
 			Callback = function(Value,set)
 				if not set then
 					Variables.ESP_Teamate = true
@@ -792,7 +792,7 @@ setmetatable(toreturn,{
 			Default = Variables.ESP_MaxDistance,
 			Increment = 1,
 			ValueName = 'ft',
-			Flag = 'Max Distance',
+			Flag = 'Max_Distance',
 			Callback = function(Value)
 				Variables.ESP_MaxDistance = Value
 			end,
@@ -848,7 +848,7 @@ setmetatable(toreturn,{
 				if issetingkey then
 					Variables.ESP_PlayerBind = keybindlib.E2S(newkey)
 				else
-					Lib:FireFlag('Player ESP')
+					Lib:FireFlag('Player_ESP')
 				end
 			end,
 		})
@@ -859,7 +859,7 @@ setmetatable(toreturn,{
 				if issetingkey then
 					Variables.ESP_BoxBind = keybindlib.E2S(newkey)
 				else
-					Lib:FireFlag('Player ESP Box')
+					Lib:FireFlag('Player_ESP_Box')
 				end
 			end,
 		})
@@ -876,7 +876,7 @@ setmetatable(toreturn,{
 				if issetingkey then
 					Variables.ESP_TeamBind = keybindlib.E2S(newkey)
 				else
-					Lib:FireFlag('Team ESP')
+					Lib:FireFlag('Team_ESP')
 				end
 			end,
 		})
