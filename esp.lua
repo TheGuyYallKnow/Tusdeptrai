@@ -284,7 +284,7 @@ for i,v in pairs(game:GetService('Players'):GetChildren()) do
 	if v ~= game:GetService('Players').LocalPlayer then
 		task.spawn(getChar,v)
 		if v:IsFriendsWith(userid) then
-			if not Current.Teamate[v.Name] then
+			if not table.find(Current.Teamate,v.Name) then
 				table.insert(Current.Teamate,v.Name)
 			end
 		end
@@ -293,7 +293,7 @@ end
 game:GetService('Players').PlayerAdded:Connect(function(p)
 	task.spawn(getChar,p)
 	if p:IsFriendsWith(userid) then
-		if not Current.Teamate[p.Name] then
+		if not table.find(Current.Teamate,p.Name) then
 			table.insert(Current.Teamate,p.Name)
 		end
 	end
@@ -304,8 +304,8 @@ game:GetService('Players').PlayerAdded:Connect(function(p)
 	end
 end)
 game:GetService('Players').PlayerRemoving:Connect(function(p)
-	if Current.Teamate[p.Name] then
-		Current.Teamate[p.Name] = nil
+	if table.find(Current.Teamate,p.Name) then
+		table.remove(Current.Teamate,p.Name)
 	end
 	if getgenv().PRemoving and typeof(getgenv().PRemoving) then
 		for i,v in pairs(getgenv().PRemoving) do
@@ -415,6 +415,15 @@ task.spawn(function()
 										text = text..'\n'
 									end
 									v.Tag.Text = text
+								end
+								if table.find(Current.Teamate,v.Part.Parent.Name) then
+									local asd = Variables.ESP_TeamColor
+									local r,g,b = asd.R,asd.G,asd.B
+									v.Tag.Color = Color3.fromRGB(r,g,b)
+								else
+									local asd = Variables.ESP_PlayerColor
+									local r,g,b = asd.R,asd.G,asd.B
+									v.Tag.Color = Color3.fromRGB(r,g,b)
 								end
 								local cfrem = v.Part.CFrame * CFrame.new(0,Variables.ESP_YOffset,Variables.ESP_ZOffset)
 								local pos = cfrem.p
@@ -838,7 +847,7 @@ setmetatable(toreturn,{
 				if issetingkey then
 					Variables.ESP_PlayerBind = keybindlib.E2S(newkey)
 				else
-					Lib.FireFlag('Player ESP')
+					Lib:FireFlag('Player ESP')
 				end
 			end,
 		})
@@ -849,7 +858,7 @@ setmetatable(toreturn,{
 				if issetingkey then
 					Variables.ESP_BoxBind = keybindlib.E2S(newkey)
 				else
-					Lib.FireFlag('Player ESP Box')
+					Lib:FireFlag('Player ESP Box')
 				end
 			end,
 		})
@@ -866,7 +875,7 @@ setmetatable(toreturn,{
 				if issetingkey then
 					Variables.ESP_TeamBind = keybindlib.E2S(newkey)
 				else
-					Lib.FireFlag('Team ESP')
+					Lib:FireFlag('Team ESP')
 				end
 			end,
 		})
