@@ -109,6 +109,7 @@ modules.side.AddToggle = function(args)
 	local Callback = args.Callback
 	local Flag = args.Flag
 	local Default = args.Default
+	local CanPress = args.CanPress or true
 	if Name and Callback and frameto then
 		local Frame = Instance.new("Frame")
 		local UICorner = Instance.new("UICorner")
@@ -172,7 +173,10 @@ modules.side.AddToggle = function(args)
 			changeColor()
 			Callback(Variables.Debounces[Frame])
 		end
-		TextButton.MouseButton1Down:Connect(Click)
+		
+		if CanPress == true then
+			TextButton.MouseButton1Down:Connect(Click)
+		end
 
 		if Flag then
 			Variables.Flags[Flag] = function(args)
