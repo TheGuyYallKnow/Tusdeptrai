@@ -610,7 +610,7 @@ setmetatable(toreturn,{
 		data_UI.PESP_toggle = Tab:AddToggle({
 			Name = 'Player Esp',
 			Default = Variables.ESP_Player,
-			Flag = 'Player_Esp',
+			Flag = 'Player_ESP',
 			Callback = function(Value,set)
 				print('Flag fired')
 				if not set then
@@ -628,7 +628,7 @@ setmetatable(toreturn,{
 		data_UI.PESP_health = Tab:AddToggle({
 			Name = 'Show Health',
 			Default = Variables.ESP_ShowHealth,
-			Flag = 'Player_Esp_Health',
+			Flag = 'Player_ESP_Health',
 			Callback = function(Value,set)
 				if not set then
 					Variables.ESP_ShowHealth = Value
@@ -638,7 +638,7 @@ setmetatable(toreturn,{
 		data_UI.PESP_distance = Tab:AddToggle({
 			Name = 'Show Distance',
 			Default = Variables.ESP_ShowHealth,
-			Flag = 'Player_Esp_Distance',
+			Flag = 'Player_ESP_Distance',
 			Callback = function(Value,set)
 				if not set then
 					Variables.ESP_ShowDistance = Value
@@ -648,7 +648,7 @@ setmetatable(toreturn,{
 		data_UI.PESP_healthbar = Tab:AddToggle({
 			Name = 'Show Health Bar',
 			Default = Variables.ESP_ShowHealthBar,
-			Flag = 'Player_Esp_Health',
+			Flag = 'Player_ESP_Health',
 			Callback = function(Value,set)
 				if not set then
 					Variables.ESP_ShowHealthBar = Value
@@ -668,7 +668,7 @@ setmetatable(toreturn,{
 		data_UI.PESP_box = Tab:AddToggle({
 			Name = 'Show Box',
 			Default = Variables.ESP_ShowBox,
-			Flag = 'Player_Esp_Box',
+			Flag = 'Player_ESP_Box',
 			Callback = function(Value,set)
 				if not set then
 					Variables.ESP_ShowBox = Value
