@@ -68,7 +68,6 @@ function AddESP(part, color, args, Flag, Features)
 	elseif typeof(part) == 'CFrame' or typeof(part) == 'Instance' then
 		pos = part.Position
 	end
-	print('Added: '..part.Parent.Name)
 	if pos then
 		--// Fetching Layers
 		local layers,Result = {},{}
@@ -591,7 +590,6 @@ end)
 local toreturn = {}
 setmetatable(toreturn,{
 	__call = function(t,Lib,Window)
-		print('Distance is: '..tostring(Variables.ESP_ShowDistance))
 		local data_UI = {}
 		local Tab = Window:MakeTab({
 			Name = "ESP",
@@ -837,9 +835,7 @@ setmetatable(toreturn,{
 			Name = 'Keybind Toggle',
 			Default = S2E(Variables.ESP_PlayerBind),
 			Callback = function(newkey,issetingkey)
-				if newkey and issetingkey then
-					print(newkey)
-					print(keybindlib:E2S(newkey))
+				if issetingkey then
 					Variables.ESP_PlayerBind = keybindlib.E2S(newkey)
 				else
 					Lib.FireFlag('Player ESP')
@@ -850,7 +846,7 @@ setmetatable(toreturn,{
 			Name = 'Keybind Box',
 			Default = S2E(Variables.ESP_BoxBind),
 			Callback = function(newkey,issetingkey)
-				if newkey and issetingkey then
+				if issetingkey then
 					Variables.ESP_BoxBind = keybindlib.E2S(newkey)
 				else
 					Lib.FireFlag('Player ESP Box')
@@ -867,7 +863,7 @@ setmetatable(toreturn,{
 			Name = 'Keybind Toggle',
 			Default = S2E(Variables.ESP_TeamBind),
 			Callback = function(newkey,issetingkey)
-				if newkey and issetingkey then
+				if issetingkey then
 					Variables.ESP_TeamBind = keybindlib.E2S(newkey)
 				else
 					Lib.FireFlag('Team ESP')
