@@ -1213,7 +1213,8 @@ function snap(pct, increment, max, min)
 	end
 	
 	Debugout('Curstep = '..tostring(curstep))
-	Debugout('Newstep ='..tostring(newstep))
+	Debugout('Newstep = '..tostring(newstep))
+	Debugout('Maxstep = '..tostring(maxstep))
 	local newnumber = min + (newstep*increment)
 	if newnumber > max then
 		return max
