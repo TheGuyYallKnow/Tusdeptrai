@@ -5,7 +5,7 @@ local function S2E(str)
 	if str == '' then
 		return nil
 	else
-		return keybindlib:S2E(str)
+		return keybindlib.S2E(str)
 	end
 end
 --//
@@ -840,7 +840,7 @@ setmetatable(toreturn,{
 				if newkey and issetingkey then
 					print(newkey)
 					print(keybindlib:E2S(newkey))
-					Variables.ESP_PlayerBind = keybindlib:E2S(newkey)
+					Variables.ESP_PlayerBind = keybindlib.E2S(newkey)
 				else
 					Lib.FireFlag('Player ESP')
 				end
@@ -851,7 +851,7 @@ setmetatable(toreturn,{
 			Default = S2E(Variables.ESP_BoxBind),
 			Callback = function(newkey,issetingkey)
 				if newkey and issetingkey then
-					Variables.ESP_BoxBind = keybindlib:E2S(newkey)
+					Variables.ESP_BoxBind = keybindlib.E2S(newkey)
 				else
 					Lib.FireFlag('Player ESP Box')
 				end
@@ -868,7 +868,7 @@ setmetatable(toreturn,{
 			Default = S2E(Variables.ESP_TeamBind),
 			Callback = function(newkey,issetingkey)
 				if newkey and issetingkey then
-					Variables.ESP_TeamBind = keybindlib:E2S(newkey)
+					Variables.ESP_TeamBind = keybindlib.E2S(newkey)
 				else
 					Lib.FireFlag('Team ESP')
 				end
