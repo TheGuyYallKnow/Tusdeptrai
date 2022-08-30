@@ -1213,10 +1213,6 @@ function snap(pct, increment, max, min)
 	end
 	
 	local newnumber = min + (newstep*increment)
-	Debugout('Curstep = '..tostring(curstep))
-	Debugout('Newstep = '..tostring(newstep))
-	Debugout('Maxstep = '..tostring(maxstep))
-	Debugout('Newnumber = '..tostring(newnumber))
 	if newnumber > max then
 		return max
 	elseif newnumber < min then
@@ -1682,7 +1678,7 @@ function hub:FireFlag(flagname,args)
 	if Variables.Flags[flagname] then
 		Debugout('Has Flag')
 		Debugout('Tyep of flag = '..typeof(Variables.Flags[flagname]))
-		Variables.Flags[flagname](args)
+		pcall(Variables.Flags[flagname],args)
 		Debugout('Executed!')
 	else
 		Debugout(game:GetService('HttpService'):JSONEncode(Variables.Flags))
