@@ -839,6 +839,7 @@ setmetatable(toreturn,{
 			Callback = function(newkey,issetingkey)
 				if newkey and issetingkey then
 					print(newkey)
+					print(keybindlib:E2S(newkey))
 					Variables.ESP_PlayerBind = keybindlib:E2S(newkey)
 				else
 					Lib.FireFlag('Player ESP')
