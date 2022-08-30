@@ -1,6 +1,15 @@
 local Players = game:GetService("Players")
 local UIS = game:GetService("UserInputService")
 local keybindlib = loadstring(game:HttpGetAsync("https://tuhub.site/Anhtucubu/enumbind2string"))()
+function getModel(tar)
+	if tar.Parent.ClassName == 'Model' then
+		return tar.Parent
+	elseif tar.Parent == game:GetService('Workspace') or not tar.Parent then
+		return nil
+	else
+		getModel(tar.Parent)
+	end
+end
 local function S2E(str)
 	if str == '' then
 		return nil
@@ -121,6 +130,12 @@ function AddESP(part, color, args, Flag, Features)
 			if Features then
 				for i,v in pairs(Features) do
 					argto[i] = v
+					if i == 'Box' and v then
+						argto.BoxSize = part.Size
+						if getModel(part) then
+							argto.BoxSize = getModel(part):GetExtentsSize()
+						end
+					end
 				end
 			end
 			
