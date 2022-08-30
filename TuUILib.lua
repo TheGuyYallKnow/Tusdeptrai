@@ -1194,7 +1194,7 @@ local con_2 = UIS.InputBegan:Connect(function(input,processed)
 	end
 end)
 function snap(pct, increment, max, min)
-	local curstep = pct*(math.abs(max-min))
+	local curstep = pct*(math.abs(max-min))/increment
 	local maxstep = (max-min)/increment
 	local minstep = 0
 	if min > 0 then
@@ -1212,10 +1212,11 @@ function snap(pct, increment, max, min)
 		newstep =  math.floor(curstep)
 	end
 	
+	local newnumber = min + (newstep*increment)
 	Debugout('Curstep = '..tostring(curstep))
 	Debugout('Newstep = '..tostring(newstep))
 	Debugout('Maxstep = '..tostring(maxstep))
-	local newnumber = min + (newstep*increment)
+	Debugout('Newnumber = '..tostring(newnumber))
 	if newnumber > max then
 		return max
 	elseif newnumber < min then
