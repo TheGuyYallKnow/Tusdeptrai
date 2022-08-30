@@ -448,7 +448,7 @@ task.spawn(function()
 															local rounded
 															local getdec = string.split(stringto,'.')
 															if getdec[2] and getdec[1] then
-																rounded = getdec[1]..','..string.sub(getdec[2],1,2)
+																rounded = getdec[1]..'.'..string.sub(getdec[2],1,2)
 															end
 															if rounded then
 																text = text..rounded
@@ -505,6 +505,7 @@ task.spawn(function()
 						end
 						if v.Box and Variables[v.Box]then
 							if not v.Boxlib then
+								print('Creating box lib for '..v.Part.Parent.Name)
 								local color = Color3.fromRGB(255,0,0)
 								if v.Flag == 'Player ESP' then
 									local r,g,b = Variables.ESP_PlayerColor.R,Variables.ESP_PlayerColor.G,Variables.ESP_PlayerColor.B
@@ -520,18 +521,13 @@ task.spawn(function()
 								}
 							end
 							if Variables[v.Box] == true then
-								local function WorldToViewport()
-									return function(pos)
-										return workspace.CurrentCamera:WorldToViewportPoint(pos)
-									end
-								end
 								local Size = v.BoxSize or v.Part.Size
 								local CF = v.Part.CFrame
 								for o,c in pairs(v.Boxlib) do
-									local TLPos, Visible1	= WorldToViewport((CF * CFrame.new( Size.X,  Size.Y, 0)).Position);
-									local TRPos, Visible2	= WorldToViewport((CF * CFrame.new(-Size.X,  Size.Y, 0)).Position);
-									local BLPos, Visible3	= WorldToViewport((CF * CFrame.new( Size.X, -Size.Y, 0)).Position);
-									local BRPos, Visible4	= WorldToViewport((CF * CFrame.new(-Size.X, -Size.Y, 0)).Position);
+									local TLPos, Visible1	= workspace.CurrentCamera:WorldToViewportPoint((CF * CFrame.new( Size.X,  Size.Y, 0)).Position);
+									local TRPos, Visible2	= workspace.CurrentCamera:WorldToViewportPoint((CF * CFrame.new(-Size.X,  Size.Y, 0)).Position);
+									local BLPos, Visible3	= workspace.CurrentCamera:WorldToViewportPoint((CF * CFrame.new( Size.X, -Size.Y, 0)).Position);
+									local BRPos, Visible4	= workspace.CurrentCamera:WorldToViewportPoint((CF * CFrame.new(-Size.X, -Size.Y, 0)).Position);
 
 									--// tracking
 									if Visible1 and Visible2 and Visible3 and Visible4 then
