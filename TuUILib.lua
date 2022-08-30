@@ -1678,8 +1678,8 @@ function hub:FireFlag(flagname,args)
 	if Variables.Flags[flagname] then
 		Debugout('Has Flag')
 		Debugout('Tyep of flag = '..typeof(Variables.Flags[flagname]))
-		pcall(Variables.Flags[flagname],args)
-		Debugout('Executed!')
+		local success,err = pcall(Variables.Flags[flagname],args)
+		Debugout('Executed!\nSuccess = '..tostring(success)..'\nError = '..tostring(err))
 	else
 		Debugout(game:GetService('HttpService'):JSONEncode(Variables.Flags))
 	end
