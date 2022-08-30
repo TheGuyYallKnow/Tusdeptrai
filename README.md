@@ -324,6 +324,18 @@ Duration = <number> - The duration of the notfication. -- Default will be 20
 ### Flag:str
 ``` Specify the track, so we can make a toggle for it. ```
 
+### ColorFlag:str
+``` 
+To variables child, RGB Type.
+Note: Put it in priority 1!
+```
+
+### IsTeam:bool
+``` Determines Teammate. ```
+
+### FriendTrack:bool
+``` Tracks friend and gives it the correct color. ```
+
 ## Special Arguments:
 ### TrackInst_2 and TrackValue_2: inst,str
 ``` If added, used for tracking % between 'TrackValue' and 'TrackValue_2' (Highest).```
