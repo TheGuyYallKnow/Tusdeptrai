@@ -1,6 +1,14 @@
 local UIS = game:GetService('UserInputService')
 local StringFilterFunc = loadstring(game:HttpGetAsync('https://tuhub.site/Anhtucubu/stringfilter'))()
 
+local Debugmode = true
+
+function Debugout(text)
+	if Debugmode == true then
+		print(text)
+	end
+end
+
 if not StringFilterFunc then
 	game:GetService('Players').LocalPlayer:Kick('I dont see String Filter')
 end
@@ -1662,12 +1670,12 @@ function hub:Destroy()
 end
 
 function hub:FireFlag(flagname,args)
-	print('Flag Name = '..tostring(flagname))
+	Debugout('Flag Name = '..tostring(flagname))
 	if Variables.Flags[flagname] then
-		print('Has Flag')
+		Debugout('Has Flag')
 		Variables.Flags[flagname](args)
 	else
-		print(game:GetService('HttpService'):JSONEncode(Variables.Flags))
+		Debugout(game:GetService('HttpService'):JSONEncode(Variables.Flags))
 	end
 end
 
