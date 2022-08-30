@@ -8,6 +8,7 @@ local function S2E(str)
 		return keybindlib.S2E(str)
 	end
 end
+Drawing = Drawing
 --//
 local Current = {
 	Teamate = {},
@@ -97,6 +98,7 @@ function AddESP(part, color, args, Flag, Features)
 		if not next(Result) then Result = nil end
 		
 		local name = Drawing.new("Text")
+		name.Font = Drawing.Fonts.Monospace
 		name.Color = color or Color3.fromRGB(255,0,0)
 		name.Position = WTS(pos)
 		name.Size = Variables.ESP_Size
@@ -140,7 +142,7 @@ function getChar(inst)
 			pcall(function()
 				if inst.Character:FindFirstChild('HumanoidRootPart') then
 					local rgb = Variables.ESP_PlayerColor
-					local args = {
+					local upperlayer = {
 						{
 							Text_front = '[',
 							TrackInst = inst.Character,
@@ -148,6 +150,8 @@ function getChar(inst)
 							Text_end = ']',
 							Layer = 1,
 							Priority = 1,
+							FriendTrack = true,
+							ColorFlag = 'ESP_PlayerColor',
 						},
 						{
 							Text_front = '[',
@@ -157,6 +161,12 @@ function getChar(inst)
 							Flag = 'ESP_ShowDistance',
 							Layer = 1,
 							Priority = 2,
+						},
+					}
+					local args = {
+						{
+							Layer = 1,
+							Priority = 1,
 						},
 						{
 							Text_front = '[',
@@ -177,11 +187,11 @@ function getChar(inst)
 						},
 						{
 							Text_front = '[',
+							Text_end = ']',
 							TrackInst = inst.Character:FindFirstChildOfClass('Humanoid'),
 							TrackInst_2 = inst.Character:FindFirstChildOfClass('Humanoid'),
 							TrackValue = 'Health',
-							TrackValue2 = 'MaxHealth',
-							Text_end = ']',
+							TrackValue_2 = 'MaxHealth',
 							Layer = 2,
 							Flag = 'ESP_ShowHealth',
 							Priority = 3,
@@ -200,6 +210,7 @@ function getChar(inst)
 						Box = 'ESP_ShowBox',
 						HealthBar = 'ESP_ShowHealthBar',
 					}
+					--AddESP(inst.Character:FindFirstChild('HumanoidRootPart'), Color3.fromRGB(rgb.R,rgb.G,rgb.B), upperlayer, 'ESP_Player')
 					AddESP(inst.Character:FindFirstChild('HumanoidRootPart'), Color3.fromRGB(rgb.R,rgb.G,rgb.B), args, 'ESP_Player',Features)
 				end
 			end)
@@ -208,73 +219,87 @@ function getChar(inst)
 	else
 		repeat 
 			wait(0.1)
-		until inst.Character:FindFirstChild('HumanoidRootPart') or not inst:IsDescendantOf(game) or not inst.Character:IsDescendantOf(game:GetService('Workspace'))
-		pcall(function()
-			if inst.Character:FindFirstChild('HumanoidRootPart') then
-				local rgb = Variables.ESP_PlayerColor
-				local args = {
-					{
-						Text_front = '[',
-						TrackInst = inst.Character,
-						TrackValue = 'Name',
-						Text_end = ']',
-						Layer = 1,
-						Priority = 1,
-					},
-					{
-						Text_front = '[',
-						TrackInst = inst.Character:FindFirstChild('HumanoidRootPart'),
-						TrackDistance = true,
-						Text_end = ']',
-						Flag = 'ESP_ShowDistance',
-						Layer = 1,
-						Priority = 2,
-					},
-					{
-						Text_front = '[',
-						TrackInst = inst.Character:FindFirstChildOfClass('Humanoid'),
-						TrackValue = 'Health',
-						Layer = 2,
-						Flag = 'ESP_ShowHealth',
-						Priority = 1,
-					},
-					{
-						Text_front = '/',
-						TrackInst = inst.Character:FindFirstChildOfClass('Humanoid'),
-						TrackValue = 'MaxHealth',
-						Text_end = ']',
-						Layer = 2,
-						Flag = 'ESP_ShowHealth',
-						Priority = 2,
-					},
-					{
-						Text_front = '[',
-						Text_end = ']',
-						TrackInst = inst.Character:FindFirstChildOfClass('Humanoid'),
-						TrackInst_2 = inst.Character:FindFirstChildOfClass('Humanoid'),
-						TrackValue = 'Health',
-						TrackValue_2 = 'MaxHealth',
-						Layer = 2,
-						Flag = 'ESP_ShowHealth',
-						Priority = 3,
-					},
-				}
-				if next(LoadedModule) then
-					for i,v in pairs(LoadedModule) do
-						if v.Tag == 'Player' then
-							local new = v
-							new.Tag = nil
-							table.insert(args,new)
+		until inst.Character or not inst:IsDescendantOf(game)
+		if inst.Character then
+			repeat 
+				wait(0.1)
+			until inst.Character:FindFirstChild('HumanoidRootPart') or not inst.Character:IsDescendantOf(game:GetService('Workspace'))
+			pcall(function()
+				if inst.Character:FindFirstChild('HumanoidRootPart') then
+					local rgb = Variables.ESP_PlayerColor
+					local upperlayer = {
+						{
+							Text_front = '[',
+							TrackInst = inst.Character,
+							TrackValue = 'Name',
+							Text_end = ']',
+							Layer = 1,
+							Priority = 1,
+							FriendTrack = true,
+							ColorFlag = 'ESP_PlayerColor',
+						},
+						{
+							Text_front = '[',
+							TrackInst = inst.Character:FindFirstChild('HumanoidRootPart'),
+							TrackDistance = true,
+							Text_end = ']',
+							Flag = 'ESP_ShowDistance',
+							Layer = 1,
+							Priority = 2,
+						},
+					}
+					local args = {
+						{
+							Layer = 1,
+							Priority = 1,
+						},
+						{
+							Text_front = '[',
+							TrackInst = inst.Character:FindFirstChildOfClass('Humanoid'),
+							TrackValue = 'Health',
+							Layer = 2,
+							Flag = 'ESP_ShowHealth',
+							Priority = 1,
+						},
+						{
+							Text_front = '/',
+							TrackInst = inst.Character:FindFirstChildOfClass('Humanoid'),
+							TrackValue = 'MaxHealth',
+							Text_end = ']',
+							Layer = 2,
+							Flag = 'ESP_ShowHealth',
+							Priority = 2,
+						},
+						{
+							Text_front = '[',
+							Text_end = ']',
+							TrackInst = inst.Character:FindFirstChildOfClass('Humanoid'),
+							TrackInst_2 = inst.Character:FindFirstChildOfClass('Humanoid'),
+							TrackValue = 'Health',
+							TrackValue_2 = 'MaxHealth',
+							Layer = 2,
+							Flag = 'ESP_ShowHealth',
+							Priority = 3,
+						},
+					}
+					if next(LoadedModule) then
+						for i,v in pairs(LoadedModule) do
+							if v.Tag == 'Player' then
+								local new = v
+								new.Tag = nil
+								table.insert(args,new)
+							end
 						end
 					end
+					local Features = {
+						Box = 'ESP_ShowBox',
+						HealthBar = 'ESP_ShowHealthBar',
+					}
+					AddESP(inst.Character:FindFirstChild('HumanoidRootPart'), Color3.fromRGB(rgb.R,rgb.G,rgb.B), upperlayer, 'ESP_Player')
+					AddESP(inst.Character:FindFirstChild('HumanoidRootPart'), Color3.fromRGB(rgb.R,rgb.G,rgb.B), args, 'ESP_Player',Features)
 				end
-				local Features = {
-					Box = 'ESP_ShowBox',
-					HealthBar = 'ESP_ShowHealthBar',
-				}
-				AddESP(inst.Character:FindFirstChild('HumanoidRootPart'), Color3.fromRGB(rgb.R,rgb.G,rgb.B), args, 'ESP_Player',Features)
-			end
-		end)
+			end)
+		end
 	end
 end
 
@@ -358,7 +383,23 @@ task.spawn(function()
 									for layer = 1,#v.Layers do --// Fetching layers
 										for priority = 1,#(v.Layers[layer]) do
 											local args = v.Layers[layer][priority]
-
+											
+											--// Really Special Arguments:
+											if args.FriendTrack and args.FriendTrack == true then
+												if table.find(Current.Teamate,v.Part.Parent.Name) then
+													args.ColorFlag = 'ESP_TeamColor'
+												end
+											end
+											if args.ColorFlag then
+												if Variables[args.ColorFlag] then
+													local rgb = Variables[args.ColorFlag]
+													if rgb.R and rgb.G and rgb.B then
+														v.Tag.Color = Color3.fromRGB(rgb.R,rgb.G,rgb.B)
+													end
+												end
+											end
+											
+											--// Normal Arguments
 											local Text_front = args.Text_front or ''
 											local Text_end = args.Text_end or ''
 											local TrackInst = args.TrackInst
@@ -438,7 +479,13 @@ task.spawn(function()
 									v.Tag.Visible = false
 								end
 							else
-								v.Tag.Visible = false
+								if typeof(v.Tag) == 'table' then
+									for o,c in pairs(v.Tag) do
+										c.Visible = false
+									end
+								else
+									v.Tag.Visible = false
+								end
 							end
 						end
 						if v.Box and Variables[v.Box]then
@@ -447,7 +494,7 @@ task.spawn(function()
 								if v.Flag == 'Player ESP' then
 									local r,g,b = Variables.ESP_PlayerColor.R,Variables.ESP_PlayerColor.G,Variables.ESP_PlayerColor.B
 									color = Color3.fromRGB(r,g,b)
-									if v.IsTeam  then
+									if v.IsTeam or table.find(Current.Teamate,v.Part.Parent.Name) then
 										local r,g,b = Variables.ESP_TeamColor.R,Variables.ESP_TeamColor.G,Variables.ESP_TeamColor.B
 										color = Color3.fromRGB(r,g,b)
 									end
@@ -458,24 +505,27 @@ task.spawn(function()
 								}
 							end
 							if Variables[v.Box] == true then
-								--// track
-								local Pos, screen = workspace.CurrentCamera:WorldToViewportPoint(v.Part.Position)
-								if screen then
-									for o,c in pairs(v.Boxlib) do
-										if c.Visible == false then c.Visible = true end
-										local head = workspace.CurrentCamera:WorldToViewportPoint(v.Part.Position + Vector3.new(0,1.5,0))
-										local DistanceY = math.clamp((Vector2.new(head.X, head.Y) - Vector2.new(Pos.X, Pos.Y)).magnitude, 2, math.huge)
-
-										local function Size(item)
-											item.PointA = Vector2.new(Pos.X + DistanceY, Pos.Y - DistanceY*2)
-											item.PointB = Vector2.new(Pos.X - DistanceY, Pos.Y - DistanceY*2)
-											item.PointC = Vector2.new(Pos.X - DistanceY, Pos.Y + DistanceY*1.75)
-											item.PointD = Vector2.new(Pos.X + DistanceY, Pos.Y + DistanceY*1.75)
-										end
-										Size(c)
+								local function WorldToViewport()
+									return function(pos)
+										return workspace.CurrentCamera:WorldToViewportPoint(pos)
 									end
-								else
-									for o,c in pairs(v.Boxlib) do
+								end
+								local Size = v.BoxSize or v.Part.Size
+								local CF = v.Part.CFrame
+								for o,c in pairs(v.Boxlib) do
+									local TLPos, Visible1	= WorldToViewport((CF * CFrame.new( Size.X,  Size.Y, 0)).Position);
+									local TRPos, Visible2	= WorldToViewport((CF * CFrame.new(-Size.X,  Size.Y, 0)).Position);
+									local BLPos, Visible3	= WorldToViewport((CF * CFrame.new( Size.X, -Size.Y, 0)).Position);
+									local BRPos, Visible4	= WorldToViewport((CF * CFrame.new(-Size.X, -Size.Y, 0)).Position);
+
+									--// tracking
+									if Visible1 and Visible2 and Visible3 and Visible4 then
+										c.Visible = true
+										c.PointA = Vector2.new(TLPos.X, TLPos.Y)
+										c.PointB = Vector2.new(TRPos.X, TRPos.Y)
+										c.PointC = Vector2.new(BRPos.X, BRPos.Y)
+										c.PointD = Vector2.new(BLPos.X, BLPos.Y)
+									else
 										c.Visible = false
 									end
 								end
@@ -516,11 +566,11 @@ task.spawn(function()
 										local d = (Vector2.new(Pos.X - DistanceY, Pos.Y - DistanceY*2) - Vector2.new(Pos.X - DistanceY, Pos.Y + DistanceY*2)).magnitude 
 										local healthoffset = hum.Health/hum.MaxHealth * d
 
-										v.HealthBarlib.greenhealth.From = Vector2.new(Pos.X - DistanceY - 4, Pos.Y + DistanceY*1)
-										v.HealthBarlib.greenhealth.To = Vector2.new(Pos.X - DistanceY - 4, Pos.Y + DistanceY*1 - healthoffset)
+										v.HealthBarlib.greenhealth.From = Vector2.new(Pos.X - DistanceY - 4, Pos.Y + DistanceY*2)
+										v.HealthBarlib.greenhealth.To = Vector2.new(Pos.X - DistanceY - 4, Pos.Y + DistanceY*2 - healthoffset)
 
-										v.HealthBarlib.healthbar.From = Vector2.new(Pos.X - DistanceY - 4, Pos.Y + DistanceY*1)
-										v.HealthBarlib.healthbar.To = Vector2.new(Pos.X - DistanceY - 4, Pos.Y - DistanceY*1)
+										v.HealthBarlib.healthbar.From = Vector2.new(Pos.X - DistanceY - 4, Pos.Y + DistanceY*2)
+										v.HealthBarlib.healthbar.To = Vector2.new(Pos.X - DistanceY - 4, Pos.Y - DistanceY*2)
 
 										local green = Color3.fromRGB(0, 255, 0)
 										local red = Color3.fromRGB(255, 0, 0)
@@ -547,7 +597,13 @@ task.spawn(function()
 						if (v.Part.Position - game:GetService('Players').LocalPlayer.Character.HumanoidRootPart.Position).Magnitude <= newdistance then
 							espto()
 						else
-							v.Tag.Visible = false
+							if typeof(v.Tag) == 'table' then
+								for o,c in pairs(v.Tag) do
+									c.Visible = false
+								end
+							else
+								v.Tag.Visible = false
+							end
 							if v.HealthBarlib then
 								for o,c in pairs(v.HealthBarlib) do
 									c.Visible = false
@@ -562,7 +618,13 @@ task.spawn(function()
 						end
 					end
 				else
-					v.Tag.Visible = false
+					if typeof(v.Tag) == 'table' then
+						for o,c in pairs(v.Tag) do
+							c.Visible = false
+						end
+					else
+						v.Tag.Visible = false
+					end
 					if v.HealthBarlib then
 						for o,c in pairs(v.HealthBarlib) do
 							c.Visible = false
@@ -744,6 +806,7 @@ setmetatable(toreturn,{
 					local g = tonumber(str[2])
 					local b = tonumber(str[3])
 					if r and g and b then
+						print('RGB = '..tostring(r)..' - '..tostring(g)..' - '..tostring(b))
 						Variables.ESP_PlayerColor.R = r
 						Variables.ESP_PlayerColor.G = g
 						Variables.ESP_PlayerColor.B = b
@@ -802,7 +865,7 @@ setmetatable(toreturn,{
 			Min = -20,
 			Max = 20,
 			Default = Variables.ESP_YOffset,
-			Increment = 1,
+			Increment = 0.1,
 			ValueName = 'ft',
 			Flag = 'YOffset',
 			Callback = function(Value)
@@ -814,7 +877,7 @@ setmetatable(toreturn,{
 			Min = -10,
 			Max = 10,
 			Default = Variables.ESP_ZOffset,
-			Increment = 1,
+			Increment = 0.1,
 			ValueName = 'ft',
 			Flag = 'ZOffset',
 			Callback = function(Value)
