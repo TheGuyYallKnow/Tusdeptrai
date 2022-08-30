@@ -71,6 +71,7 @@ Tab:AddToggle({
 --[[
 Name = <string> - The name of the toggle.
 Default = <bool> - The default value of the toggle.
+CanPress = <bool> - default is true
 Callback = <function> - The function of the toggle.
 Flag = <string>
 ]]
