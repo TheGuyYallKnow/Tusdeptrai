@@ -275,12 +275,13 @@ The below function needs to be added at the end of your code.
 ```lua
 HubLib:Init() -- Enable the gui
 ```
+Idk, useless but still necessarry
 
 ### How flags work.
 ```lua
-HubLib.FireFlag('Tu',args)
+HubLib:FireFlag('Tu',args)
 ```
-Fire the function of the flag with the args
+Pass the args to the function of that flag, actually its an event but ill call it flag
 
 ## Destroying the Interface and all the Callback function
 ```lua
