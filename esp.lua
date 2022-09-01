@@ -226,7 +226,7 @@ function getChar(inst)
 					local Features = {
 						Box = 'ESP_ShowBox',
 						HealthBar = 'ESP_ShowHealthBar',
-						BoxSize = Vector3.new(5,10,2),
+						BoxSize = Vector3.new(4.5,6,2),
 					}
 					--AddESP(inst.Character:FindFirstChild('HumanoidRootPart'), Color3.fromRGB(rgb.R,rgb.G,rgb.B), upperlayer, 'ESP_Player')
 					AddESP(inst.Character:FindFirstChild('HumanoidRootPart'), Color3.fromRGB(rgb.R,rgb.G,rgb.B), args, 'ESP_Player',Features)
@@ -314,7 +314,7 @@ function getChar(inst)
 					local Features = {
 						Box = 'ESP_ShowBox',
 						HealthBar = 'ESP_ShowHealthBar',
-						BoxSize = Vector3.new(5,10,2),
+						BoxSize = Vector3.new(4.5,6,2),
 					}
 					AddESP(inst.Character:FindFirstChild('HumanoidRootPart'), Color3.fromRGB(rgb.R,rgb.G,rgb.B), upperlayer, 'ESP_Player')
 					AddESP(inst.Character:FindFirstChild('HumanoidRootPart'), Color3.fromRGB(rgb.R,rgb.G,rgb.B), args, 'ESP_Player',Features)
