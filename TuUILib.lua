@@ -1,5 +1,8 @@
+--// Declaring
+getgenv,syn = getgenv,syn
+
 local UIS = game:GetService('UserInputService')
-local StringFilterFunc = loadstring(game:HttpGetAsync('https://tuhub.site/Anhtucubu/stringfilter'))()
+local StringFilterFunc = getgenv().stringfilter()
 
 local Debugmode = true
 
@@ -1661,7 +1664,7 @@ function hub:Off()
 end
 
 function hub:Toggle()
-	Variables.link.Hub.Enabled = not Variables.link.Hub.Enabled
+	Variables.link.Main.Enabled = not Variables.link.Main.Enabled
 end
 
 function hub:Destroy()
