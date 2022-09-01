@@ -2,7 +2,7 @@
 getgenv,syn = getgenv,syn
 
 local UIS = game:GetService('UserInputService')
-local StringFilterFunc = getgenv().stringfilter()
+local StringFilterFunc = getgenv().stringfilter
 
 local Debugmode = true
 
