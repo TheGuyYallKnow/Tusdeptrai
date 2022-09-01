@@ -39,7 +39,7 @@ local DataStructure = {
 	
 	ESP_Size = 16,
 	ESP_MaxDistance = 2000,
-	ESP_YOffset = 5,
+	ESP_YOffset = 4,
 	ESP_ZOffset = 0,
 	
 	ESP_PlayerColor = {
@@ -148,13 +148,16 @@ local LoadedModule = {}
 local LoadedGuiModule = {}
 local Connections = {}
 function getChar(inst)
+	print('Added connection to '..inst.Name)
 	local conn
 	function get(c)
+		print('Got: '..c.Name)
 		repeat 
 			wait(0.1)
 		until inst.Character:FindFirstChild('HumanoidRootPart') or not inst:IsDescendantOf(game) or not inst.Character:IsDescendantOf(game:GetService('Workspace'))
 		pcall(function()
 			if inst.Character:FindFirstChild('HumanoidRootPart') then
+				print(c.Name..' Passed')
 				local rgb = Variables.ESP_PlayerColor
 				local upperlayer = {
 					{
@@ -224,7 +227,7 @@ function getChar(inst)
 				local Features = {
 					Box = 'ESP_ShowBox',
 					HealthBar = 'ESP_ShowHealthBar',
-					BoxSize = Vector3.new(4.5,6,2),
+					BoxSize = Vector3.new(3.5,5,2),
 				}
 				AddESP(inst.Character:FindFirstChild('HumanoidRootPart'), Color3.fromRGB(rgb.R,rgb.G,rgb.B), upperlayer, 'ESP_Player')
 				AddESP(inst.Character:FindFirstChild('HumanoidRootPart'), Color3.fromRGB(rgb.R,rgb.G,rgb.B), args, 'ESP_Player',Features)
@@ -250,6 +253,7 @@ for i,v in pairs(game:GetService('Players'):GetChildren()) do
 	end
 end
 game:GetService('Players').PlayerAdded:Connect(function(p)
+	print(p.Name..' Joined')
 	task.spawn(getChar,p)
 	if p:IsFriendsWith(userid) then
 		if not table.find(Current.Teamate,p.Name) then
@@ -258,6 +262,10 @@ game:GetService('Players').PlayerAdded:Connect(function(p)
 	end
 end)
 game:GetService('Players').PlayerRemoving:Connect(function(p)
+	if Connections[p.Name] then
+		Connections[p.Name]:Disconnect()
+		Connections[p.Name] = nil
+	end
 	if table.find(Current.Teamate,p.Name) then
 		table.remove(Current.Teamate,p.Name)
 	end
