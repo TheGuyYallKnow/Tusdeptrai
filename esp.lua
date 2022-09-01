@@ -295,7 +295,7 @@ end
 task.spawn(function()
 	while true do
 		for i,v in pairs(data.Track) do
-			if v.Part and v.Part:IsDescendantOf(workspace) then
+			if v.Part then
 				local newdistance
 				if Variables.ESP_MaxDistance == 10000 then
 					newdistance = math.huge
@@ -565,13 +565,6 @@ task.spawn(function()
 					end
 				end
 			else
-				print('Some one Wiped...')
-				pcall(function()
-					if v.Part then print('Has v.Part') end
-					print('Part Name = '..tostring(v.Part.Name))
-					local pn = v.Part.Parent
-					print('PartP Name = '..tostring(pn))
-				end)
 				if v.HealthBarlib then
 					for o,c in pairs(v.HealthBarlib) do
 						c:Remove()
