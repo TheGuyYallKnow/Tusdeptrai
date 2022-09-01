@@ -567,6 +567,11 @@ task.spawn(function()
 				end
 			else
 				print('Some one Wiped...')
+				pcall(function()
+					if v.Part then print('Has v.Part') end
+					local pn = v.Part.Parent.Name
+					print('PartP Name = '..pn)
+				end)
 				if v.HealthBarlib then
 					for o,c in pairs(v.HealthBarlib) do
 						c:Remove()
