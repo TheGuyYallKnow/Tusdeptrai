@@ -199,7 +199,6 @@ function getChar(inst)
 						Layer = 2,
 						Flag = 'ESP_ShowHealth',
 						Priority = 2,
-						Spacing = true,
 					},
 					{
 						Text_front = '[',
@@ -569,8 +568,9 @@ task.spawn(function()
 				print('Some one Wiped...')
 				pcall(function()
 					if v.Part then print('Has v.Part') end
-					local pn = v.Part.Parent.Name
-					print('PartP Name = '..pn)
+					print('Part Name = '..tostring(v.Part.Name))
+					local pn = v.Part.Parent
+					print('PartP Name = '..tostring(pn))
 				end)
 				if v.HealthBarlib then
 					for o,c in pairs(v.HealthBarlib) do
