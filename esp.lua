@@ -155,6 +155,7 @@ function getChar(inst)
 		until (inst.Character:FindFirstChild('HumanoidRootPart') and inst.Character:FindFirstChildOfClass('Humanoid')) or not inst:IsDescendantOf(game) or not inst.Character:IsDescendantOf(game:GetService('Workspace'))
 		pcall(function()
 			if inst.Character:FindFirstChild('HumanoidRootPart') and inst.Character:FindFirstChildOfClass('Humanoid') then
+				repeat wait() until inst.Character:FindFirstChild('HumanoidRootPart'):IsDescendantOf(game:GetService('Workspace'))
 				local rgb = Variables.ESP_PlayerColor
 				local upperlayer = {
 					{
