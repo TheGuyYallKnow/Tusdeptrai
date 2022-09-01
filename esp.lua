@@ -1,6 +1,9 @@
+--// Declaring
+getgenv = getgenv
+
 local Players = game:GetService("Players")
 local UIS = game:GetService("UserInputService")
-local keybindlib = loadstring(game:HttpGetAsync("https://tuhub.site/Anhtucubu/enumbind2string"))()
+local keybindlib = getgenv().EB2S()
 function getModel(tar)
 	if tar.Parent.ClassName == 'Model' then
 		return tar.Parent
@@ -8,13 +11,6 @@ function getModel(tar)
 		return nil
 	else
 		getModel(tar.Parent)
-	end
-end
-local function S2E(str)
-	if str == '' then
-		return nil
-	else
-		return keybindlib.S2E(str)
 	end
 end
 Drawing = Drawing
@@ -61,7 +57,7 @@ local DataStructure = {
 }
 local Variables = {}
 local file = 'Tushub/Config.json'
-loadstring(game:HttpGet('https://tuhub.site/Anhtucubu/saving'))()(file,DataStructure,Variables)
+getgenv().tushub_saving(file,DataStructure,Variables)
 function WTS(pos)
 	local screen = workspace.CurrentCamera:WorldToViewportPoint(pos)
 	return Vector2.new(screen.x, screen.y)
@@ -131,9 +127,13 @@ function AddESP(part, color, args, Flag, Features)
 				for i,v in pairs(Features) do
 					argto[i] = v
 					if i == 'Box' and v then
-						argto.BoxSize = part.Size
-						if getModel(part) then
-							argto.BoxSize = getModel(part):GetExtentsSize()
+						if Features['BoxSize'] then
+							argto.BoxSize = Features['BoxSize']
+						else
+							argto.BoxSize = part.Size
+							if getModel(part) then
+								argto.BoxSize = getModel(part):GetExtentsSize()
+							end
 						end
 					end
 				end
@@ -167,6 +167,7 @@ function getChar(inst)
 							Priority = 1,
 							FriendTrack = true,
 							ColorFlag = 'ESP_PlayerColor',
+							Spacing = true,
 						},
 						{
 							Text_front = '[',
@@ -199,6 +200,7 @@ function getChar(inst)
 							Layer = 2,
 							Flag = 'ESP_ShowHealth',
 							Priority = 2,
+							Spacing = true,
 						},
 						{
 							Text_front = '[',
@@ -224,6 +226,7 @@ function getChar(inst)
 					local Features = {
 						Box = 'ESP_ShowBox',
 						HealthBar = 'ESP_ShowHealthBar',
+						BoxSize = Vector3.new(5,10,2),
 					}
 					--AddESP(inst.Character:FindFirstChild('HumanoidRootPart'), Color3.fromRGB(rgb.R,rgb.G,rgb.B), upperlayer, 'ESP_Player')
 					AddESP(inst.Character:FindFirstChild('HumanoidRootPart'), Color3.fromRGB(rgb.R,rgb.G,rgb.B), args, 'ESP_Player',Features)
@@ -252,6 +255,7 @@ function getChar(inst)
 							Priority = 1,
 							FriendTrack = true,
 							ColorFlag = 'ESP_PlayerColor',
+							Spacing = true,
 						},
 						{
 							Text_front = '[',
@@ -284,6 +288,7 @@ function getChar(inst)
 							Layer = 2,
 							Flag = 'ESP_ShowHealth',
 							Priority = 2,
+							Spacing = true,
 						},
 						{
 							Text_front = '[',
@@ -309,6 +314,7 @@ function getChar(inst)
 					local Features = {
 						Box = 'ESP_ShowBox',
 						HealthBar = 'ESP_ShowHealthBar',
+						BoxSize = Vector3.new(5,10,2),
 					}
 					AddESP(inst.Character:FindFirstChild('HumanoidRootPart'), Color3.fromRGB(rgb.R,rgb.G,rgb.B), upperlayer, 'ESP_Player')
 					AddESP(inst.Character:FindFirstChild('HumanoidRootPart'), Color3.fromRGB(rgb.R,rgb.G,rgb.B), args, 'ESP_Player',Features)
@@ -337,20 +343,10 @@ game:GetService('Players').PlayerAdded:Connect(function(p)
 			table.insert(Current.Teamate,p.Name)
 		end
 	end
-	if getgenv().PAdded and typeof(getgenv().PAdded) then
-		for i,v in pairs(getgenv().PAdded) do
-			pcall(v,p)
-		end
-	end
 end)
 game:GetService('Players').PlayerRemoving:Connect(function(p)
 	if table.find(Current.Teamate,p.Name) then
 		table.remove(Current.Teamate,p.Name)
-	end
-	if getgenv().PRemoving and typeof(getgenv().PRemoving) then
-		for i,v in pairs(getgenv().PRemoving) do
-			pcall(v,p)
-		end
 	end
 end)
 
@@ -459,6 +455,10 @@ task.spawn(function()
 													end
 												end
 												text = text..Text_end
+												
+												if args.Spacing and args.Spacing == true then
+													text = text..' '
+												end
 											end
 											if Flag then
 												if Variables[Flag] and Variables[Flag] == true then
@@ -551,8 +551,8 @@ task.spawn(function()
 						if v.HealthBar and Variables[v.HealthBar] then
 							if not v.HealthBarlib then
 								v.HealthBarlib = {
-									healthbar = NewLine(3, Color3.fromRGB(0,0,0)),
-									greenhealth = NewLine(1.5, Color3.fromRGB(0,0,0))
+									healthbar = NewLine(4, Color3.fromRGB(0,0,0)),
+									greenhealth = NewLine(2, Color3.fromRGB(0,0,0))
 								}
 							end
 							if Variables[v.HealthBar] == true then
@@ -912,6 +912,9 @@ setmetatable(toreturn,{
 		})
 		--// Loaded module
 		--// Category: Player
+		local function S2E(str)
+			return keybindlib:S2E(str)
+		end
 		Tab_2:AddSection({
 			Name = 'Player Esp',
 		})
