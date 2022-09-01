@@ -183,6 +183,7 @@ modules.side.AddToggle = function(args)
 
 		if Flag then
 			Variables.Flags[Flag] = function(args)
+				if not args then args = {} end
 				if not args.Set then
 					args.Set = not Variables.Debounces[Frame]
 				end
