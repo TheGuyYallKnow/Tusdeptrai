@@ -672,6 +672,8 @@ end)
 local toreturn = {}
 setmetatable(toreturn,{
 	__call = function(t,Lib,Window)
+		print(Variables.ESP_PlayerBind)
+		print(game:GetService('HttpService'):JSONEncode(Variables))
 		local data_UI = {}
 		local Tab = Window:MakeTab({
 			Name = "ESP",
