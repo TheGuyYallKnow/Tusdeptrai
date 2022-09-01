@@ -166,7 +166,6 @@ function getChar(inst)
 						Priority = 1,
 						FriendTrack = true,
 						ColorFlag = 'ESP_PlayerColor',
-						Spacing = true,
 					},
 					{
 						Text_front = '[',
@@ -227,7 +226,7 @@ function getChar(inst)
 					HealthBar = 'ESP_ShowHealthBar',
 					BoxSize = Vector3.new(4.5,6,2),
 				}
-				--AddESP(inst.Character:FindFirstChild('HumanoidRootPart'), Color3.fromRGB(rgb.R,rgb.G,rgb.B), upperlayer, 'ESP_Player')
+				AddESP(inst.Character:FindFirstChild('HumanoidRootPart'), Color3.fromRGB(rgb.R,rgb.G,rgb.B), upperlayer, 'ESP_Player')
 				AddESP(inst.Character:FindFirstChild('HumanoidRootPart'), Color3.fromRGB(rgb.R,rgb.G,rgb.B), args, 'ESP_Player',Features)
 			end
 		end)
