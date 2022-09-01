@@ -912,15 +912,12 @@ setmetatable(toreturn,{
 		})
 		--// Loaded module
 		--// Category: Player
-		local function S2E(str)
-			return keybindlib:S2E(str)
-		end
 		Tab_2:AddSection({
 			Name = 'Player Esp',
 		})
 		Tab_2:AddBind({
 			Name = 'Keybind Toggle',
-			Default = S2E(Variables.ESP_PlayerBind),
+			Default = keybindlib:S2E(Variables.ESP_PlayerBind),
 			Callback = function(newkey,issetingkey)
 				if issetingkey then
 					Variables.ESP_PlayerBind = keybindlib.E2S(newkey)
@@ -931,7 +928,7 @@ setmetatable(toreturn,{
 		})
 		Tab_2:AddBind({
 			Name = 'Keybind Box',
-			Default = S2E(Variables.ESP_BoxBind),
+			Default = keybindlib:S2E(Variables.ESP_BoxBind),
 			Callback = function(newkey,issetingkey)
 				if issetingkey then
 					Variables.ESP_BoxBind = keybindlib.E2S(newkey)
@@ -948,7 +945,7 @@ setmetatable(toreturn,{
 		})
 		Tab_2:AddBind({
 			Name = 'Keybind Toggle',
-			Default = S2E(Variables.ESP_TeamBind),
+			Default = keybindlib:S2E(Variables.ESP_TeamBind),
 			Callback = function(newkey,issetingkey)
 				if issetingkey then
 					Variables.ESP_TeamBind = keybindlib.E2S(newkey)
