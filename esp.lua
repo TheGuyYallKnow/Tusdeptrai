@@ -418,7 +418,6 @@ task.spawn(function()
 						end
 						if v.Box and Variables[v.Box]then
 							if not v.Boxlib then
-								print('Creating box lib for '..v.Part.Parent.Name)
 								local color = Color3.fromRGB(255,0,0)
 								if v.Flag == 'Player ESP' then
 									local r,g,b = Variables.ESP_PlayerColor.R,Variables.ESP_PlayerColor.G,Variables.ESP_PlayerColor.B
@@ -585,8 +584,6 @@ end)
 local toreturn = {}
 setmetatable(toreturn,{
 	__call = function(t,Lib,Window)
-		print(Variables.ESP_PlayerBind)
-		print(game:GetService('HttpService'):JSONEncode(Variables))
 		local data_UI = {}
 		local Tab = Window:MakeTab({
 			Name = "ESP",
@@ -600,7 +597,6 @@ setmetatable(toreturn,{
 			Default = Variables.ESP_Player,
 			Flag = 'Player_ESP',
 			Callback = function(Value,set)
-				print('Flag fired')
 				if not set then
 					Variables.ESP_Player = Value
 					if Value == false then
@@ -732,7 +728,6 @@ setmetatable(toreturn,{
 					local g = tonumber(str[2])
 					local b = tonumber(str[3])
 					if r and g and b then
-						print('RGB = '..tostring(r)..' - '..tostring(g)..' - '..tostring(b))
 						Variables.ESP_PlayerColor.R = r
 						Variables.ESP_PlayerColor.G = g
 						Variables.ESP_PlayerColor.B = b
