@@ -1664,7 +1664,7 @@ function hub:Off()
 end
 
 function hub:Toggle()
-	Variables.link.Main.Enabled = not Variables.link.Main.Enabled
+	Variables.link.Main.Visible = not Variables.link.Main.Visible
 end
 
 function hub:Destroy()
