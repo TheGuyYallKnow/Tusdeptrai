@@ -148,16 +148,13 @@ local LoadedModule = {}
 local LoadedGuiModule = {}
 local Connections = {}
 function getChar(inst)
-	print('Added connection to '..inst.Name)
 	local conn
 	function get(c)
-		print('Got: '..c.Name)
 		repeat 
 			wait(0.1)
 		until (inst.Character:FindFirstChild('HumanoidRootPart') and inst.Character:FindFirstChildOfClass('Humanoid')) or not inst:IsDescendantOf(game) or not inst.Character:IsDescendantOf(game:GetService('Workspace'))
 		pcall(function()
 			if inst.Character:FindFirstChild('HumanoidRootPart') and inst.Character:FindFirstChildOfClass('Humanoid') then
-				print(c.Name..' Passed')
 				local rgb = Variables.ESP_PlayerColor
 				local upperlayer = {
 					{
@@ -253,7 +250,6 @@ for i,v in pairs(game:GetService('Players'):GetChildren()) do
 	end
 end
 game:GetService('Players').PlayerAdded:Connect(function(p)
-	print(p.Name..' Joined')
 	task.spawn(getChar,p)
 	if p:IsFriendsWith(userid) then
 		if not table.find(Current.Teamate,p.Name) then
@@ -569,6 +565,7 @@ task.spawn(function()
 					end
 				end
 			else
+				print('Some one Wiped...')
 				if v.HealthBarlib then
 					for o,c in pairs(v.HealthBarlib) do
 						c:Remove()
