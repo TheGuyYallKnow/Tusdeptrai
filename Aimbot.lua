@@ -173,6 +173,7 @@ return function(lib,window)
 	tab:AddBind({
 		Name = 'Aimbot keybind',
 		Default = Variables.AimbotBind,
+		DoubleSided = true,
 		Callback = function(key,setting,inputo)
 			print(key)
 			print(setting)
