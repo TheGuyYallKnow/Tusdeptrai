@@ -169,10 +169,8 @@ return function(lib,window)
 		Default = Variables.AimbotBind,
 		Callback = function(key,setting)
 			if key and setting then
-				print(key)
-				print(EB2SLib:E2S(key))
 				wait()
-				Variables.AimbotBind = EB2SLib:E2S(key)
+				Variables.AimbotBind = EB2SLib.E2S(key)
 			end
 		end,
 	})
@@ -226,7 +224,7 @@ return function(lib,window)
 			if not setting then
 				lib:FireFlag('Aimbot_Circle_Filled')
 			else
-				Variables.CircleFilledBind = EB2SLib:E2S(key)
+				Variables.CircleFilledBind = EB2SLib.E2S(key)
 			end
 		end,
 	})
@@ -246,7 +244,7 @@ return function(lib,window)
 			if not setting then
 				lib:FireFlag('Aimbot_Circle_visible')
 			else
-				Variables.CircleFilledBind = EB2SLib:E2S(key)
+				Variables.CircleFilledBind = EB2SLib.E2S(key)
 			end
 		end,
 	})
@@ -266,7 +264,7 @@ return function(lib,window)
 			if not setting then
 				lib:FireFlag('Aimbot_Ignore_Teammate')
 			else
-				Variables.TeamBind = EB2SLib:E2S(key)
+				Variables.TeamBind = EB2SLib.E2S(key)
 			end
 		end,
 	})
