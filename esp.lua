@@ -153,84 +153,84 @@ function getChar(inst)
 		repeat 
 			wait(0.1)
 		until (inst.Character:FindFirstChild('HumanoidRootPart') and inst.Character:FindFirstChildOfClass('Humanoid')) or not inst:IsDescendantOf(game) or not inst.Character:IsDescendantOf(game:GetService('Workspace'))
-		pcall(function()
-			if inst.Character then
-				local rp = inst.Character:WaitForChild('HumanoidRootPart')
-				local hum = inst.Character:WaitForChild('Humanoid')
-				local rgb = Variables.ESP_PlayerColor
-				local upperlayer = {
-					{
-						Text_front = '[',
-						TrackInst = inst.Character,
-						TrackValue = 'Name',
-						Text_end = ']',
-						Layer = 1,
-						Priority = 1,
-						FriendTrack = true,
-						ColorFlag = 'ESP_PlayerColor',
-					},
-					{
-						Text_front = '[',
-						TrackInst = inst.Character:FindFirstChild('HumanoidRootPart'),
-						TrackDistance = true,
-						Text_end = ']',
-						Flag = 'ESP_ShowDistance',
-						Layer = 1,
-						Priority = 2,
-					},
-				}
-				local args = {
-					{
-						Layer = 1,
-						Priority = 1,
-					},
-					{
-						Text_front = '[',
-						TrackInst = inst.Character:FindFirstChildOfClass('Humanoid'),
-						TrackValue = 'Health',
-						Layer = 2,
-						Flag = 'ESP_ShowHealth',
-						Priority = 1,
-					},
-					{
-						Text_front = '/',
-						TrackInst = inst.Character:FindFirstChildOfClass('Humanoid'),
-						TrackValue = 'MaxHealth',
-						Text_end = ']',
-						Layer = 2,
-						Flag = 'ESP_ShowHealth',
-						Priority = 2,
-					},
-					{
-						Text_front = '[',
-						Text_end = ']',
-						TrackInst = inst.Character:FindFirstChildOfClass('Humanoid'),
-						TrackInst_2 = inst.Character:FindFirstChildOfClass('Humanoid'),
-						TrackValue = 'Health',
-						TrackValue_2 = 'MaxHealth',
-						Layer = 2,
-						Flag = 'ESP_ShowHealth',
-						Priority = 3,
-					},
-				}
-				if next(LoadedModule) then
-					for i,v in pairs(LoadedModule) do
-						if v.Tag == 'Player' then
-							local new = v
-							new.Tag = nil
-							table.insert(args,new)
-						end
+		if inst.Character then
+			local rp = inst.Character:WaitForChild('HumanoidRootPart')
+			local hum = inst.Character:WaitForChild('Humanoid')
+			local rgb = Variables.ESP_PlayerColor
+			local upperlayer = {
+				{
+					Text_front = '[',
+					TrackInst = inst.Character,
+					TrackValue = 'Name',
+					Text_end = ']',
+					Layer = 1,
+					Priority = 1,
+					FriendTrack = true,
+					ColorFlag = 'ESP_PlayerColor',
+				},
+				{
+					Text_front = '[',
+					TrackInst = inst.Character:FindFirstChild('HumanoidRootPart'),
+					TrackDistance = true,
+					Text_end = ']',
+					Flag = 'ESP_ShowDistance',
+					Layer = 1,
+					Priority = 2,
+				},
+			}
+			local args = {
+				{
+					Layer = 1,
+					Priority = 1,
+				},
+				{
+					Text_front = '[',
+					TrackInst = inst.Character:FindFirstChildOfClass('Humanoid'),
+					TrackValue = 'Health',
+					Layer = 2,
+					Flag = 'ESP_ShowHealth',
+					Priority = 1,
+				},
+				{
+					Text_front = '/',
+					TrackInst = inst.Character:FindFirstChildOfClass('Humanoid'),
+					TrackValue = 'MaxHealth',
+					Text_end = ']',
+					Layer = 2,
+					Flag = 'ESP_ShowHealth',
+					Priority = 2,
+				},
+				{
+					Text_front = '[',
+					Text_end = ']',
+					TrackInst = inst.Character:FindFirstChildOfClass('Humanoid'),
+					TrackInst_2 = inst.Character:FindFirstChildOfClass('Humanoid'),
+					TrackValue = 'Health',
+					TrackValue_2 = 'MaxHealth',
+					Layer = 2,
+					Flag = 'ESP_ShowHealth',
+					Priority = 3,
+				},
+			}
+			if next(LoadedModule) then
+				for i,v in pairs(LoadedModule) do
+					if v.Tag == 'Player' then
+						local new = v
+						new.Tag = nil
+						table.insert(args,new)
 					end
 				end
-				local Features = {
-					Box = 'ESP_ShowBox',
-					HealthBar = 'ESP_ShowHealthBar',
-					BoxSize = Vector3.new(3.5,5,2),
-				}
-				AddESP(inst.Character:FindFirstChild('HumanoidRootPart'), Color3.fromRGB(rgb.R,rgb.G,rgb.B), upperlayer, 'ESP_Player')
-				AddESP(inst.Character:FindFirstChild('HumanoidRootPart'), Color3.fromRGB(rgb.R,rgb.G,rgb.B), args, 'ESP_Player',Features)
 			end
-		end)
+			local Features = {
+				Box = 'ESP_ShowBox',
+				HealthBar = 'ESP_ShowHealthBar',
+				BoxSize = Vector3.new(3.5,5,2),
+			}
+			AddESP(inst.Character:FindFirstChild('HumanoidRootPart'), Color3.fromRGB(rgb.R,rgb.G,rgb.B), upperlayer, 'ESP_Player')
+			AddESP(inst.Character:FindFirstChild('HumanoidRootPart'), Color3.fromRGB(rgb.R,rgb.G,rgb.B), args, 'ESP_Player',Features)
+		else
+			print(inst.Name..' Has no character?')
+		end
 	end
 	
 	if inst.Character then get(inst.Character) end
