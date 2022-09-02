@@ -151,6 +151,7 @@ function getChar(inst)
 	local conn
 	function get(c)
 		repeat 
+			print(c.Name..' Is still Loading...')
 			wait(0.1)
 		until not inst:IsDescendantOf(game) or not inst.Character:IsDescendantOf(game:GetService('Workspace')) or (inst.Character:FindFirstChild('HumanoidRootPart') and inst.Character:FindFirstChildOfClass('Humanoid'))
 		if inst.Character then
