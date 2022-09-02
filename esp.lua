@@ -569,11 +569,15 @@ task.spawn(function()
 				pcall(function()
 					if not v.Part then
 						print('no vpart?/')
+					else
+						print('It has vpart but still removing..?')
 					end
 					if v.Part:IsDescendantOf(game:GetService('Workspace')) then
 						print('Not in workspace???')
 						print(v.Part.Parent.Name)
 					end
+					print(v.Part.Name)
+					print(v.Part.Parent.Name)
 				end)
 				if v.HealthBarlib then
 					for o,c in pairs(v.HealthBarlib) do
