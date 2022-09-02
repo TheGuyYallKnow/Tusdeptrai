@@ -1,4 +1,4 @@
-print('Version 1')
+print('ASD')
 --// Delcaring
 getgenv = getgenv
 Drawing = Drawing
@@ -171,6 +171,7 @@ return function(lib,window)
 	local tab = window:MakeTab({
 		Name = 'Aimbot'
 	})
+	print(Variables.AimbotBind)
 	tab:AddBind({
 		Name = 'Aimbot keybind',
 		Default = Variables.AimbotBind,
@@ -181,10 +182,9 @@ return function(lib,window)
 			print(inputo)
 			if setting and setting == true then
 				Variables.AimbotBind = EB2SLib.E2S(key)
-				print(Variables.AimbotBind)
 			else
 				IsAiming = inputo or false
-				print('Isaming: '..IsAiming)
+				print('Isaming: '..tostring(IsAiming))
 			end
 		end,
 	})
