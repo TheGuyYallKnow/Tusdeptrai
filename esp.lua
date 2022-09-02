@@ -295,7 +295,7 @@ end
 task.spawn(function()
 	while true do
 		for i,v in pairs(data.Track) do
-			if v.Part then
+			if v.Part and v.Part.Parent then
 				local newdistance
 				if Variables.ESP_MaxDistance == 10000 then
 					newdistance = math.huge
