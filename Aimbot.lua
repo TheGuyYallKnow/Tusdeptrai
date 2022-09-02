@@ -44,11 +44,12 @@ FOVCircle.Transparency = 0.7 --// For now..
 FOVCircle.NumSides = 0
 FOVCircle.Thickness = Variables.CircleThickness
 --// Init Advanced Aimbot
+local mouse = game:GetService('Players').LocalPlayer:GetMouse()
 local mt = getrawmetatable(game)
 local index = mt.__index
 setreadonly(mt, false)
 mt.__index = newcclosure(function(t,i)
-	if t == game:GetService('Players').LocalPlayer:GetMouse() and Variables.Advanced_Aimbot == true and tostring(i):lower() == 'hit' then
+	if t == mouse and Variables.Advanced_Aimbot == true and tostring(i):lower() == 'hit' then
 		local clostestplr = GetClosestPlayer()
 		if clostestplr then
 			return clostestplr.Character[Variables.AimPart].CFrame
