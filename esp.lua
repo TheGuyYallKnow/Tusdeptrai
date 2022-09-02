@@ -154,7 +154,9 @@ function getChar(inst)
 			print(c.Name..' Is still Loading...')
 			wait(0.1)
 		until not inst:IsDescendantOf(game) or not inst.Character:IsDescendantOf(game:GetService('Workspace')) or (inst.Character:FindFirstChild('HumanoidRootPart') and inst.Character:FindFirstChildOfClass('Humanoid'))
+		print(c.Name..' Done loading')
 		if inst.Character then
+			print(c.Name..' Has Character')
 			local rp = inst.Character:WaitForChild('HumanoidRootPart')
 			local hum = inst.Character:WaitForChild('Humanoid')
 			local rgb = Variables.ESP_PlayerColor
