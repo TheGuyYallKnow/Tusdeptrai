@@ -124,7 +124,6 @@ end
 
 UserInputService.InputBegan:Connect(function(input, processed)
 	if not processed then
-		print(Variables.AimbotBind)
 		if Variables.AimbotBind and Variables.AimbotBind[input.KeyCode] or Variables.AimbotBind[input.UserInputType] then
 			IsAiming = true
 			print('Isaming')
@@ -174,10 +173,13 @@ return function(lib,window)
 	tab:AddBind({
 		Name = 'Aimbot keybind',
 		Default = Variables.AimbotBind,
-		Callback = function(key,setting)
-			if key and setting then
-				wait()
-				Variables.AimbotBind = EB2SLib.E2S(key)
+		Callback = function(key,setting,inputo)
+			if key then
+				if setting and setting == true then
+					Variables.AimbotBind = EB2SLib.E2S(key)
+				else
+					IsAiming = inputo or false
+				end
 			end
 		end,
 	})
