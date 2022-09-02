@@ -3,6 +3,7 @@ getgenv,syn = getgenv,syn
 
 local UIS = game:GetService('UserInputService')
 local StringFilterFunc = getgenv().stringfilter
+local EB2SLib = getgenv().EB2S()
 
 local Debugmode = true
 
@@ -409,7 +410,7 @@ modules.side.AddSlider = function(args)
 
 		local Value_3 = Instance.new('StringValue',Frame_3)
 		Value_3.Name = 'Nameto'
-		Value_3.Value = Name
+		Value_3.Value = ValueName
 
 		local maxto = Instance.new('NumberValue',Frame_3)
 		maxto.Name = 'Maxto'
@@ -549,16 +550,7 @@ modules.side.AddBind = function(args)
 	
 	if Name and Callback then
 		local function EnumtoString(enum)
-			local give = string.split(tostring(enum),'.')[3]
-			local tab = {
-				MouseButton1 = 'LMB',
-				MouseButton2 = 'RMB',
-				MouseButton3 = 'MMB',
-			}
-			if tab[tostring(give)] then
-				give = tab[tostring(give)]
-			end
-			return give
+			return EB2SLib.E2S(enum)
 		end
 		
 		local Frame = Instance.new("Frame")
@@ -672,7 +664,7 @@ modules.side.AddBind = function(args)
 			if Default and not Variables.Keybinds[Default] then
 				Variables.Keybinds[Default] = {}
 			end
-			Value.Text = EnumtoString(Default) or '???'
+			Value.Text = EnumtoString(Default)
 			Callback(Default,true)
 			wait()
 			table.insert(Variables.Keybinds[Default],Callback_)
