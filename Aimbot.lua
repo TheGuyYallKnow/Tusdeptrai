@@ -1,4 +1,4 @@
-print(':<>')
+print('huh')
 --// Delcaring
 getgenv = getgenv
 Drawing = Drawing
