@@ -23,6 +23,7 @@ local Variables = {
 	Tab_Closedfuncs = {},
 	
 	Keybinds = {},
+	Keybinds_ = {}, --// False state
 	link = {},
 
 	held = false,
@@ -544,6 +545,7 @@ modules.side.AddBind = function(args)
 	local Default = args.Default
 	local Callback = args.Callback
 	local Flag = args.Flag
+	local DoubleSided = args.DoubleSided or false
 	
 	if Name and Callback then
 		local function EnumtoString(enum)
@@ -629,6 +631,13 @@ modules.side.AddBind = function(args)
 				Variables.Keybinds[Default] = {}
 			end
 			table.insert(Variables.Keybinds[Default],Callback_)
+			
+			if DoubleSided and DoubleSided == true then
+				if not Variables.Keybinds_[Default] then
+					Variables.Keybinds_[Default] = {}
+				end
+				table.insert(Variables.Keybinds_[Default],Callback_)
+			end
 		end
 		
 		local function setkey(input)
@@ -1187,6 +1196,17 @@ local con_1 = UIS.InputEnded:connect(function(input, processed)
 		Variables.held = false
 		Variables.mousepressed = false
 	end
+	if Variables.Keybinds[input.KeyCode] or Variables.Keybinds[input.UserInputType] then
+		for i,v in pairs(Variables.Keybinds[input.KeyCode] or Variables.Keybinds[input.UserInputType]) do
+			local inputo = nil
+			if input.UserInputType == Enum.UserInputType.Keyboard then
+				inputo = input.KeyCode
+			else
+				inputo = input.UserInputType
+			end
+			v(inputo,false,false)
+		end
+	end
 end)
 local con_2 = UIS.InputBegan:Connect(function(input,processed)
 	if input.UserInputType == Enum.UserInputType.MouseButton1 then
@@ -1195,7 +1215,13 @@ local con_2 = UIS.InputBegan:Connect(function(input,processed)
 	if not processed then
 		if Variables.Keybinds[input.KeyCode] or Variables.Keybinds[input.UserInputType] then
 			for i,v in pairs(Variables.Keybinds[input.KeyCode] or Variables.Keybinds[input.UserInputType]) do
-				v()
+				local inputo = nil
+				if input.UserInputType == Enum.UserInputType.Keyboard then
+					inputo = input.KeyCode
+				else
+					inputo = input.UserInputType
+				end
+				v(inputo,false,true)
 			end
 		end
 	end
