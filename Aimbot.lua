@@ -1,3 +1,4 @@
+print('Version 1')
 --// Delcaring
 getgenv = getgenv
 Drawing = Drawing
