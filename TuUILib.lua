@@ -617,8 +617,8 @@ modules.side.AddBind = function(args)
 		TextButton.AutoButtonColor = false
 		TextButton.Text = ""
 		
-		local Callback_ = function()
-			Callback(Default,false)
+		local Callback_ = function(Key,Setting,Pressed)
+			Callback(Key,Setting,Pressed)
 		end
 		
 		--//Flag
