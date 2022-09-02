@@ -124,14 +124,14 @@ end
 
 UserInputService.InputBegan:Connect(function(input, processed)
 	if not processed then
-		if Variables.AimbotBind[input.KeyCode] or Variables.AimbotBind[input.UserInputType] then
+		if Variables.AimbotBind and Variables.AimbotBind[input.KeyCode] or Variables.AimbotBind[input.UserInputType] then
 			IsAiming = true
 		end
 	end
 end)
 
 UserInputService.InputEnded:Connect(function(input)
-	if Variables.AimbotBind[input.KeyCode] or Variables.AimbotBind[input.UserInputType] then
+	if Variables.AimbotBind and Variables.AimbotBind[input.KeyCode] or Variables.AimbotBind[input.UserInputType] then
 		IsAiming = false
 	end
 end)
