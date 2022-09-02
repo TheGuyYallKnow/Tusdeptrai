@@ -219,8 +219,9 @@ Tab:AddBind({
 --[[
 Name = <string> - The name of the bind.
 Default = <keycode> - The default value of the bind.
-Callback = <function> - The function of the bind. // return {key,issettingkey <bool>}
-Flag = <string>
+DoubleSided = <bool> - Fire the callback function even when input ended.
+Callback = <function> - The function of the bind. // return {key,issettingkey <bool>, inputed <bool>}
+Flag = <string> - Fire with true state only ;3
 ]]
 ```
 
