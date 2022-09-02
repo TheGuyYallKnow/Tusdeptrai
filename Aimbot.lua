@@ -11,11 +11,11 @@ local UserInputService = game:GetService('UserInputService')
 local IsAiming = false
 local DataStructure = {
 	Advanced_Aimbot = false,
+	AimbotCamera = false,
 	AimPart = 'Head',
 	Sensitivity = 0, -- How many seconds it takes for the aimbot script to officially lock onto the target's aimpart.
 	TeamCheck = false,
 	
-	CircleSides = 0,
 	CircleColor = Color3.fromRGB(255,0,0),
 	CircleRadius = 70, -- or FOV
 	CircleFilled = false,
@@ -41,14 +41,44 @@ FOVCircle.Filled = Variables.CircleFilled
 FOVCircle.Color = Variables.CircleColor
 FOVCircle.Visible = Variables.CircleVisible
 FOVCircle.Transparency = 0.7 --// For now..
-FOVCircle.NumSides = Variables.CircleSides
+FOVCircle.NumSides = 0
 FOVCircle.Thickness = Variables.CircleThickness
+--// Init Advanced Aimbot
+local mt = getrawmetatable(game)
+local index = mt.__index
+setreadonly(mt, false)
+mt.__index = newcclosure(function(t,i)
+	if t == game:GetService('Players').LocalPlayer:GetMouse() and Variables.Advanced_Aimbot == true and tostring(i):lower() == 'hit' then
+		local clostestplr = GetClosestPlayer()
+		if clostestplr then
+			return clostestplr.Character[Variables.AimPart].CFrame
+		end
+		return index(t,i)
+	end
+	return index(t,i)
+end)
+setreadonly(mt, true)
+
 
 local userid = game:GetService('Players').LocalPlayer.UserId
-local function GetClosestPlayer()
+function GetClosestPlayer()
 	local MaximumDistance = Variables.CircleRadius
 	local Target = nil
-
+	local Center = Vector2.new(UserInputService:GetMouseLocation().X, UserInputService:GetMouseLocation().Y)
+	
+	local function inside(x,y)
+		local x = math.abs(Center.X - x)
+		x = x*x --// ^2
+		local y = math.abs(Center.Y - y)
+		y = y*y
+		local d = (x+y)/(x+y) --// Radical
+		local r = Variables.CircleRadius
+		if d <= r then
+			return true
+		end
+		return false
+	end
+	
 	for _, v in next, Players:GetPlayers() do
 		if v.Name ~= LocalPlayer.Name then
 			if Variables.TeamCheck == true then
@@ -56,11 +86,14 @@ local function GetClosestPlayer()
 					if v.Character ~= nil then
 						if v.Character:FindFirstChild("HumanoidRootPart") ~= nil then
 							if v.Character:FindFirstChild("Humanoid") ~= nil and v.Character:FindFirstChild("Humanoid").Health ~= 0 then
-								local ScreenPoint = Camera:WorldToScreenPoint(v.Character:WaitForChild("HumanoidRootPart", math.huge).Position)
-								local VectorDistance = (Vector2.new(UserInputService:GetMouseLocation().X, UserInputService:GetMouseLocation().Y) - Vector2.new(ScreenPoint.X, ScreenPoint.Y)).Magnitude
-
-								if VectorDistance < MaximumDistance then
-									Target = v
+								local ScreenPoint,visible = Camera:WorldToScreenPoint(v.Character:WaitForChild("HumanoidRootPart", math.huge).Position)
+								if visible then
+									--// Check inside circle
+									if inside(ScreenPoint.X, ScreenPoint.Y) then
+										if ScreenPoint.Z < MaximumDistance then
+											Target = v
+										end
+									end
 								end
 							end
 						end
@@ -70,11 +103,14 @@ local function GetClosestPlayer()
 				if v.Character ~= nil then
 					if v.Character:FindFirstChild("HumanoidRootPart") ~= nil then
 						if v.Character:FindFirstChild("Humanoid") ~= nil and v.Character:FindFirstChild("Humanoid").Health ~= 0 then
-							local ScreenPoint = Camera:WorldToScreenPoint(v.Character:WaitForChild("HumanoidRootPart", math.huge).Position)
-							local VectorDistance = (Vector2.new(UserInputService:GetMouseLocation().X, UserInputService:GetMouseLocation().Y) - Vector2.new(ScreenPoint.X, ScreenPoint.Y)).Magnitude
-
-							if VectorDistance < MaximumDistance then
-								Target = v
+							local ScreenPoint,visible = Camera:WorldToScreenPoint(v.Character:WaitForChild("HumanoidRootPart", math.huge).Position)
+							if visible then
+								--// Check inside circle
+								if inside(ScreenPoint.X, ScreenPoint.Y) then
+									if ScreenPoint.Z < MaximumDistance then
+										Target = v
+									end
+								end
 							end
 						end
 					end
@@ -82,7 +118,6 @@ local function GetClosestPlayer()
 			end
 		end
 	end
-
 	return Target
 end
 
@@ -101,18 +136,21 @@ UserInputService.InputEnded:Connect(function(input)
 end)
 
 game:GetService('RunService').RenderStepped:Connect(function()
-	FOVCircle.Position = Vector2.new(UserInputService:GetMouseLocation().X, UserInputService:GetMouseLocation().Y)
+	local Center = Vector2.new(UserInputService:GetMouseLocation().X, UserInputService:GetMouseLocation().Y)
+	FOVCircle.Position = Center
 	FOVCircle.Radius = Variables.CircleRadius
 	FOVCircle.Filled = Variables.CircleFilled
 	FOVCircle.Color = Variables.CircleColor
 	FOVCircle.Visible = Variables.CircleVisible
 	FOVCircle.Transparency = 0.7 --// For now..
-	FOVCircle.NumSides = Variables.CircleSides
+	FOVCircle.NumSides = 0
 	FOVCircle.Thickness = Variables.CircleThickness
 
 	if IsAiming == true then
 		local part = GetClosestPlayer().Character[Variables.AimPart]
-		game:GetService('TweenService'):Create(Camera, TweenInfo.new(Variables.Sensitivity, Enum.EasingStyle.Sine, Enum.EasingDirection.Out), {CFrame = CFrame.new(Camera.CFrame.Position, part.Position)}):Play()
+		if Variables.AimbotCamera == true then
+			game:GetService('TweenService'):Create(Camera, TweenInfo.new(Variables.Sensitivity, Enum.EasingStyle.Sine, Enum.EasingDirection.Out), {CFrame = CFrame.new(Camera.CFrame.Position, part.Position)}):Play()
+		end
 		wait(Variables.Sensitivity)
 		local pos, screen = workspace.CurrentCamera:WorldToViewportPoint(part.Position)
 		if screen then
@@ -146,17 +184,6 @@ return function(lib,window)
 		ValueName = 's',
 		Callback = function(Val)
 			Variables.Sensitivity = Val
-		end,
-	})
-	tab:AddSlider({
-		Name = 'Shape',
-		Min = 0,
-		Max = 10,
-		Default = Variables.CircleSides,
-		Increment = 1,
-		ValueName = 'Sides',
-		Callback = function(Val)
-			Variables.CircleSides = Val
 		end,
 	})
 	tab:AddSlider({
@@ -263,7 +290,15 @@ return function(lib,window)
 			Variables.AimPart = val
 		end,
 	})
-	--// Advanced Aimbot
+	--// Aimbot Camera
+	tab:AddToggle({
+		Name = 'Camera Aiming (Rec in fps games)',
+		Default = Variables.AimbotCamera,
+		Callback = function(val)
+			Variables.AimbotCamera = val
+		end,
+	})
+	--// Advanced Aimbot (hook shit)
 	tab:AddToggle({
 		Name = 'Advanced Aimbot',
 		Default = Variables.Advanced_Aimbot,
