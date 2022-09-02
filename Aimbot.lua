@@ -1,4 +1,3 @@
-print('huh')
 --// Delcaring
 getgenv = getgenv
 Drawing = Drawing
@@ -183,7 +182,6 @@ return function(lib,window)
 				Variables.AimbotBind = EB2SLib.E2S(key)
 			else
 				IsAiming = inputo or false
-				print('Isaming: '..tostring(IsAiming))
 			end
 		end,
 	})
