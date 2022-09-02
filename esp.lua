@@ -750,14 +750,11 @@ setmetatable(toreturn,{
 		--// Loaded module for more...
 
 		--// Settings board
-		local Tab_2 = Window:MakeTab({
-			Name = "ESP Settings",
-		})
 		--// Category: Global
-		Tab_2:AddSection({
+		Tab:AddSection({
 			Name = 'Global Settings'
 		})
-		Tab_2:AddSlider({
+		Tab:AddSlider({
 			Name = 'Size',
 			Min = 10,
 			Max = 25,
@@ -769,7 +766,7 @@ setmetatable(toreturn,{
 				Variables.ESP_Size = Value
 			end,
 		})
-		Tab_2:AddSlider({
+		Tab:AddSlider({
 			Name = 'Max Distance',
 			Min = 0,
 			Max = 10000,
@@ -781,7 +778,7 @@ setmetatable(toreturn,{
 				Variables.ESP_MaxDistance = Value
 			end,
 		})
-		Tab_2:AddSlider({
+		Tab:AddSlider({
 			Name = 'YOffset',
 			Min = -20,
 			Max = 20,
@@ -793,7 +790,7 @@ setmetatable(toreturn,{
 				Variables.ESP_YOffset = Value
 			end,
 		})
-		Tab_2:AddSlider({
+		Tab:AddSlider({
 			Name = 'ZOffset',
 			Min = -10,
 			Max = 10,
@@ -805,7 +802,7 @@ setmetatable(toreturn,{
 				Variables.ESP_ZOffset = Value
 			end,
 		})
-		Tab_2:AddButton({
+		Tab:AddButton({
 			Name = 'Refresh Teammate list',
 			Callback = function()
 				Current.Teamate = {}
@@ -822,10 +819,10 @@ setmetatable(toreturn,{
 		})
 		--// Loaded module
 		--// Category: Player
-		Tab_2:AddSection({
+		Tab:AddSection({
 			Name = 'Player Esp',
 		})
-		Tab_2:AddBind({
+		Tab:AddBind({
 			Name = 'Keybind Toggle',
 			Default = keybindlib.S2E(Variables.ESP_PlayerBind),
 			Callback = function(newkey,issetingkey)
@@ -836,7 +833,7 @@ setmetatable(toreturn,{
 				end
 			end,
 		})
-		Tab_2:AddBind({
+		Tab:AddBind({
 			Name = 'Keybind Box',
 			Default = keybindlib.S2E(Variables.ESP_BoxBind),
 			Callback = function(newkey,issetingkey)
@@ -850,10 +847,10 @@ setmetatable(toreturn,{
 		--// Loaded Module...
 
 		--// Category: Team
-		Tab_2:AddSection({
+		Tab:AddSection({
 			Name = 'Team ESP'
 		})
-		Tab_2:AddBind({
+		Tab:AddBind({
 			Name = 'Keybind Toggle',
 			Default = keybindlib.S2E(Variables.ESP_TeamBind),
 			Callback = function(newkey,issetingkey)
