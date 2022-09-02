@@ -1,4 +1,3 @@
-print('oto')
 --// Declaring
 getgenv,syn = getgenv,syn
 
@@ -1212,7 +1211,6 @@ local con_1 = UIS.InputEnded:connect(function(input, processed)
 		Variables.mousepressed = false
 	end
 	if Variables.Keybinds_[input.KeyCode] or Variables.Keybinds_[input.UserInputType] then
-		print('Has: '..#(Variables.Keybinds_[input.KeyCode] or Variables.Keybinds_[input.UserInputType]))
 		for i,v in pairs(Variables.Keybinds_[input.KeyCode] or Variables.Keybinds_[input.UserInputType]) do
 			local inputo = nil
 			if input.UserInputType == Enum.UserInputType.Keyboard then
@@ -1221,7 +1219,7 @@ local con_1 = UIS.InputEnded:connect(function(input, processed)
 				inputo = input.UserInputType
 			end
 			print('Fired end')
-			v(inputo,false,'bullshit')
+			v('inputo',false,'bullshit')
 		end
 	end
 end)
@@ -1238,7 +1236,8 @@ local con_2 = UIS.InputBegan:Connect(function(input,processed)
 				else
 					inputo = input.UserInputType
 				end
-				v(inputo,false,true)
+				print('Fired')
+				v('inputo',false,true)
 			end
 		end
 	end
