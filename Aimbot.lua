@@ -1,3 +1,6 @@
+--// Delcaring
+getgenv = getgenv
+--// Funcs
 local EB2SLib = getgenv().EB2S
 local Players = game:GetService('Players')
 local LocalPlayer = Players.LocalPlayer
@@ -236,7 +239,7 @@ return function(lib,window)
 	repeat wait() until game:GetService('Players').LocalPlayer.Character and game:GetService('Players').LocalPlayer.Character:FindFirstChildOfClass('Humanoid')
 	wait()
 	local Parts
-	if game:GetService('Players').LocalPlayer.Character:FindFirstChildOfClass('Humanoid').RigType == Enum.RigType.R6 then
+	if game:GetService('Players').LocalPlayer.Character:FindFirstChildOfClass('Humanoid').RigType == Enum.HumanoidRigType.R6 then
 		Parts = R6
 	else
 		Parts = R15
