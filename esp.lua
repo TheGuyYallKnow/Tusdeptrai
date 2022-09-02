@@ -296,7 +296,7 @@ end
 task.spawn(function()
 	while true do
 		for i,v in pairs(data.Track) do
-			if v.Part and v.Part:IsDescendantOf(game:GetService('Workspace')) then
+			if v.Part and v.Part.Parent then
 				local newdistance
 				if Variables.ESP_MaxDistance == 10000 then
 					newdistance = math.huge
@@ -566,19 +566,6 @@ task.spawn(function()
 					end
 				end
 			else
-				pcall(function()
-					if not v.Part then
-						print('no vpart?/')
-					else
-						print('It has vpart but still removing..?')
-					end
-					if v.Part:IsDescendantOf(game:GetService('Workspace')) then
-						print('Not in workspace???')
-						print(v.Part.Parent.Name)
-					end
-					print(v.Part.Name)
-					print(v.Part.Parent.Name)
-				end)
 				if v.HealthBarlib then
 					for o,c in pairs(v.HealthBarlib) do
 						c:Remove()
