@@ -170,6 +170,8 @@ return function(lib,window)
 		Callback = function(key,setting)
 			if key and setting then
 				print(key)
+				print(EB2SLib:E2S(key))
+				wait()
 				Variables.AimbotBind = EB2SLib:E2S(key)
 			end
 		end,
