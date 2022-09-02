@@ -177,8 +177,10 @@ return function(lib,window)
 			if key then
 				if setting and setting == true then
 					Variables.AimbotBind = EB2SLib.E2S(key)
+					print(Variables.AimbotBind)
 				else
 					IsAiming = inputo or false
+					print('Isaming: '..IsAiming)
 				end
 			end
 		end,
