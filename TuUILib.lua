@@ -1,3 +1,4 @@
+print('Vippro')
 --// Declaring
 getgenv,syn = getgenv,syn
 
@@ -651,6 +652,14 @@ modules.side.AddBind = function(args)
 						end
 					end
 				end
+				if Variables.Keybinds_[Default] then
+					if table.find(Variables.Keybinds_[Default],Callback_) then
+						table.remove(Variables.Keybinds_[Default],table.find(Variables.Keybinds_[Default],Callback_))
+						if #Variables.Keybinds_[Default] == 0 then
+							Variables.Keybinds_[Default] = nil
+						end
+					end
+				end
 			end
 			--// New
 			if input.UserInputType == Enum.UserInputType.Keyboard then
@@ -1196,6 +1205,7 @@ local con_1 = UIS.InputEnded:connect(function(input, processed)
 		Variables.held = false
 		Variables.mousepressed = false
 	end
+	print(game:GetService('HttpService'):JSONEncode(Variables.Keybinds_))
 	if Variables.Keybinds_[input.KeyCode] or Variables.Keybinds_[input.UserInputType] then
 		for i,v in pairs(Variables.Keybinds_[input.KeyCode] or Variables.Keybinds_[input.UserInputType]) do
 			local inputo = nil
@@ -1204,6 +1214,7 @@ local con_1 = UIS.InputEnded:connect(function(input, processed)
 			else
 				inputo = input.UserInputType
 			end
+			print('Fired end')
 			v(inputo,false,false)
 		end
 	end
