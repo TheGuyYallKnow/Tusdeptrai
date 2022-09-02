@@ -113,7 +113,10 @@ game:GetService('RunService').RenderStepped:Connect(function()
 end)
 
 return function(lib,window)
-	window:AddBind({
+	local tab = window:MakeTab({
+		Name = 'Aimbot'
+	})
+	tab:AddBind({
 		Name = 'Aimbot keybind',
 		Default = Variables.AimbotBind,
 		Callback = function(key,setting)
@@ -124,7 +127,7 @@ return function(lib,window)
 	})
 	
 	--// Settings
-	window:AddSlider({
+	tab:AddSlider({
 		Name = 'Delay time',
 		Min = 0,
 		Max = 2,
@@ -135,7 +138,7 @@ return function(lib,window)
 			Variables.Sensitivity = Val
 		end,
 	})
-	window:AddSlider({
+	tab:AddSlider({
 		Name = 'Shape',
 		Min = 0,
 		Max = 10,
@@ -146,7 +149,7 @@ return function(lib,window)
 			Variables.CircleSides = Val
 		end,
 	})
-	window:AddSlider({
+	tab:AddSlider({
 		Name = 'Radius (FOV)',
 		Min = 5,
 		Max = 120,
@@ -157,7 +160,7 @@ return function(lib,window)
 			Variables.CircleRadius = val
 		end,
 	})
-	window:AddSlider({
+	tab:AddSlider({
 		Name = 'Circle thickness',
 		Min = 0,
 		Max = 10,
@@ -168,7 +171,7 @@ return function(lib,window)
 		end,
 	})
 	--//
-	window:AddToggle({
+	tab:AddToggle({
 		Name = 'Circle filled',
 		Default = Variables.CircleFilled,
 		Flag = 'Aimbot_Circle_Filled',
@@ -176,7 +179,7 @@ return function(lib,window)
 			Variables.CircleFilled = val
 		end,
 	})
-	window:AddBind({
+	tab:AddBind({
 		Name = 'Circle filled keybind',
 		Default = Variables.CircleFilledBind,
 		Callback = function(key,setting)
@@ -188,7 +191,7 @@ return function(lib,window)
 		end,
 	})
 	--//
-	window:AddToggle({
+	tab:AddToggle({
 		Name = 'Circle visible',
 		Default = Variables.CircleVisible,
 		Flag = 'Aimbot_Circle_visible',
@@ -196,7 +199,7 @@ return function(lib,window)
 			Variables.CircleVisible = val
 		end,
 	})
-	window:AddBind({
+	tab:AddBind({
 		Name = 'Circle filled keybind',
 		Default = Variables.CircleFilledBind,
 		Callback = function(key,setting)
@@ -208,7 +211,7 @@ return function(lib,window)
 		end,
 	})
 	--// Team
-	window:AddToggle({
+	tab:AddToggle({
 		Name = 'Ignore Teammate',
 		Default = Variables.TeamCheck,
 		Flag = 'Aimbot_Ignore_Teammate',
@@ -216,7 +219,7 @@ return function(lib,window)
 			Variables.TeamCheck = val
 		end,
 	})
-	window:AddBind({
+	tab:AddBind({
 		Name = 'Circle filled keybind',
 		Default = Variables.TeamBind,
 		Callback = function(key,setting)
@@ -242,7 +245,7 @@ return function(lib,window)
 	if not table.find(Parts,Variables.AimPart) then
 		Variables.AimPart = 'HumanoidRootPart'
 	end
-	window:AddDropdown({
+	tab:AddDropdown({
 		Name = 'Aim Part',
 		Default = Variables.AimPart,
 		Options = Parts,
@@ -251,7 +254,7 @@ return function(lib,window)
 		end,
 	})
 	--// Advanced Aimbot
-	window:AddToggle({
+	tab:AddToggle({
 		Name = 'Advanced Aimbot',
 		Default = Variables.Advanced_Aimbot,
 		Callback = function(val)
