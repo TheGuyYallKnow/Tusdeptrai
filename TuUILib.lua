@@ -1,4 +1,4 @@
-print('alraight')
+print('oto')
 --// Declaring
 getgenv,syn = getgenv,syn
 
@@ -1221,7 +1221,7 @@ local con_1 = UIS.InputEnded:connect(function(input, processed)
 				inputo = input.UserInputType
 			end
 			print('Fired end')
-			v(inputo,false,false)
+			v(inputo,false,'bullshit')
 		end
 	end
 end)
