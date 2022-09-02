@@ -152,7 +152,7 @@ function getChar(inst)
 	function get(c)
 		repeat 
 			wait(0.1)
-		until (inst.Character:FindFirstChild('HumanoidRootPart') and inst.Character:FindFirstChildOfClass('Humanoid')) or not inst:IsDescendantOf(game) or not inst.Character:IsDescendantOf(game:GetService('Workspace'))
+		until not inst:IsDescendantOf(game) or not inst.Character:IsDescendantOf(game:GetService('Workspace')) or (inst.Character:FindFirstChild('HumanoidRootPart') and inst.Character:FindFirstChildOfClass('Humanoid'))
 		if inst.Character then
 			local rp = inst.Character:WaitForChild('HumanoidRootPart')
 			local hum = inst.Character:WaitForChild('Humanoid')
