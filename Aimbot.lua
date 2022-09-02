@@ -1,4 +1,4 @@
-print('ASD')
+print(':<>')
 --// Delcaring
 getgenv = getgenv
 Drawing = Drawing
@@ -171,10 +171,9 @@ return function(lib,window)
 	local tab = window:MakeTab({
 		Name = 'Aimbot'
 	})
-	print(Variables.AimbotBind)
 	tab:AddBind({
 		Name = 'Aimbot keybind',
-		Default = Variables.AimbotBind,
+		Default = EB2SLib.S2E(Variables.AimbotBind),
 		DoubleSided = true,
 		Callback = function(key,setting,inputo)
 			print(key)
