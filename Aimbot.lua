@@ -94,6 +94,8 @@ function GetClosestPlayer()
 										if ScreenPoint.Z < MaximumDistance then
 											Target = v
 										end
+									else
+										print('Target = '..v.Name..'\tAnd not inside...')
 									end
 								end
 							end
@@ -120,7 +122,9 @@ function GetClosestPlayer()
 		end
 	end
 	
-	print(Target.Name..' Is in sight!')
+	if Target then
+		print(Target.Name..' Is in sight!')
+	end
 	return Target
 end
 
