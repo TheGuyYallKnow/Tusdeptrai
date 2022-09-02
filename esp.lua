@@ -565,6 +565,15 @@ task.spawn(function()
 					end
 				end
 			else
+				pcall(function()
+					if not v.Part then
+						print('no vpart?/')
+					end
+					if v.Part:IsDescendantOf(game:GetService('Workspace')) then
+						print('Not in workspace???')
+						print(v.Part.Parent.Name)
+					end
+				end)
 				if v.HealthBarlib then
 					for o,c in pairs(v.HealthBarlib) do
 						c:Remove()
