@@ -1196,8 +1196,8 @@ local con_1 = UIS.InputEnded:connect(function(input, processed)
 		Variables.held = false
 		Variables.mousepressed = false
 	end
-	if Variables.Keybinds[input.KeyCode] or Variables.Keybinds[input.UserInputType] then
-		for i,v in pairs(Variables.Keybinds[input.KeyCode] or Variables.Keybinds[input.UserInputType]) do
+	if Variables.Keybinds_[input.KeyCode] or Variables.Keybinds_[input.UserInputType] then
+		for i,v in pairs(Variables.Keybinds_[input.KeyCode] or Variables.Keybinds_[input.UserInputType]) do
 			local inputo = nil
 			if input.UserInputType == Enum.UserInputType.Keyboard then
 				inputo = input.KeyCode
