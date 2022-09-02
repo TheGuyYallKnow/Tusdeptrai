@@ -3,7 +3,7 @@ getgenv = getgenv
 Drawing = Drawing
 mousemoverel = mousemoverel
 --// Funcs
-local EB2SLib = getgenv().EB2S
+local EB2SLib = getgenv().EB2S()
 local Players = game:GetService('Players')
 local LocalPlayer = Players.LocalPlayer
 local UserInputService = game:GetService('UserInputService')
