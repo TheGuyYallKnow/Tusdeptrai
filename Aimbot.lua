@@ -148,14 +148,18 @@ game:GetService('RunService').RenderStepped:Connect(function()
 	FOVCircle.Thickness = Variables.CircleThickness
 
 	if IsAiming == true then
+		print('Isaming')
 		local part = GetClosestPlayer().Character[Variables.AimPart]
-		if Variables.AimbotCamera == true then
-			game:GetService('TweenService'):Create(Camera, TweenInfo.new(Variables.Sensitivity, Enum.EasingStyle.Sine, Enum.EasingDirection.Out), {CFrame = CFrame.new(Camera.CFrame.Position, part.Position)}):Play()
-		end
-		wait(Variables.Sensitivity)
-		local pos, screen = workspace.CurrentCamera:WorldToViewportPoint(part.Position)
-		if screen then
-			mousemoverel(pos.X,pos.Y)
+		if part then
+			print(part.Name)
+			if Variables.AimbotCamera == true then
+				game:GetService('TweenService'):Create(Camera, TweenInfo.new(Variables.Sensitivity, Enum.EasingStyle.Sine, Enum.EasingDirection.Out), {CFrame = CFrame.new(Camera.CFrame.Position, part.Position)}):Play()
+			end
+			wait(Variables.Sensitivity)
+			local pos, screen = workspace.CurrentCamera:WorldToViewportPoint(part.Position)
+			if screen then
+				mousemoverel(pos.X,pos.Y)
+			end
 		end
 	end
 end)
