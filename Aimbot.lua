@@ -174,14 +174,15 @@ return function(lib,window)
 		Name = 'Aimbot keybind',
 		Default = Variables.AimbotBind,
 		Callback = function(key,setting,inputo)
-			if key then
-				if setting and setting == true then
-					Variables.AimbotBind = EB2SLib.E2S(key)
-					print(Variables.AimbotBind)
-				else
-					IsAiming = inputo or false
-					print('Isaming: '..IsAiming)
-				end
+			print(key)
+			print(setting)
+			print(inputo)
+			if setting and setting == true then
+				Variables.AimbotBind = EB2SLib.E2S(key)
+				print(Variables.AimbotBind)
+			else
+				IsAiming = inputo or false
+				print('Isaming: '..IsAiming)
 			end
 		end,
 	})
