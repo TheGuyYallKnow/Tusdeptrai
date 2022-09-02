@@ -1218,8 +1218,7 @@ local con_1 = UIS.InputEnded:connect(function(input, processed)
 			else
 				inputo = input.UserInputType
 			end
-			print('Fired end')
-			v('inputo',false,'bullshit')
+			v(inputo,false,false)
 		end
 	end
 end)
@@ -1236,8 +1235,7 @@ local con_2 = UIS.InputBegan:Connect(function(input,processed)
 				else
 					inputo = input.UserInputType
 				end
-				print('Fired')
-				v('inputo',false,true)
+				v(inputo,false,true)
 			end
 		end
 	end
