@@ -119,6 +119,8 @@ function GetClosestPlayer()
 			end
 		end
 	end
+	
+	print(Target.Name..' Is in sight!')
 	return Target
 end
 
@@ -150,9 +152,9 @@ game:GetService('RunService').RenderStepped:Connect(function()
 	FOVCircle.Thickness = Variables.CircleThickness
 
 	if IsAiming == true then
-		print('Isaming')
-		local part = GetClosestPlayer().Character[Variables.AimPart]
-		if part then
+		local target = GetClosestPlayer()
+		if target and target.Character then
+			local part = target.Character[Variables.AimPart]
 			print(part.Name)
 			if Variables.AimbotCamera == true then
 				game:GetService('TweenService'):Create(Camera, TweenInfo.new(Variables.Sensitivity, Enum.EasingStyle.Sine, Enum.EasingDirection.Out), {CFrame = CFrame.new(Camera.CFrame.Position, part.Position)}):Play()
@@ -175,9 +177,6 @@ return function(lib,window)
 		Default = EB2SLib.S2E(Variables.AimbotBind),
 		DoubleSided = true,
 		Callback = function(key,setting,inputo)
-			print(key)
-			print(setting)
-			print(inputo)
 			if setting and setting == true then
 				Variables.AimbotBind = EB2SLib.E2S(key)
 			else
