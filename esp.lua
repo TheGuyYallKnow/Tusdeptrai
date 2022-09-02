@@ -151,14 +151,13 @@ function getChar(inst)
 	local conn
 	function get(c)
 		if inst.Character then
-			print(c.Name..' Has Character')
 			local rp = inst.Character:WaitForChild('HumanoidRootPart')
 			local hum = inst.Character:WaitForChild('Humanoid')
 			local rgb = Variables.ESP_PlayerColor
 			local upperlayer = {
 				{
 					Text_front = '[',
-					TrackInst = inst.Character,
+					TrackInst = c,
 					TrackValue = 'Name',
 					Text_end = ']',
 					Layer = 1,
@@ -168,7 +167,7 @@ function getChar(inst)
 				},
 				{
 					Text_front = '[',
-					TrackInst = inst.Character:FindFirstChild('HumanoidRootPart'),
+					TrackInst = rp,
 					TrackDistance = true,
 					Text_end = ']',
 					Flag = 'ESP_ShowDistance',
@@ -183,7 +182,7 @@ function getChar(inst)
 				},
 				{
 					Text_front = '[',
-					TrackInst = inst.Character:FindFirstChildOfClass('Humanoid'),
+					TrackInst = hum,
 					TrackValue = 'Health',
 					Layer = 2,
 					Flag = 'ESP_ShowHealth',
@@ -191,7 +190,7 @@ function getChar(inst)
 				},
 				{
 					Text_front = '/',
-					TrackInst = inst.Character:FindFirstChildOfClass('Humanoid'),
+					TrackInst = hum,
 					TrackValue = 'MaxHealth',
 					Text_end = ']',
 					Layer = 2,
@@ -201,8 +200,8 @@ function getChar(inst)
 				{
 					Text_front = '[',
 					Text_end = ']',
-					TrackInst = inst.Character:FindFirstChildOfClass('Humanoid'),
-					TrackInst_2 = inst.Character:FindFirstChildOfClass('Humanoid'),
+					TrackInst = hum,
+					TrackInst_2 = hum,
 					TrackValue = 'Health',
 					TrackValue_2 = 'MaxHealth',
 					Layer = 2,
@@ -224,12 +223,8 @@ function getChar(inst)
 				HealthBar = 'ESP_ShowHealthBar',
 				BoxSize = Vector3.new(3.5,5,2),
 			}
-			AddESP(inst.Character:FindFirstChild('HumanoidRootPart'), Color3.fromRGB(rgb.R,rgb.G,rgb.B), upperlayer, 'ESP_Player')
-			AddESP(inst.Character:FindFirstChild('HumanoidRootPart'), Color3.fromRGB(rgb.R,rgb.G,rgb.B), args, 'ESP_Player',Features)
-			
-			print('Added: '..inst.Name)
-		else
-			print(inst.Name..' Has no character?')
+			AddESP(rp, Color3.fromRGB(rgb.R,rgb.G,rgb.B), upperlayer, 'ESP_Player')
+			AddESP(rp, Color3.fromRGB(rgb.R,rgb.G,rgb.B), args, 'ESP_Player',Features)
 		end
 	end
 	
