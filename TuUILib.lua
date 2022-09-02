@@ -1,4 +1,4 @@
-print('Vippro')
+print('alraight')
 --// Declaring
 getgenv,syn = getgenv,syn
 
@@ -677,6 +677,12 @@ modules.side.AddBind = function(args)
 			Callback(Default,true)
 			wait()
 			table.insert(Variables.Keybinds[Default],Callback_)
+			if DoubleSided == true then
+				if not Variables.Keybinds_[Default] then
+					Variables.Keybinds_[Default] = {}
+				end
+				table.insert(Variables.Keybinds_[Default],Callback_)
+			end
 		end
 		
 		TextButton.MouseButton1Down:Connect(function()
@@ -1205,8 +1211,8 @@ local con_1 = UIS.InputEnded:connect(function(input, processed)
 		Variables.held = false
 		Variables.mousepressed = false
 	end
-	print(game:GetService('HttpService'):JSONEncode(Variables.Keybinds_))
 	if Variables.Keybinds_[input.KeyCode] or Variables.Keybinds_[input.UserInputType] then
+		print('Has: '..#(Variables.Keybinds_[input.KeyCode] or Variables.Keybinds_[input.UserInputType]))
 		for i,v in pairs(Variables.Keybinds_[input.KeyCode] or Variables.Keybinds_[input.UserInputType]) do
 			local inputo = nil
 			if input.UserInputType == Enum.UserInputType.Keyboard then
