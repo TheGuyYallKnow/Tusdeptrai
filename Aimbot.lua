@@ -1,5 +1,6 @@
 --// Delcaring
 getgenv = getgenv
+Drawing = Drawing
 --// Funcs
 local EB2SLib = getgenv().EB2S
 local Players = game:GetService('Players')
@@ -29,9 +30,7 @@ local DataStructure = {
 local Variables = {}
 local file = 'Tushub/Config.json'
 getgenv().tushub_saving(file,DataStructure,Variables)
-Variables = DataStructure --// For now
 
-Drawing = Drawing
 --// Init Aimbot!
 local Camera = game:GetService('Workspace').CurrentCamera
 local FOVCircle = Drawing.new("Circle")
@@ -124,6 +123,7 @@ return function(lib,window)
 		Default = Variables.AimbotBind,
 		Callback = function(key,setting)
 			if key and setting then
+				print(key)
 				Variables.AimbotBind = EB2SLib:E2S(key)
 			end
 		end,
