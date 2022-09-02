@@ -1,6 +1,7 @@
 --// Delcaring
 getgenv = getgenv
 Drawing = Drawing
+mousemoverel = mousemoverel
 --// Funcs
 local EB2SLib = getgenv().EB2S
 local Players = game:GetService('Players')
@@ -110,7 +111,13 @@ game:GetService('RunService').RenderStepped:Connect(function()
 	FOVCircle.Thickness = Variables.CircleThickness
 
 	if IsAiming == true then
-		game:GetService('TweenService'):Create(Camera, TweenInfo.new(Variables.Sensitivity, Enum.EasingStyle.Sine, Enum.EasingDirection.Out), {CFrame = CFrame.new(Camera.CFrame.Position, GetClosestPlayer().Character[Variables.AimPart].Position)}):Play()
+		local part = GetClosestPlayer().Character[Variables.AimPart]
+		game:GetService('TweenService'):Create(Camera, TweenInfo.new(Variables.Sensitivity, Enum.EasingStyle.Sine, Enum.EasingDirection.Out), {CFrame = CFrame.new(Camera.CFrame.Position, part.Position)}):Play()
+		wait(Variables.Sensitivity)
+		local pos, screen = workspace.CurrentCamera:WorldToViewportPoint(part.Position)
+		if screen then
+			mousemoverel(pos.X,pos.Y)
+		end
 	end
 end)
 
@@ -155,7 +162,7 @@ return function(lib,window)
 	tab:AddSlider({
 		Name = 'Radius (FOV)',
 		Min = 5,
-		Max = 120,
+		Max = 280,
 		Default = Variables.CircleRadius,
 		Increment = 1,
 		ValueName = 'px',
@@ -203,7 +210,7 @@ return function(lib,window)
 		end,
 	})
 	tab:AddBind({
-		Name = 'Circle filled keybind',
+		Name = 'Circle visible keybind',
 		Default = Variables.CircleFilledBind,
 		Callback = function(key,setting)
 			if not setting then
@@ -223,7 +230,7 @@ return function(lib,window)
 		end,
 	})
 	tab:AddBind({
-		Name = 'Circle filled keybind',
+		Name = 'Ignore teammate keybind',
 		Default = Variables.TeamBind,
 		Callback = function(key,setting)
 			if not setting then
