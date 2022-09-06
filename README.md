@@ -344,3 +344,24 @@ Note: Put it in priority 1!
 
 ### TrackDistance:bool
 ``` Special module to Check the distance between the 'TrackInst' and self. ```
+
+## Global Arguments:
+### CustomHealthTrack
+```lua
+local sent = {}
+sent.CustomHealthTrack = {
+	HealthPath = 'char/Health',
+	HealthValue = 'Value',
+	
+	MaxHealthPath = 'char/Health',
+	MaxHealthValue = 'MaxValue',
+}
+```
+Path Guide: 'char' = .Character; '/' = Dir; 
+Ex: 'char/Health'
+
+## External Module Arguments:
+### ESP
+DATA (Table, no mt, with indexes)
+### GUI
+DATA (Table, no mt, with indexes)
