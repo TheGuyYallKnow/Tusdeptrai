@@ -367,3 +367,23 @@ DATA (Table, no mt, with indexes)
 DATA (Table, no mt, with indexes)
 ### ColorFlags
 DATA (Table, no mt, with indexes)
+```lua
+local ColorFlags = {
+	{
+		Name = 'LGBT Supporter',
+		R = 255,
+		G = 255,
+		B = 255,
+	},
+	{
+		Name = 'Pog',
+		R = 0,
+		G = 255,
+		B = 0
+	}
+}
+--[[
+Name: = <string> - Name of that flag
+R,G,B = <int> - Color in RGB only please, thanks
+]]
+```
