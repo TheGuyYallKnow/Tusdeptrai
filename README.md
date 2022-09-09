@@ -365,3 +365,5 @@ Ex: 'char/Health'
 DATA (Table, no mt, with indexes)
 ### GUI
 DATA (Table, no mt, with indexes)
+### ColorFlags
+DATA (Table, no mt, with indexes)
