@@ -362,9 +362,45 @@ Ex: 'char/Health'
 
 ## External Module Arguments:
 ### ESP
-DATA (Table, no mt, with indexes)
+DATA (Table, no mt, with indexes), Pretty much the same args as above
+```lua
+local Gave = {
+	{
+		Layer = 3,
+		Priority = 1,
+		Text_front = "[BP: ",
+		Text_end = "]",
+		TrackInst = 'char/Config/BattlePower',
+		TrackValue = 'Value',
+		Flag = 'BP_XO2',
+		ColorFlag = 'ESP_PlayerColor',
+	},
+	{},
+	{},
+}
+```
 ### GUI
-DATA (Table, no mt, with indexes)
+DATA (Table, no mt, with indexes), Same as 'Bind' (only 'Bind' and 'Toggle' for now)
+```lua
+local Gave = {
+	{
+		Type = 'Toggle',
+		Flag = 'BP_XO2',
+		Save = 'ESP_ShowBP_XO2',
+	}
+}
+```
+CATEGORIES (Table)
+```lua
+local Categories = {
+	Player = {},
+	Team = {},
+	Player_Global = {},
+	Team_Global = {},
+	Misc = {}, --// Thinking of Areas esp or npcs, going to make sections inside o.o
+}
+```
+See the priority in the script ;3
 ### ColorFlags
 DATA (Table, no mt, with indexes)
 ```lua
