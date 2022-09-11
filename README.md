@@ -387,6 +387,7 @@ local Gave = {
 		Type = 'Toggle',
 		Flag = 'BP_XO2',
 		Save = 'ESP_ShowBP_XO2',
+		NoSave = true, -- Default will be false.
 	}
 }
 ```
