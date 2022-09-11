@@ -380,7 +380,7 @@ local Gave = {
 }
 ```
 ### GUI
-DATA (Table, no mt, with indexes), Same as 'Bind' (only 'Bind' and 'Toggle' for now)
+Args (Table, no mt, with indexes), Same as 'Bind' (only 'Bind' and 'Toggle' for now)
 ```lua
 local Gave = {
 	{
@@ -391,7 +391,19 @@ local Gave = {
 	}
 }
 ```
-CATEGORIES (Table)
+Category (Table)
+```lua
+local GUI = {
+	Player = {
+		Gave, -- Above there ;3
+		{
+			-- do shit here
+		},
+		{},
+	}
+}
+```
+CATEGORIES LIST
 ```lua
 local Categories = {
 	Player = {},
