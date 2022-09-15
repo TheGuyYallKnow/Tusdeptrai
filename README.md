@@ -408,15 +408,18 @@ CATEGORIES LIST
 local miscto = {
 	{
 		Section = 'Areas',
-		Data = {}, --// Same with those above
+		{}, --// Init Buttons Here
+		Data = {}, -- Important, For Data and Flag Function
 	},
 	{
 		Section = 'NPCs',
-		Data = {},
+		{}, --// Init Buttons Here
+		Data = {}, -- Important, For Data and Flag Function
 	},
 	{
 		Section = 'Hostiles',
-		Data = {},
+		{}, --// Init Buttons Here
+		Data = {}, -- Important, For Data and Flag Function
 	}
 }
 local Categories = {
@@ -428,22 +431,6 @@ local Categories = {
 }
 ```
 See the priority in the script ;3
-For Data:
-```lua
-local Data = {
-	ParentFolder=
-}
-```
-## Data Stuffo
-### ChildType:str
-A Child of the ParentFolder Feature, can be 'Model' (gonna use :IsA(x))
-Nil will get everything - Default by nil
-### ChildName:str
-A Child of the ParentFolder Feature, will execute Callback if the name is correct, 100% matched
-### ParentFolder:path
-Add connections to that dir (cadded, cremoved) and execute the Callback function
-### Callback:func
-Just Function o,o
 
 ### ColorFlags
 DATA (Table, no mt, with indexes)
@@ -467,3 +454,39 @@ Name: = <string> - Name of that flag
 R,G,B = <int> - Color in RGB only please, thanks
 ]]
 ```
+
+## Data of misc descendants
+```lua
+local Data = {
+	ParentFolder = 'game.WorkSpace',
+	ChildType = 'Model',
+	ChildHasHum = true,
+}
+```
+For Manually (Areas and Locations,...) -- Returning GUID of that (NAMES AND GUIDS ARE UNIQUE)
+### Tags:table
+```lua
+local Tags = {
+	['Royal Woods'] = Vector3.new(100,100,100),
+	['All Dark'] = Vector3.new(-100,-100,-100),
+}
+--// After Execution
+local ids = getgenv().tushub_espguids
+--// We Can Manage it with these methods
+-- Editting
+getgenv().tushub_espedit(ids['All Dark'], Vector3.new(100,100,100)) -- Function
+-- Removing
+getgenv().tushub_espremove(ids['Royal Woods'])
+```
+
+For Automation (Hostiles and Npcs,...)
+### ChildType:str
+A Child of the ParentFolder Feature, can be 'Model' (gonna use :IsA(x))
+Nil will get everything - Default by nil
+### ChildName:str
+A Child of the ParentFolder Feature, will execute ESPs if the name is correct, 100% matched
+### ChildHasHum:bool
+Check if the child has humanoid or not
+### ParentFolder:path
+Add connections to that dir (cadded), will execute ESPs--// Optimize this for 1 connection,... and disconnections
+
