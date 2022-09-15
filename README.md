@@ -405,15 +405,46 @@ local GUI = {
 ```
 CATEGORIES LIST
 ```lua
+local miscto = {
+	{
+		Section = 'Areas',
+		Data = {}, --// Same with those above
+	},
+	{
+		Section = 'NPCs',
+		Data = {},
+	},
+	{
+		Section = 'Hostiles',
+		Data = {},
+	}
+}
 local Categories = {
 	Player = {},
 	Team = {},
 	Player_Global = {},
 	Team_Global = {},
-	Misc = {}, --// Thinking of Areas esp or npcs, going to make sections inside o.o
+	Misc = miscto, --// Thinking of Areas esp or npcs, going to make sections inside o.o
 }
 ```
 See the priority in the script ;3
+For Data:
+```lua
+local Data = {
+	ParentFolder=
+}
+```
+## Data Stuffo
+### ChildType:str
+A Child of the ParentFolder Feature, can be 'Model' (gonna use :IsA(x))
+Nil will get everything - Default by nil
+### ChildName:str
+A Child of the ParentFolder Feature, will execute Callback if the name is correct, 100% matched
+### ParentFolder:path
+Add connections to that dir (cadded, cremoved) and execute the Callback function
+### Callback:func
+Just Function o,o
+
 ### ColorFlags
 DATA (Table, no mt, with indexes)
 ```lua
