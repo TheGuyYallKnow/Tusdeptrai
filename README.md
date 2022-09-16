@@ -474,7 +474,7 @@ local Tags = {
 local ids = getgenv().tushub_espguids
 --// We Can Manage it with these methods
 -- Editting
-getgenv().tushub_espedit(ids['All Dark'], Vector3.new(100,100,100)) -- Function
+getgenv().tushub_espedit(ids['All Dark'], Vector3.new(100,100,100), 'PlayerColor') -- 3rd one is colorflag
 -- Removing
 getgenv().tushub_espremove(ids['Royal Woods'])
 ```
@@ -489,4 +489,5 @@ A Child of the ParentFolder Feature, will execute ESPs if the name is correct, 1
 Check if the child has humanoid or not
 ### ParentFolder:path
 Add connections to that dir (cadded), will execute ESPs--// Optimize this for 1 connection,... and disconnections
-
+### ColorFlag:str
+Determined the color of the esp
