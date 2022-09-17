@@ -467,8 +467,16 @@ For Manually (Areas and Locations,...) -- Returning GUID of that (NAMES AND GUID
 ### Tags:table
 ```lua
 local Tags = {
-	['Royal Woods'] = Vector3.new(100,100,100),
-	['All Dark'] = Vector3.new(-100,-100,-100),
+	{
+		Name = 'Royal Woods',
+		Pos = Vector3.new(100,100,100),
+		Flag = 'Royal Woods Esp'
+	},
+	{
+		Name = 'All Dark',
+		Pos = Vector3.new(-100,-100,-100),
+		Flag = 'All Dark Esp'
+	}
 }
 --// After Execution
 local ids = getgenv().tushub_espguids
