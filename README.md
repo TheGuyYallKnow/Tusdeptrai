@@ -488,14 +488,33 @@ getgenv().tushub_espremove(ids['Royal Woods'])
 ```
 
 For Automation (Hostiles and Npcs,...)
+
 ### ChildType:str
 A Child of the ParentFolder Feature, can be 'Model' (gonna use :IsA(x))
 Nil will get everything - Default by nil
+### GChildType:str
+Descendant of the child, can be 'Model' (gonna use :FindFirstChildOfClass(x))
+Nil will get everything - Default by nil
+
 ### ChildName:str
 A Child of the ParentFolder Feature, will execute ESPs if the name is correct, 100% matched
+Nil will get everything - Default by nil
+### GChildName:str
+Descendant of the child, will execute ESPs if the name is correct, 100% matched
+Nil will get everything - Default by nil
+
 ### ChildHasHum:bool
 Check if the child has humanoid or not
 ### ParentFolder:path
 Add connections to that dir (cadded), will execute ESPs--// Optimize this for 1 connection,... and disconnections
+
+### TargetName:str
+Get the main part, where esp maintains
+
 ### ColorFlag:str
 Determined the color of the esp
+### Flag:str
+Trigger
+
+### Args:table
+Same as ESP DATA.
