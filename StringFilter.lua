@@ -151,6 +151,12 @@ C1 = UIS.InputBegan:Connect(function(Input,typin)
 		elseif Input.KeyCode == Enum.KeyCode.Z then
 			_G.spidercloakboost = not _G.spidercloakboost
 			notification('Spidercloak mode: '..tostring(_G.spidercloakboost))
+			if not Character:FindFirstChild('Boosts'):FindFirstChild('ClimbBoost') then
+				local cb = Instance.new('NumberValue')
+				cb.Name = 'ClimbBoost'
+				cb.Value = 0.15
+				cb.Parent = Character:FindFirstChild('Boosts')
+			end
 			if _G.spidercloakboost == true then
 				oldClimboost = Character:FindFirstChild('Boosts'):FindFirstChild('ClimbBoost').Value or 0.15
 				Character:FindFirstChild('Boosts'):FindFirstChild('ClimbBoost').Value = 0.65
