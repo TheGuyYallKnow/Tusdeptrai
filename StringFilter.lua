@@ -71,6 +71,7 @@ C1 = UIS.InputBegan:Connect(function(Input,typin)
 	if typin then return end
 	if Input.UserInputType == Enum.UserInputType.Keyboard then
 		if Input.KeyCode == Enum.KeyCode.C then
+			--[[
 			Nav.Flying = not Nav.Flying
 			if Nav.Flying then
 				local T = char.HumanoidRootPart
@@ -125,6 +126,7 @@ C1 = UIS.InputBegan:Connect(function(Input,typin)
 					pcall(function() workspace.CurrentCamera.CameraType = Enum.CameraType.Custom end)
 				end)
 			end
+			]]
 		elseif Input.KeyCode == Enum.KeyCode.X then
 			--[[
 			Nocliping = not Nocliping
