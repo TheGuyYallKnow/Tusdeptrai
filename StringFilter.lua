@@ -227,8 +227,6 @@ end
 local mouse = plr:GetMouse()
 local way = plr.PlayerGui:FindFirstChild(guiname).MainFrame.ScrollingFrame
 
-local a = Instance.new('')
-
 FrameAdded = function(frame)
 	frame.MouseEnter:connect(function()
 		wait()
