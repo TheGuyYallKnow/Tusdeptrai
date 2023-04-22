@@ -213,6 +213,8 @@ local function removespaces(str)
 	return str:gsub(" ","")
 end
 local function spectate()
+	wait()
+	if frameto.TextTransparency == 0 then return end
 	game:GetService("Workspace").Camera.CameraType = "Custom"
 	if not Players:FindFirstChild(target) then
 		workspace.CurrentCamera.CFrame = Player.Character.HumanoidRootPart.CFrame*CFrame.new(Vector3.new(0,4,10))
@@ -224,6 +226,8 @@ local function spectate()
 end
 local mouse = plr:GetMouse()
 local way = plr.PlayerGui:FindFirstChild(guiname).MainFrame.ScrollingFrame
+
+local a = Instance.new('')
 
 FrameAdded = function(frame)
 	frame.MouseEnter:connect(function()
@@ -244,7 +248,7 @@ way.ChildAdded:Connect(function(v)
 end)
 UIS.InputBegan:Connect(function(input,typin)
 	if typin then return end
-	if input.UserInputType == Enum.UserInputType.MouseButton1 and target ~= nil and frameto.Text == target then
+	if input.UserInputType == Enum.UserInputType.MouseButton1 and target ~= nil then
 		wait()
 		spectate()
 	end
@@ -566,7 +570,7 @@ local newnamecall = newcclosure(function(self,...)
 			return 1
 		end
 		local castType = remoteNames[tostring(self)]
-		if _G.antibackfire == true and  then
+		if _G.antibackfire == true and castType then
 			local char = player.Character;
 			if not char then return namecall(self, ...) end;
 			local tool = char:FindFirstChildOfClass'Tool';
