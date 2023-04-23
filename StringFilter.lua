@@ -207,7 +207,7 @@ C2 = UIS.InputEnded:Connect(function(Input)
 end)
 
 local Players = game:GetService("Players")
-local target,frameto = nil,nil
+local target,frameto,oldframeto,oldtextcolor = nil,nil,nil,nil
 local guiname = "LeaderboardGui"
 local function removespaces(str)
 	return str:gsub(" ","")
@@ -215,6 +215,10 @@ end
 local function spectate()
 	wait()
 	if frameto.TextTransparency == 0 then return end
+	if frameto == oldframeto then 
+		target = Player.Name
+	end
+	if oldframeto and oldtextcolor then oldframeto.TextColor3 = oldtextcolor end
 	game:GetService("Workspace").Camera.CameraType = "Custom"
 	if not Players:FindFirstChild(target) then
 		workspace.CurrentCamera.CFrame = Player.Character.HumanoidRootPart.CFrame*CFrame.new(Vector3.new(0,4,10))
@@ -223,6 +227,15 @@ local function spectate()
 	end
 	workspace.CurrentCamera.CFrame = Players:FindFirstChild(target).Character.HumanoidRootPart.CFrame*CFrame.new(Vector3.new(0,4,10))
 	workspace.CurrentCamera.CameraSubject = Players:FindFirstChild(target).Character.Humanoid
+	
+	if target ~= Player.Name then
+		oldframeto = frameto
+		oldtextcolor = frameto.TextColor3
+		frameto.TextColor3= Color3.fromRGB(255,0,0)
+	else
+		oldframeto = nil
+		oldtextcolor = nil
+	end
 end
 local mouse = plr:GetMouse()
 local way = plr.PlayerGui:FindFirstChild(guiname).MainFrame.ScrollingFrame
