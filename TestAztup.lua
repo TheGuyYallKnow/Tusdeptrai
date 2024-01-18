@@ -1,4 +1,5 @@
 scriptVersion = 12312
+SX_VM_CNONE = function() end
 
 function Signal()
 	SX_VM_CNONE();
