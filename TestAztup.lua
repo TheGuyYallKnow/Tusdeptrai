@@ -1482,85 +1482,78 @@ do
 	end)
 end;
 
-do -- // Auto Pickup
-	local trinkets = {};
-	local ingredients = {};
+--do -- // Auto Pickup
+--	local trinkets = {};
+--	local ingredients = {};
 
-	local function onChildAdded(obj)
-		local isIngredient = obj.Parent == ingredientsFolder;
-		local isTrinket = not isIngredient;
-		local t = isIngredient and ingredients or trinkets;
+--	local function onChildAdded(obj)
+--		local isIngredient = obj.Parent == ingredientsFolder;
+--		local isTrinket = not isIngredient;
+--		local t = isIngredient and ingredients or trinkets;
 
-		if(isIngredient or (obj:FindFirstChild('Part') and obj.Part.Size == Vector3.new(1.5, 1.5, 1.5))) then
-			table.insert(t, obj);
+--		if(isIngredient or (obj:FindFirstChild('Part') and obj.Part.Size == Vector3.new(1.5, 1.5, 1.5))) then
+--			table.insert(t, obj);
 
-			local propertyWatched = isIngredient and 'Transparency' or 'Parent';
-			local connection;
-			connection = obj:GetPropertyChangedSignal(propertyWatched):Connect(function()
-				task.wait();
-				if(obj.Parent and isIngredient or not connection) then return end;
+--			local propertyWatched = isIngredient and 'Transparency' or 'Parent';
+--			local connection;
+--			connection = obj:GetPropertyChangedSignal(propertyWatched):Connect(function()
+--				task.wait();
+--				if(obj.Parent and isIngredient or not connection) then return end;
 
-				if(obj:IsDescendantOf(game)) then return; end
+--				if(obj:IsDescendantOf(game)) then return; end
 
-				connection:Disconnect();
-				connection = nil;
+--				connection:Disconnect();
+--				connection = nil;
 
-				table.remove(t, table.find(t, obj));
-			end);
-		end;
-	end;
+--				table.remove(t, table.find(t, obj));
+--			end);
+--		end;
+--	end;
 
-	library.OnLoad:Connect(function()
-		if (library.flags.collectorAutoFarm) then
-			warn('[Auto Pickup] Not enabling cuz collector bot is on');
-			return;
-		end;
+--	if(ingredientsFolder) then
+--		for _, obj in next, ingredientsFolder:GetChildren() do
+--			task.spawn(onChildAdded, obj);
+--		end;
 
-		if(ingredientsFolder) then
-			for _, obj in next, ingredientsFolder:GetChildren() do
-				task.spawn(onChildAdded, obj);
-			end;
+--		ingredientsFolder.ChildAdded:Connect(onChildAdded);
+--	end;
 
-			ingredientsFolder.ChildAdded:Connect(onChildAdded);
-		end;
+--	for _, obj in next, workspace:GetChildren() do
+--		task.spawn(onChildAdded, obj);
+--	end;
 
-		for _, obj in next, workspace:GetChildren() do
-			task.spawn(onChildAdded, obj);
-		end;
+--	workspace.ChildAdded:Connect(onChildAdded);
 
-		workspace.ChildAdded:Connect(onChildAdded);
-	end);
+--	local function makeAutoPickup(maidName, t)
+--		return function(toggle)
+--			if(not toggle) then
+--				maid[maidName] = nil;
+--				return;
+--			end;
 
-	local function makeAutoPickup(maidName, t)
-		return function(toggle)
-			if(not toggle) then
-				maid[maidName] = nil;
-				return;
-			end;
+--			local lastUpdate = 0;
 
-			local lastUpdate = 0;
+--			maid[maidName] = RunService.RenderStepped:Connect(function()
+--				local rootPart = LocalPlayer.Character and LocalPlayer.Character.PrimaryPart;
+--				if(not rootPart or tick() - lastUpdate < 0.2) then return end;
 
-			maid[maidName] = RunService.RenderStepped:Connect(function()
-				local rootPart = LocalPlayer.Character and LocalPlayer.Character.PrimaryPart;
-				if(not rootPart or tick() - lastUpdate < 0.2) then return end;
+--				lastUpdate = tick();
 
-				lastUpdate = tick();
+--				for i,v in next, t do
+--					if((rootPart.Position - v.Position).Magnitude <= 25) then
+--						local clickDetector = v:FindFirstChildWhichIsA('ClickDetector', true);
+--						if(clickDetector and clickDetector.MaxActivationDistance <= 100) then
+--							fireclickdetector(clickDetector, 1);
+--						end;
+--					end;
+--				end;
+--			end);
+--		end;
+--	end;
 
-				for i,v in next, t do
-					if((rootPart.Position - v.Position).Magnitude <= 25) then
-						local clickDetector = v:FindFirstChildWhichIsA('ClickDetector', true);
-						if(clickDetector and clickDetector.MaxActivationDistance <= 100) then
-							fireclickdetector(clickDetector, 1);
-						end;
-					end;
-				end;
-			end);
-		end;
-	end;
-
-	autoPickup = makeAutoPickup('autoPickup', trinkets);
-	autoPickupIngredients = makeAutoPickup('autoPickupIngredients', ingredients);
-end;
+--	autoPickup = makeAutoPickup('autoPickup', trinkets);
+--	autoPickupIngredients = makeAutoPickup('autoPickupIngredients', ingredients);
+--end;
 
 function autoSmelt(toggle)
 	if(not toggle) then return end;
