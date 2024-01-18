@@ -1152,79 +1152,79 @@ do -- // Player Classes
 	};
 end;
 
-do -- // AA Gun Counter
-	local aaGunCounterGUI = library:Create('ScreenGui', {
-		Enabled = false;
-	});
+--do -- // AA Gun Counter
+--	local aaGunCounterGUI = library:Create('ScreenGui', {
+--		Enabled = false;
+--	});
 
-	if(gethui) then
-		aaGunCounterGUI.Parent = gethui();
-	else
-		syn.protect_gui(aaGunCounterGUI);
-		aaGunCounterGUI.Parent = CoreGui;
-	end;
+--	if(gethui) then
+--		aaGunCounterGUI.Parent = gethui();
+--	else
+--		syn.protect_gui(aaGunCounterGUI);
+--		aaGunCounterGUI.Parent = CoreGui;
+--	end;
 
-	local aaGunCounterText = library:Create('TextLabel', {
-		Parent = aaGunCounterGUI,
-		RichText = true,
-		TextSize = 25,
-		Text = '',
-		BackgroundTransparency = 1,
-		Position = UDim2.new(0.5, 0, 0, 50),
-		AnchorPoint = Vector2.new(0.5, 0.5),
-		Size = UDim2.new(0, 200, 0, 50),
-		Font = Enum.Font.SourceSansSemibold,
-		TextColor3 = Color3.fromRGB(255, 255, 255)
-	});
+--	local aaGunCounterText = library:Create('TextLabel', {
+--		Parent = aaGunCounterGUI,
+--		RichText = true,
+--		TextSize = 25,
+--		Text = '',
+--		BackgroundTransparency = 1,
+--		Position = UDim2.new(0.5, 0, 0, 50),
+--		AnchorPoint = Vector2.new(0.5, 0.5),
+--		Size = UDim2.new(0, 200, 0, 50),
+--		Font = Enum.Font.SourceSansSemibold,
+--		TextColor3 = Color3.fromRGB(255, 255, 255)
+--	});
 
-	local params = RaycastParams.new();
-	params.FilterType = Enum.RaycastFilterType.Blacklist;
-	params.FilterDescendantsInstances = {workspace.Live, workspace:FindFirstChild('NPCs') or Instance.new('Folder'), workspace:FindFirstChild('AreaMarkers') or Instance.new('Folder')};
+--	local params = RaycastParams.new();
+--	params.FilterType = Enum.RaycastFilterType.Blacklist;
+--	params.FilterDescendantsInstances = {workspace.Live, workspace:FindFirstChild('NPCs') or Instance.new('Folder'), workspace:FindFirstChild('AreaMarkers') or Instance.new('Folder')};
 
-	local flying        = false;
-	local lastFly       = tick();
-	local onGroundAt    = tick();
-	local flyStartedAt  = lastFly;
+--	local flying        = false;
+--	local lastFly       = tick();
+--	local onGroundAt    = tick();
+--	local flyStartedAt  = lastFly;
 
-	function aaGunCounter(toggle)
-		aaGunCounterGUI.Enabled = toggle;
+--	function aaGunCounter(toggle)
+--		aaGunCounterGUI.Enabled = toggle;
 
-		if(not toggle) then
-			maid.aaGunCounter = nil;
-			return;
-		end;
+--		if(not toggle) then
+--			maid.aaGunCounter = nil;
+--			return;
+--		end;
 
-		maid.aaGunCounter = RunService.RenderStepped:Connect(function()
-			local rootPart = LocalPlayer.Character and LocalPlayer.Character:FindFirstChild('HumanoidRootPart');
-			if(not rootPart) then return end;
+--		maid.aaGunCounter = RunService.RenderStepped:Connect(function()
+--			local rootPart = LocalPlayer.Character and LocalPlayer.Character:FindFirstChild('HumanoidRootPart');
+--			if(not rootPart) then return end;
 
-			local isOnGround = workspace:Raycast(rootPart.Position, Vector3.new(0, -10, 0), params)
-			if(not isOnGround) then
-				if(not flying) then
-					flyStartedAt = tick();
-				end;
-				flying = true;
-				lastFly = tick();
-			else
-				if(flying) then
-					onGroundAt = tick();
-				end;
-				flying = false;
-			end;
+--			local isOnGround = workspace:Raycast(rootPart.Position, Vector3.new(0, -10, 0), params)
+--			if(not isOnGround) then
+--				if(not flying) then
+--					flyStartedAt = tick();
+--				end;
+--				flying = true;
+--				lastFly = tick();
+--			else
+--				if(flying) then
+--					onGroundAt = tick();
+--				end;
+--				flying = false;
+--			end;
 
-			local timeSinceLastFly = tick() - flyStartedAt;
-			local timeOnGround = tick() - onGroundAt;
-			local shouldFly = (timeOnGround >= 6 and (flying and timeSinceLastFly < 5 or not flying and true));
+--			local timeSinceLastFly = tick() - flyStartedAt;
+--			local timeOnGround = tick() - onGroundAt;
+--			local shouldFly = (timeOnGround >= 6 and (flying and timeSinceLastFly < 5 or not flying and true));
 
-			local red, green = 'rgb(255, 0, 0)', 'rgb(0, 255, 0)'
-			local onGroundText = string.format('<font color="%s"> %s </font>', isOnGround and green or red, isOnGround and 'Yes' or 'No')
-			local timeOnGroundText = string.format('<font color="%s"> %.01f </font>', flying and red or green, flying and -timeSinceLastFly or timeOnGround);
-			local canFlyText = string.format('<font color="%s"> %s </font>', shouldFly and green or red, shouldFly and 'Yes' or 'No');
+--			local red, green = 'rgb(255, 0, 0)', 'rgb(0, 255, 0)'
+--			local onGroundText = string.format('<font color="%s"> %s </font>', isOnGround and green or red, isOnGround and 'Yes' or 'No')
+--			local timeOnGroundText = string.format('<font color="%s"> %.01f </font>', flying and red or green, flying and -timeSinceLastFly or timeOnGround);
+--			local canFlyText = string.format('<font color="%s"> %s </font>', shouldFly and green or red, shouldFly and 'Yes' or 'No');
 
-			aaGunCounterText.Text = string.format('On Ground: %s\nTime on ground: %s\nCan Fly (Recommended): %s', onGroundText, timeOnGroundText, canFlyText);
-		end);
-	end;
-end;
+--			aaGunCounterText.Text = string.format('On Ground: %s\nTime on ground: %s\nCan Fly (Recommended): %s', onGroundText, timeOnGroundText, canFlyText);
+--		end);
+--	end;
+--end;
 
 local function removeGroup(instance, list)
 	for _, listObject in next, list do
