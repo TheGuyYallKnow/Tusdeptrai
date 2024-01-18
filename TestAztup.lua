@@ -2370,14 +2370,14 @@ Tab_Self:AddToggle({
 	end    
 })
 
-fullBright(true)
-noFog(true)
+--fullBright(true)
+--noFog(true)
 local Tab_Lighting = Window:MakeTab({
 	Name = "Lighting",
 })
 Tab_Lighting:AddToggle({
 	Name = "Shrine bright like a diamond",
-	Default = true,
+	Default = false,
 	Callback = function(Value)
 		fullBright(Value)
 		getgenv().fullbright = Value
@@ -2385,7 +2385,7 @@ Tab_Lighting:AddToggle({
 })
 Tab_Lighting:AddToggle({
 	Name = "Notify Illu dog",
-	Default = true,
+	Default = false,
 	Callback = function(Value)
 		noFog(Value)
 		getgenv().noFog = Value
