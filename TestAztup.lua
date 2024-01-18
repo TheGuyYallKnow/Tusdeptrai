@@ -1,4 +1,4 @@
-local isGaia = false
+local isGaia = true
 local debugMode = false
 local isUserTrolled = false
 
@@ -6,7 +6,77 @@ local moderatorInGame = false;
 local sprinting = false;
 local playerGotManualKick = false;
 
+--// EB2S
+do
+	function EnumBind2String()
+		local modules = {}
+
+		local tab = {
+			MouseButton1 = 'LMB',
+			MouseButton2 = 'RMB',
+			MouseButton3 = 'MMB',
+		}
+
+		modules.E2S = function(en)
+			if en then
+				local give = string.split(tostring(en),'.')[3]
+				if tab[tostring(give)] then
+					give = tab[tostring(give)]
+				end
+				return give
+			else
+				return ''
+			end
+		end
+
+		modules.S2E = function(str)
+			if str ~= '' then
+				local get
+				for i,v in pairs(tab) do
+					if tostring(str) == tostring(v) then
+						get = tostring(i)
+					end
+				end
+				if not get then
+					if Enum.KeyCode[str] then
+						get = Enum.KeyCode[str]
+					end
+				else
+					get = Enum.UserInputType[tostring(get)]
+				end
+				if get then
+					return get
+				end
+			end
+			return nil
+		end
+		return modules
+	end
+	local func_ = newcclosure(EnumBind2String)
+	getgenv().EB2S = func_
+end
+--// String filter shit
+do 
+	local function split(str)
+		return string.split(tostring(str),'')
+	end
+	function filter (str, str2)
+		local get = split(str)
+		local get2 = split(str2)
+		local toreturn = true
+		for i = 1,#str do
+			if str[i] ~= str2[2] then
+				toreturn = false
+			end
+		end
+		return toreturn
+	end
+	local stringfilter = newcclosure(filter)
+	getgenv().stringfilter = stringfilter
+end
+
 local Maid = loadstring(game:HttpGet(("https://raw.githubusercontent.com/TheGuyYallKnow/Tusdeptrai/main/Maid.lua")))()
+local GUILIB = loadstring(game:HttpGet(("https://raw.githubusercontent.com/TheGuyYallKnow/Tusdeptrai/main/GUILIB.lua")))()
 local createBaseESP = function() end
 
 local CoreGui = game:GetService('CoreGui')
@@ -1258,6 +1328,24 @@ local function isKnocked()
 	end;
 end;
 
+local oldAmbient, oldBritghtness
+local LastConnection
+function fullBright(toggle)
+	if(not toggle) then
+		Lighting.Ambient, Lighting.Brightness = oldAmbient, oldBritghtness;
+		if LastConnection then LastConnection:Disconnect() LastConnection = nil end
+		return
+	end;
+
+	oldAmbient, oldBritghtness = Lighting.Ambient, Lighting.Brightness;
+	LastConnection = Lighting:GetPropertyChangedSignal('Ambient'):Connect(function()
+		Lighting.Ambient = Color3.fromRGB(255, 255, 255);
+		Lighting.Brightness = 1;
+	end);
+	Lighting.Ambient = Color3.fromRGB(255, 255, 255);
+end;
+
+
 function noClip(toggle)
 	if(not toggle) then return end;
 
@@ -2166,3 +2254,158 @@ UserInputService.InputBegan:Connect(function(input)
 		spectatePlayer(LocalPlayer.Name);
 	end;
 end);
+
+local Window = GUILIB:MakeWindow({Name = "RUGE LAIN AGING"})
+--// Cheats
+local Tab_Self = Window:MakeTab({
+	Name = "Self",
+})
+Tab_Self:AddBind({
+	Name = "Im a bird",
+	Default = Enum.KeyCode.Z,
+	DoubleSided = true,
+	Callback = function(Key,Setting,Pressed)
+		fly(Pressed)
+		getgenv().fly = Pressed
+	end    
+})
+Tab_Self:AddSlider({
+	Name = 'Birdy speed',
+	Min = 16,
+	Max = 250,
+	Default = 200,
+	Increment = 1,
+	ValueName = 'ft/s',
+	Callback = function(Val)
+		getgenv().flySpeed = Val
+	end,
+})
+Tab_Self:AddBind({
+	Name = "Im speed!",
+	Default = Enum.KeyCode.X,
+	DoubleSided = true,
+	Callback = function(Key,Setting,Pressed)
+		speedHack(Pressed)
+		getgenv().speedHack = Pressed
+	end    
+})
+Tab_Self:AddSlider({
+	Name = 'Walk speed',
+	Min = 16,
+	Max = 250,
+	Default = 200,
+	Increment = 1,
+	ValueName = 'ft/s',
+	Callback = function(Val)
+		getgenv().speedhackSpeed = Val
+	end,
+})
+Tab_Self:AddSlider({
+	Name = 'Climb speed',
+	Min = 1,
+	Max = 10,
+	Default = 5,
+	Increment = 1,
+	ValueName = 'ft/s',
+	Callback = function(Val)
+		getgenv().climbSpeed = Val
+	end,
+})
+Tab_Self:AddBind({
+	Name = "Im a ghost ngl",
+	Default = Enum.KeyCode.C,
+	DoubleSided = true,
+	Callback = function(Key,Setting,Pressed)
+		noClip(Pressed)
+		getgenv().noClip = Pressed
+	end    
+})
+Tab_Self:AddToggle({
+	Name = "No fall damage",
+	Default = true,
+	Callback = function(Value)
+		getgenv().noFallDamage = Value
+	end    
+})
+Tab_Self:AddToggle({
+	Name = "No fall damage",
+	Default = true,
+	Callback = function(Value)
+		getgenv().noFallDamage = Value
+	end    
+})
+Tab_Self:AddToggle({
+	Name = "Lock Temperature",
+	Default = true,
+	Callback = function(Value)
+		getgenv().temperatureLock = Value
+	end    
+})
+Tab_Self:AddToggle({
+	Name = "No Injuries :D",
+	Default = false,
+	Callback = function(Value)
+		noInjuries(Value)
+	end    
+})
+Tab_Self:AddToggle({
+	Name = "Anti Fire",
+	Default = false,
+	Callback = function(Value)
+		antiFire(Value)
+	end    
+})
+Tab_Self:AddToggle({
+	Name = "Anti Hystericus",
+	Default = false,
+	Callback = function(Value)
+		antiHystericus(Value)
+	end    
+})
+Tab_Self:AddToggle({
+	Name = "Auto Bard",
+	Default = true,
+	Callback = function(Value)
+		getgenv().autoBard = Value
+	end    
+})
+
+fullBright(true)
+noFog(true)
+local Tab_Lighting = Window:MakeTab({
+	Name = "Lighting",
+})
+Tab_Lighting:AddToggle({
+	Name = "Shrine bright like a diamond",
+	Default = true,
+	Callback = function(Value)
+		fullBright(Value)
+		getgenv().fullbright = Value
+	end    
+})
+Tab_Lighting:AddToggle({
+	Name = "Notify Illu dog",
+	Default = true,
+	Callback = function(Value)
+		noFog(Value)
+		getgenv().noFog = Value
+	end    
+})
+
+local Tab_Notify = Window:MakeTab({
+	Name = "Notifiers",
+})
+Tab_Notify:AddToggle({
+	Name = "Notify Artifact",
+	Default = true,
+	Callback = function(Value)
+		getgenv().artifactNotifier = Value
+	end    
+})
+Tab_Notify:AddToggle({
+	Name = "Notify Illu dog",
+	Default = true,
+	Callback = function(Value)
+		getgenv().illusionistNotifier = Value
+	end    
+})
