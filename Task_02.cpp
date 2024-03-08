@@ -1,4 +1,36 @@
-float closestPerfectSquare(float value) {
+// Task 2
+// Kiem tra va dieu chinh gia tri EXP neu no vuot qua hoac duoi gioi han
+void ClampEXP(int &EXP)
+{
+    // std::clamp(EXP, 0, 600); // Perfect we got no clamp :>
+    if (EXP > 600) {
+        EXP = 600;
+    } else if (EXP < 0) {
+        EXP = 0;
+    }
+}
+
+// Kiem tra va dieu chinh gia tri HP neu no vuot qua hoac duoi gioi han
+void ClampHP(int &HP)
+{
+    if (HP > 666) {
+        HP = 666;
+    } else if (HP < 0) {
+        HP = 0;
+    }
+}
+
+// Kiem tra va dieu chinh gia tri M neu no vuot qua hoac duoi gioi han
+void ClampM(int &M)
+{
+    if (M > 3000) {
+        M = 3000;
+    } else if (M < 0) {
+        M = 0;
+    }
+}
+
+float closestSquare(float value) {
     float minValue = floor(sqrt(value));
     float maxValue = ceil(sqrt(value));
     float closestValue = abs(sqrt(value) - minValue) < abs(sqrt(value) - maxValue) ? minValue : maxValue;
@@ -11,106 +43,99 @@ float closestPerfectSquare(float value) {
     return closestValue * closestValue;
 }
 
+bool EvenChecker(float & CurrentMoney, int E) {
+    if (E%2 == 1) {return true;}
+    if (CurrentMoney < 0) {
+        return false;
+    }
+    return true;
+}
+
+bool OddChecker(float & CurrentMoney, int E, float EstimatedMoney) {
+    if (E%2 == 0) {return true;}
+    if (CurrentMoney < EstimatedMoney) {
+        return false;
+    }
+    return true;
+}
+
+void Ceil(float & exp, float & hp, float & M){
+    hp = ceil(hp);
+    exp = ceil(exp);
+    M = ceil(M);
+}
+
+void Path_02(float & exp, float & hp, float & M,int E, float EstimatedM) {
+    if (hp < 200) {
+        hp *= 1.3;
+        M -= 150;
+    } else {
+        hp *= 1.1;
+        M -= 70;
+    }
+    Ceil(exp, hp, M);
+    if (EvenChecker(M,E) == false) {
+        return;
+    }
+    if (OddChecker(M,E,EstimatedM) == false) {
+        return;
+    }
+
+    if (exp < 400) {
+        M -= 200;
+    } else {
+        M -= 120;
+    }
+    exp *= 1.13;
+    Ceil(exp, hp, M);
+    if (EvenChecker(M,E) == false) {
+        return;
+    }
+    if (OddChecker(M,E,EstimatedM) == false) {
+        return;
+    }
+
+    if (exp < 300) {
+        M -= 100;
+    } else {
+        M -= 120;
+    }
+    exp *= 0.9;
+    Ceil(exp, hp, M);
+    if (EvenChecker(M,E) == false) {
+        return;
+    }
+    Ceil(exp,hp,M);
+    if (OddChecker(M,E,EstimatedM) == false) {
+        return;
+    } else {
+        if (E%2 == 1) {
+            return Path_02(exp, hp, M, E, EstimatedM);
+        }
+    }
+}
+
 int traceLuggage(int & HP1, int & EXP1, int & M1, int E2)
 {
-    // INITIAL, IDK WHAT UR GIVING
-    ClampEXP(EXP1);
-    ClampHP(HP1);
-    ClampM(M1);
-    
-    float PFS_Exp1 = closestPerfectSquare(EXP1);
-    float PseudoExp1_Road = static_cast<float>(EXP1);
-    float PseudoHP1_Road = static_cast<float>(HP1);
-    float PseudoM1_Road = static_cast<float>(M1);
-    cout << "Current HP Before: " << PseudoHP1_Road << endl;
+    float CS_Exp1 = closestSquare(EXP1);
+    float Exp1_Road = static_cast<float>(EXP1); // Chuyển từ int sang float để phòng mấy trường hợp đề cho phép tính ra số float...
+    float HP1_Road = static_cast<float>(HP1);
+    float M1_Road = static_cast<float>(M1);
 
     // Road_01:
-    float P1 = ((PseudoExp1_Road/PFS_Exp1) + 80)/123;
+    float P1 = ((Exp1_Road/CS_Exp1) + 80)/123;
     // HAHAHA
-    if (PseudoExp1_Road >= PFS_Exp1) {
+    if (Exp1_Road >= CS_Exp1) {
         P1 = 1;
     }
 
     // Road_02
-    struct Sherlock { // Bruh cpp so weid?
-        static void Adventure(float & exp, float & hp, float & M,int E, float EstimatedM)
-        {
-            if (hp < 200) {
-                hp *= 1.3;
-                M -= 150;
-            } else {
-                hp *= 1.1;
-                M -= 70;
-            }
-            Sherlock::Ceil(exp, hp, M);
-            cout << "Current HP: " << hp << endl;
-            if (Sherlock::MChecker_Even(M,E) == false) {
-                return;
-            }
-            if (Sherlock::MChecker_Odd(M,E,EstimatedM) == false) {
-                return;
-            }
-
-            if (exp < 400) {
-                M -= 200;
-            } else {
-                M -= 120;
-            }
-            exp *= 1.13;
-            Sherlock::Ceil(exp, hp, M);
-            if (Sherlock::MChecker_Even(M,E) == false) {
-                return;
-            }
-            if (Sherlock::MChecker_Odd(M,E,EstimatedM) == false) {
-                return;
-            }
-
-            if (exp < 300) {
-                M -= 100;
-            } else {
-                M -= 120;
-            }
-            exp *= 0.9;
-            Sherlock::Ceil(exp, hp, M);
-            if (Sherlock::MChecker_Even(M,E) == false) {
-                return;
-            }
-            Sherlock::Ceil(exp,hp,M);
-            if (Sherlock::MChecker_Odd(M,E,EstimatedM) == false) {
-                return;
-            } else {
-                if (E%2 == 1) {
-                    return Sherlock::Adventure(exp, hp, M, E, EstimatedM);
-                }
-            }
-        };
-        static bool MChecker_Even(float & CurrentMoney, int E) {
-            if (E%2 == 1) {return true;}
-            if (CurrentMoney < 0) {
-                return false;
-            }
-            return true;
-        }
-        static bool MChecker_Odd(float & CurrentMoney, int E, float EstimatedMoney) {
-            if (E%2 == 0) {return true;}
-            if (CurrentMoney < EstimatedMoney) {
-                return false;
-            }
-            return true;
-        }
-        static void Ceil(float & exp, float & hp, float & M){
-            hp = ceil(hp);
-            exp = ceil(exp);
-            M = ceil(M);
-        }
-    };
-    Sherlock::Adventure(PseudoExp1_Road, PseudoHP1_Road, PseudoM1_Road, E2, PseudoM1_Road/2); // Bro is yelding LOL
-    PseudoHP1_Road *= (1-0.17);
-    PseudoExp1_Road *= (1+0.17);
-    cout << "Current HP After finished: " << PseudoHP1_Road << endl;
-    Sherlock::Ceil(PseudoExp1_Road, PseudoHP1_Road, PseudoM1_Road);
-    float P2 = ((PseudoExp1_Road/PFS_Exp1) + 80)/123;
-    if (PseudoExp1_Road >= PFS_Exp1) {
+    Path_02(Exp1_Road, HP1_Road, M1_Road, E2, M1_Road/2); // Bro is yelding LOL
+    HP1_Road *= (1-0.17);
+    Exp1_Road *= (1+0.17);
+    Ceil(Exp1_Road, HP1_Road, M1_Road);
+    float P2 = ((Exp1_Road/CS_Exp1) + 80)/123;
+    if (Exp1_Road >= CS_Exp1) {
         P2 = 1;
     }
 
@@ -123,30 +148,25 @@ int traceLuggage(int & HP1, int & EXP1, int & M1, int E2)
         int sum = (E2 / 10) + (E2 % 10);
         P3InAShell = sum % 10;
     }
-    cout << "Got: " << E2 << ",Shell: " << P3InAShell << ",Found: " << P[P3InAShell] << " ";
     float P3 = P[P3InAShell];
 
     // Calculation
     if (P1 == 1 && P2 == 1 && P3 == 1) {
-        PseudoExp1_Road *= 0.75;
+        Exp1_Road *= 0.75;
     } else {
         float P_Avg = (P1 + P2 + P3)/3;
         if (P_Avg < 0.5) {
-            PseudoHP1_Road *= 0.85;
-            PseudoExp1_Road *= 1.15;
+            HP1_Road *= 0.85;
+            Exp1_Road *= 1.15;
         } else {
-            PseudoHP1_Road *= 0.9;
-            PseudoExp1_Road *= 1.2;
+            HP1_Road *= 0.9;
+            Exp1_Road *= 1.2;
         }
-        cout << "\nAverageP: " << P_Avg;
     }
 
-    cout << "\nP1:" << P1 << " P2:"<< P2 << " P3:" << P[P3InAShell];
-    cout << "\n";
-
-    EXP1 = static_cast<int>(ceil(PseudoExp1_Road));
-    HP1 = static_cast<int>(ceil(PseudoHP1_Road));
-    M1 = static_cast<int>(ceil(PseudoM1_Road));
+    EXP1 = static_cast<int>(ceil(Exp1_Road));
+    HP1 = static_cast<int>(ceil(HP1_Road));
+    M1 = static_cast<int>(ceil(M1_Road));
     ClampEXP(EXP1);
     ClampHP(HP1);
     ClampM(M1);
